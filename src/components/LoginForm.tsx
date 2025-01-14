@@ -1,0 +1,117 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+
+interface FormValues {
+  email: string;
+  password: string;
+}
+
+interface LoginFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSwitchToSignup: () => void;
+}
+
+const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    mode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="bg-[#e7e2cd] p-0 border-none h-[700px] overflow-y-scroll">
+          <img
+            src="/src/assets/images/login-img.jpg"
+            className="rounded-lg w-full h-[220px]"
+          />
+          <div className="bg-gradient-to-t from-[#e7e2cd] via-transparent to-transparent absolute w-full h-[100px] top-[120px] left-0 z-10"></div>
+          <DialogHeader>
+            <DialogTitle className="text-center font-semibold text-3xl">
+              Welcome back
+            </DialogTitle>
+            <DialogDescription className="py-4 text-xl text-black px-6 text-center">
+              Enter your email address to log in to your BabyCenter account
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)} className="px-6">
+            <div className="my-2">
+              <Input
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email format",
+                  },
+                })}
+                className="bg-white p-6 rounded-none border-2 border-slate-300"
+                placeholder="Email address:"
+              />
+              {errors.email && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div className="my-2">
+              <Input
+                type="password"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters long",
+                  },
+                })}
+                className="bg-white p-6 rounded-none border-2 border-slate-300"
+                placeholder="Password:"
+              />
+              {errors.password && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
+            </div>
+
+            <p className="my-2 text-sm text-sky-800">Forgot password?</p>
+
+            <div className="flex items-center justify-center mt-6 my-2">
+              <Button
+                type="submit"
+                className="bg-sky-800 text-emerald-300 rounded-full p-6 text-xl hover:bg-sky-950"
+              >
+                Log in
+              </Button>
+            </div>
+          </form>
+          <div className="border border-slate-500 mx-6"></div>
+
+          <div className="flex flex-col justify-center items-center">
+            <p className="font-semibold my-2 text-xl">New to BabyCare?</p>
+            <Button
+              onClick={onSwitchToSignup}
+              className="bg-slate-500/20 text-sky-950 border border-black rounded-full p-6 text-xl hover:bg-slate-500/50 hover:border-black my-4"
+            >
+              Sign up
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export default LoginForm;
