@@ -1,32 +1,63 @@
-import toast from "react-hot-toast";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import AdvisoryBoard from "./components/AdvisoryBoard";
+import Banner from "./components/Banner";
+import Panel from "./components/Panel";
+import PlatformOverview from "./components/PlatformOverview";
+import PregnancyTimeline from "./components/PregnancyTimeline";
+import Tools from "./components/Tools";
 
 const HomeContainer = () => {
-  const notify = () => toast("Here is your toast.");
-
   return (
-    <div className="mt-40 px-60">
-      Home
-      <button onClick={notify}>Make me a toast</button>
-      <Sheet>
-        <SheetTrigger>Open</SheetTrigger>
-        <SheetContent side={"left"}>
-          <SheetHeader>
-            <SheetTitle>Are you absolutely sure?</SheetTitle>
-            <SheetDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+    <div className="flex flex-col  mt-10 mb-40 px-32">
+      <PlatformOverview />
+      <div className="flex flex-col bg-[#F3F2F2] p-4">
+        <Banner />
+        <p className="text-center text-3xl font-bold text-sky-900">
+          My pregnancy week by week
+        </p>
+        <PregnancyTimeline />
+        <div className="flex flex-col items-center justify-center bg-white p-10 mb-10 ">
+          <p className="text-center text-3xl font-bold text-sky-900">
+            Popular tools
+          </p>
+          <Tools />
+        </div>
+        <Panel
+          title={"Getting Pernancy"}
+          iconUrl={"/src/assets/images/Home/Panel/pregnancy-test-icon.png"}
+          category={"huan"}
+          seeAllLink={"/"}
+          isOpened={false}
+        />
+        <Panel
+          title={"Pernancy"}
+          iconUrl={"/src/assets/images/Home/Panel/getting-pregnant-icon.png"}
+          category={"huan"}
+          seeAllLink={"/"}
+          isOpened={true}
+        />
+        <Panel
+          title={"Baby"}
+          iconUrl={"/src/assets/images/Home/Panel/baby-icon.png"}
+          category={"huan"}
+          seeAllLink={"/"}
+          isOpened={true}
+        />
+        <Panel
+          title={"Toddler"}
+          iconUrl={"/src/assets/images/Home/Panel/toddler-icon.png"}
+          category={"huan"}
+          seeAllLink={"/"}
+          isOpened={false}
+        />
+        <Panel
+          title={"Child"}
+          iconUrl={"/src/assets/images/Home/Panel/child-icon.png"}
+          category={"huan"}
+          seeAllLink={"/"}
+          isOpened={false}
+        />
+        <AdvisoryBoard/>
+      </div>
     </div>
   );
 };

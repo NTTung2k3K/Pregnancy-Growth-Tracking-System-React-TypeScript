@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./index.css";
 
 const NotFoundContainer = () => {
@@ -17,9 +18,9 @@ const NotFoundContainer = () => {
         <span>4</span>
       </section>
       <div className="link-container">
-        <a target="_blank" href="/" className="more-link">
+        <Link to={"/"} className="more-link">
           Home
-        </a>
+        </Link>
       </div>
     </div>
   );

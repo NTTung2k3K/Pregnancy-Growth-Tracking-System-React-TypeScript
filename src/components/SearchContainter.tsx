@@ -37,7 +37,7 @@ const SearchContainter = () => {
 
   return (
     <Sheet>
-      <SheetTrigger className="mr-2 hover:bg-slate-100 rounded-full hover:cursor-pointer p-2 bg-white border-none">
+      <SheetTrigger className="mr-2 hover:bg-slate-100 rounded-full hover:cursor-pointer p-2 bg-transparent border-none">
         <LuTextSearch />
       </SheetTrigger>
       <SheetContent side={"left"}>
