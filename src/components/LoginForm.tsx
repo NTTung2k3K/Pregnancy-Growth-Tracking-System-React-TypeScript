@@ -8,6 +8,7 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 interface FormValues {
   email: string;
@@ -86,7 +87,13 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
               )}
             </div>
 
-            <p className="my-2 text-sm text-sky-800">Forgot password?</p>
+            <Link
+              to={"/auth/reset-password"}
+              onClick={() => onClose()}
+              className="my-2 text-sm text-sky-800"
+            >
+              Forgot password?
+            </Link>
 
             <div className="flex items-center justify-center mt-6 my-2">
               <Button
