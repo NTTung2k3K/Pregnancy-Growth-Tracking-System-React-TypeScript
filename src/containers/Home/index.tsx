@@ -17,7 +17,7 @@ const HomeContainer = () => {
         <PregnancyTimeline />
         <div className="flex flex-col items-center justify-center bg-white p-10 mb-10 ">
           <p className="text-center text-3xl font-bold text-sky-900">
-            Popular tools
+            Popular tools huan
           </p>
           <Tools />
         </div>
