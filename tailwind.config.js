@@ -47,7 +47,7 @@ export default {
         },
       },
       backgroundImage: {
-        topbar: "url('/src/assets/images/topbar.jpg')",
+        topbar: "url('/assets/images/topbar.jpg')",
       },
       borderRadius: {
         lg: "var(--radius)",

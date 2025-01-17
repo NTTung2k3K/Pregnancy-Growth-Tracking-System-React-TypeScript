@@ -84,7 +84,7 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-[#e7e2cd] p-0 border-none h-[700px] overflow-y-scroll">
         <img
-          src="/src/assets/images/signup-img.jpg"
+          src="/assets/images/signup-img.jpg"
           className="rounded-lg w-full h-[220px]"
         />
         <div className="bg-gradient-to-t from-[#e7e2cd] via-transparent to-transparent absolute w-full h-[100px] top-[120px] left-0 z-10"></div>

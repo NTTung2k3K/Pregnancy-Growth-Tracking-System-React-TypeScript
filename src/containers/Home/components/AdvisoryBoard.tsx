@@ -7,39 +7,39 @@ const AdvisoryBoard = () => {
       name: "Layan Alrahmani, M.D.",
       career: "ob-gyn, MFM",
       imageUrl:
-        "/src/assets/images/Home/AdvisoryBoard/MAB-Layan-Alrahmani-photo.jpg",
+        "/assets/images/Home/AdvisoryBoard/MAB-Layan-Alrahmani-photo.jpg",
     },
     {
       id: "1",
       name: "Cheryl Axelrod, M.D.",
       career: "ob-gyn",
-      imageUrl: "/src/assets/images/Home/AdvisoryBoard/CherylMD2019-300px.jpg",
+      imageUrl: "/assets/images/Home/AdvisoryBoard/CherylMD2019-300px.jpg",
     },
     {
       id: "1",
       name: "Chandani DeZure, M.D., FAAP",
       career: "pediatric hospitalist",
       imageUrl:
-        "/src/assets/images/Home/AdvisoryBoard/chandani-dezure-profile-picture-sep-2022.jpg",
+        "/assets/images/Home/AdvisoryBoard/chandani-dezure-profile-picture-sep-2022.jpg",
     },
     {
       id: "1",
       name: "Shawnté James, M.D.",
       career: "neonatal and pediatric hospitalist",
-      imageUrl: "/src/assets/images/Home/AdvisoryBoard/dr-shawnte-james.jpg",
+      imageUrl: "/assets/images/Home/AdvisoryBoard/dr-shawnte-james.jpg",
     },
     {
       id: "1",
       name: "Liz Donner, M.D.",
       career: "pediatric hospitalist",
-      imageUrl: "/src/assets/images/Home/AdvisoryBoard/LizDonner.png",
+      imageUrl: "/assets/images/Home/AdvisoryBoard/LizDonner.png",
     },
     {
       id: "1",
       name: "Zakiyah Williams, MPH, IBCLC",
       career: "lactation consultant",
       imageUrl:
-        "/src/assets/images/Home/AdvisoryBoard/expert-bio-zakiyah-williams.jpg",
+        "/assets/images/Home/AdvisoryBoard/expert-bio-zakiyah-williams.jpg",
     },
   ];
 

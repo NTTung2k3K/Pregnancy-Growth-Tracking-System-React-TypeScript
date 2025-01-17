@@ -23,40 +23,40 @@ const HomeContainer = () => {
         </div>
         <Panel
           title={"Getting Pernancy"}
-          iconUrl={"/src/assets/images/Home/Panel/pregnancy-test-icon.png"}
+          iconUrl={"/assets/images/Home/Panel/pregnancy-test-icon.png"}
           category={"huan"}
           seeAllLink={"/"}
           isOpened={false}
         />
         <Panel
           title={"Pernancy"}
-          iconUrl={"/src/assets/images/Home/Panel/getting-pregnant-icon.png"}
+          iconUrl={"/assets/images/Home/Panel/getting-pregnant-icon.png"}
           category={"huan"}
           seeAllLink={"/"}
           isOpened={true}
         />
         <Panel
           title={"Baby"}
-          iconUrl={"/src/assets/images/Home/Panel/baby-icon.png"}
+          iconUrl={"/assets/images/Home/Panel/baby-icon.png"}
           category={"huan"}
           seeAllLink={"/"}
           isOpened={true}
         />
         <Panel
           title={"Toddler"}
-          iconUrl={"/src/assets/images/Home/Panel/toddler-icon.png"}
+          iconUrl={"/assets/images/Home/Panel/toddler-icon.png"}
           category={"huan"}
           seeAllLink={"/"}
           isOpened={false}
         />
         <Panel
           title={"Child"}
-          iconUrl={"/src/assets/images/Home/Panel/child-icon.png"}
+          iconUrl={"/assets/images/Home/Panel/child-icon.png"}
           category={"huan"}
           seeAllLink={"/"}
           isOpened={false}
         />
-        <AdvisoryBoard/>
+        <AdvisoryBoard />
       </div>
     </div>
   );

@@ -43,7 +43,7 @@ const Navbar = () => {
           )}
         </div>
         <Link to={"/"} className="hover:cursor-pointer">
-          <img src="/src/assets/images/navbar-logo.png" className="h-[60px]" />
+          <img src="/assets/images/navbar-logo.png" className="h-[60px]" />
         </Link>
         <div className="flex items-center text-2xl text-sky-900">
           <div className="mr-2 hover:bg-slate-100 hover:rounded-full hover:cursor-pointer p-2">

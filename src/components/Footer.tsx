@@ -8,7 +8,7 @@ const Footer = () => {
     <div className="bg-[#F3F2F2] w-full flex px-60 py-10 justify-around">
       <div className="w-[500px]">
         <Link to={"/"} className="hover:cursor-pointer">
-          <img src="/src/assets/images/navbar-logo.png" className="h-[60px]" />
+          <img src="/assets/images/navbar-logo.png" className="h-[60px]" />
         </Link>
         <p>
           BabyCenter is committed to providing the most helpful and trustworthy
