@@ -55,7 +55,7 @@ const Banner = () => {
           ))}
         </CarouselContent>
         <CarouselPrevious className="ml-10" />
-        <CarouselNext className="mr-10" />
+        <CarouselNext className="mr-10 " />
       </Carousel>
     </>
   );
