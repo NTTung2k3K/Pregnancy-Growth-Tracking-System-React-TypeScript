@@ -86,7 +86,7 @@ const Panel = ({
                   to={seeAllLink}
                   className="bg-slate-200 py-4 px-8 text-xl text-sky-900 font-semibold border border-sky-900 rounded-full mb-10"
                 >
-                  See all s
+                  See all
                 </Link>
               </div>
             </div>
