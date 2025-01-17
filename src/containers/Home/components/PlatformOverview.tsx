@@ -3,17 +3,18 @@ const PlatformOverview = () => {
     {
       data: "32+ million",
       description: "users every month",
-      imgUrl: "/src/assets/images/Home/PlatformOverview/user-group.png",
+      imgUrl: "/assets/images/Home/PlatformOverview/user-group.png",
     },
     {
       data: "40+",
       description: "medical advisors",
-      imgUrl: "/src/assets/images/Home/PlatformOverview/medical-advisors.jpg",
+      imgUrl: "/assets/images/Home/PlatformOverview/medical-advisors.jpg",
     },
     {
       data: "2,500+",
       description: "expert-reviewed articles",
-      imgUrl: "/src/assets/images/Home/PlatformOverview/expert-reviewed-articles.png",
+      imgUrl:
+        "/assets/images/Home/PlatformOverview/expert-reviewed-articles.png",
     },
   ];
 

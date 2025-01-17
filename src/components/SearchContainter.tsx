@@ -44,7 +44,7 @@ const SearchContainter = () => {
         <SheetHeader>
           <SheetTitle>
             <img
-              src="/src/assets/images/navbar-logo.png"
+              src="/assets/images/navbar-logo.png"
               className="h-[60px]"
             />
           </SheetTitle>

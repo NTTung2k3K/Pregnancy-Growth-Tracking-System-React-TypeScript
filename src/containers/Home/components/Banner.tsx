@@ -13,17 +13,17 @@ const Banner = () => {
     {
       title: "What does your baby look like now ?",
       buttonTitle: "Show my baby",
-      imageUrl: "/src/assets/images/Home/Banner/carousel-1.webp",
+      imageUrl: "/assets/images/Home/Banner/carousel-1.webp",
     },
     {
       title: "Baby Center Registry Builder",
       buttonTitle: "Get started",
-      imageUrl: "/src/assets/images/Home/Banner/carousel-2.webp",
+      imageUrl: "/assets/images/Home/Banner/carousel-2.webp",
     },
     {
       title: "BabyCenter Course",
       buttonTitle: "Sign me up",
-      imageUrl: "/src/assets/images/Home/Banner/carousel-3.jpeg",
+      imageUrl: "/assets/images/Home/Banner/carousel-3.jpeg",
     },
   ];
 

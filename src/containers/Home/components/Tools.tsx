@@ -3,61 +3,61 @@ import { Link } from "react-router-dom";
 const Tools = () => {
   const items = [
     {
-      imageUrl: "/src/assets/images/Home/Tools/ovulation-calculator.webp",
+      imageUrl: "/assets/images/Home/Tools/ovulation-calculator.webp",
       title: "Ovulation Calculator",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/date-calculator.webp",
+      imageUrl: "/assets/images/Home/Tools/date-calculator.webp",
       title: "Due Date Calculator",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/gender.png",
+      imageUrl: "/assets/images/Home/Tools/gender.png",
       title: "Gender Predictor",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/baby-names-finder.jpg",
+      imageUrl: "/assets/images/Home/Tools/baby-names-finder.jpg",
       title: "Baby Names Finder",
     },
     {
       imageUrl:
-        "/src/assets/images/Home/Tools/pregnancy-weight-gain-calculator.jpg",
+        "/assets/images/Home/Tools/pregnancy-weight-gain-calculator.jpg",
       title: "Pregnancy Weight Gain Calculator",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/birth-plan-worksheet.webp",
+      imageUrl: "/assets/images/Home/Tools/birth-plan-worksheet.webp",
       title: "Birth Plan Worksheet",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/ovulation-calculator.webp",
+      imageUrl: "/assets/images/Home/Tools/ovulation-calculator.webp",
       title: "Ovulation Calculator",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/date-calculator.webp",
+      imageUrl: "/assets/images/Home/Tools/date-calculator.webp",
       title: "Due Date Calculator",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/gender.png",
+      imageUrl: "/assets/images/Home/Tools/gender.png",
       title: "Gender Predictor",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/baby-names-finder.jpg",
+      imageUrl: "/assets/images/Home/Tools/baby-names-finder.jpg",
       title: "Baby Names Finder",
     },
     {
       imageUrl:
-        "/src/assets/images/Home/Tools/pregnancy-weight-gain-calculator.jpg",
+        "/assets/images/Home/Tools/pregnancy-weight-gain-calculator.jpg",
       title: "Pregnancy Weight Gain Calculator",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/birth-plan-worksheet.webp",
+      imageUrl: "/assets/images/Home/Tools/birth-plan-worksheet.webp",
       title: "Birth Plan Worksheet",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/birth-plan-worksheet.webp",
+      imageUrl: "/assets/images/Home/Tools/birth-plan-worksheet.webp",
       title: "Birth Plan Worksheet",
     },
     {
-      imageUrl: "/src/assets/images/Home/Tools/birth-plan-worksheet.webp",
+      imageUrl: "/assets/images/Home/Tools/birth-plan-worksheet.webp",
       title: "Birth Plan Worksheet",
     },
   ];

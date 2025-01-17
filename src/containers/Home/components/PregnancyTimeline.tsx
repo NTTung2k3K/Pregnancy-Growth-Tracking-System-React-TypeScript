@@ -11,25 +11,25 @@ import { Link } from "react-router-dom";
 const PregnancyTimeline = () => {
   const items = [
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/apple-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
     },
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/orange-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
     },
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
     },
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
     },
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/lime-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
     },
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
     },
     {
-      imageUrl: "/src/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
     },
   ];
 

@@ -22,33 +22,33 @@ interface CarouselItem {
 }
 
 const PanelCarousel = ({ keyword }: PanelCarouselProps) => {
-  const data : CarouselItem[] = [
+  const data: CarouselItem[] = [
     {
       title: "How to cope with the emotional toll of infertility",
       description: "Reviewed By Sipra Laddha, perinatal psychiatrist",
-      imgUrl: "/src/assets/images/Home/PanelCarousel/carousel-1.jpg",
+      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
       keyword: "Fertility",
     },
     {
       title: "How to cope with the emotional toll of infertility",
       description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/src/assets/images/Home/PanelCarousel/carousel-1.jpg",
+      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
       keyword: "Fertility",
     },
     {
       title: "How to cope with the emotional toll of infertility",
       description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/src/assets/images/Home/PanelCarousel/carousel-1.jpg",
+      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
     },
     {
       title: "How to cope with the emotional toll of infertility",
       description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/src/assets/images/Home/PanelCarousel/carousel-1.jpg",
+      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
     },
     {
       title: "How to cope with the emotional toll of infertility",
       description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/src/assets/images/Home/PanelCarousel/carousel-1.jpg",
+      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
     },
   ];
 
