@@ -9,7 +9,7 @@ import UserButton from "./UserButton";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged] = useState(false);
 
   const categories = [
     { name: "Community", link: "/community" },

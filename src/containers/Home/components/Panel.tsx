@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -35,6 +35,7 @@ const Panel = ({
   ]);
 
   const handleKeywordClick = (index: number) => {
+    console.log(category)
     setKeywords((prevKeywords) =>
       prevKeywords.map((keyword, i) => ({
         ...keyword,
