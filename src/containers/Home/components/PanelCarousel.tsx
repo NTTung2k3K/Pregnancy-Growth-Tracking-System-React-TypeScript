@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { truncate } from "@/utils";
+import { truncate } from "@/lib/text";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 

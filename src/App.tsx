@@ -9,15 +9,37 @@ import { ThemeProvider } from "./components/theme-provider";
 const MainLayout = lazy(() => import("./layouts/Main"));
 
 // CONTAINERS
+//------------MAIN PAGES----------------
 const NotFoundContainer = lazy(() => import("./containers/NotFound"));
 const HomeContainer = lazy(() => import("./containers/Home"));
 const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
+
+//------------Auth PAGES----------------
+const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
+const VerifyOTPContainer = lazy(() => import("./containers/VerifyOTP"));
+const NewPasswordContainer = lazy(() => import("./containers/NewPassword"));
 
 const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFoundContainer />,
   },
+
+  //------------Auth PAGES----------------
+  {
+    path: ROUTES.RESET_PASSWORD,
+    element: <MainLayout children={<ResetPasswordContainer />} />,
+  },
+  {
+    path: ROUTES.VERIFY_OTP,
+    element: <MainLayout children={<VerifyOTPContainer />} />,
+  },
+  {
+    path: ROUTES.NEW_PASSWORD,
+    element: <MainLayout children={<NewPasswordContainer />} />,
+  },
+
+  // ------------MAIN PAGES----------------
   {
     path: ROUTES.HOME,
     element: <MainLayout children={<HomeContainer />} />,
