@@ -73,7 +73,7 @@ const PanelCarousel = ({ keyword }: PanelCarouselProps) => {
         <CarouselContent>
           {items.map((item, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4">
-              <Link to={"/"} className="p-1">
+              <Link to={"/blog-detail/123"} className="p-1">
                 <Card>
                   <CardContent className="w-full h-80 flex aspect-square p-0 border-r-4 border-b-4 border-r-emerald-300 border-b-emerald-300 rounded-xl">
                     <div className="flex flex-col">

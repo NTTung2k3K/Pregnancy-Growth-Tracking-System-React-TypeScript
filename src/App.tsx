@@ -4,6 +4,7 @@ import { ROUTES } from "./routes";
 import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./components/theme-provider";
+import ScrollToTop from "./components/ScrollToTop";
 
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
@@ -13,6 +14,7 @@ const MainLayout = lazy(() => import("./layouts/Main"));
 const NotFoundContainer = lazy(() => import("./containers/NotFound"));
 const HomeContainer = lazy(() => import("./containers/Home"));
 const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
+const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
     path: ROUTES.ABOUT,
     element: <ComingSoonContainer />,
   },
+  {
+    path: ROUTES.BLOG_DETAIL,
+    element: <MainLayout children={<BlogDetailContainer />} />,
+  },
 ]);
 
 function App() {
@@ -56,6 +62,7 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Toaster />
         <Suspense fallback={<Loading />}>
+          <ScrollToTop router={router} />
           <RouterProvider router={router} />
         </Suspense>
       </ThemeProvider>
