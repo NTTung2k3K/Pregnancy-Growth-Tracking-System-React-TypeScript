@@ -14,7 +14,9 @@ const MainLayout = lazy(() => import("./layouts/Main"));
 const NotFoundContainer = lazy(() => import("./containers/NotFound"));
 const HomeContainer = lazy(() => import("./containers/Home"));
 const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
+const BlogGridContainer = lazy(() => import("./containers/BlogGrid"));
 const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
+const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -51,8 +53,16 @@ const router = createBrowserRouter([
     element: <ComingSoonContainer />,
   },
   {
+    path: ROUTES.BLOG,
+    element: <MainLayout children={<BlogGridContainer />} />,
+  },
+  {
     path: ROUTES.BLOG_DETAIL,
     element: <MainLayout children={<BlogDetailContainer />} />,
+  },
+  {
+    path: ROUTES.APPOINTMENT,
+    element: <MainLayout children={<AppoinmentContainer />} />,
   },
 ]);
 
