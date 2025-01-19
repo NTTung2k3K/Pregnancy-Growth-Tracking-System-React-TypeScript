@@ -7,6 +7,8 @@ export const ROUTES = {
   // Main
   HOME: "/",
   ABOUT:"/about",
+  BLOG:"/blog/:type",
   BLOG_DETAIL:"/blog-detail/:id",
+  APPOINTMENT:"/appointment",
 
 };
