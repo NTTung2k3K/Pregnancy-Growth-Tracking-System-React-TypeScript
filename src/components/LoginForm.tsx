@@ -9,8 +9,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-//import { GoogleLogin } from "@react-oauth/google";
-//import { jwtDecode } from "jwt-decode";
 import {useGoogleLogin} from "@react-oauth/google";
 import axios from "axios";
 
@@ -38,9 +36,6 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
     console.log(data);
   };
 
-  {/*const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => console.log(tokenResponse), 
-  });*/}
   const login = useGoogleLogin({
     onSuccess: async (response) => {
       try{
@@ -130,19 +125,6 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
             </div>
           </form>
 
-          {/*<GoogleLogin
-            onSuccess={credentialResponse => {
-              if(credentialResponse.credential){
-                const credentialResponseDecoded = jwtDecode(credentialResponse.credential);
-                console.log(credentialResponseDecoded);
-              }else{
-                console.error("Credential is undefined")
-              }
-            }}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-          />;*/}
           <div className="flex items-center justify-center mt-6 my-2">
             <button 
               onClick={() => login()} 
