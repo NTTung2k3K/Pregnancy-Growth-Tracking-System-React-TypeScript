@@ -15,7 +15,7 @@ const Navbar = () => {
     { name: "Community", link: "/community" },
     { name: "Getting Pregnant", link: "/community" },
     { name: "Pregnancy", link: "/community" },
-    { name: "Baby Names", link: "/community" },
+    { name: "Baby Name", link: "/community" },
     { name: "Baby", link: "/community" },
     { name: "Toddler", link: "/community" },
     { name: "Child", link: "/community" },

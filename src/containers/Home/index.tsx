@@ -25,35 +25,35 @@ const HomeContainer = () => {
           title={"Getting Pernancy"}
           iconUrl={"/assets/images/Home/Panel/pregnancy-test-icon.png"}
           category={"huan"}
-          seeAllLink={"/"}
+          seeAllLink={"/blog/getting-pregnant"}
           isOpened={false}
         />
         <Panel
           title={"Pernancy"}
           iconUrl={"/assets/images/Home/Panel/getting-pregnant-icon.png"}
           category={"huan"}
-          seeAllLink={"/"}
+          seeAllLink={"/blog/pregnancy"}
           isOpened={true}
         />
         <Panel
           title={"Baby"}
           iconUrl={"/assets/images/Home/Panel/baby-icon.png"}
           category={"huan"}
-          seeAllLink={"/"}
+          seeAllLink={"/blog/baby"}
           isOpened={true}
         />
         <Panel
           title={"Toddler"}
           iconUrl={"/assets/images/Home/Panel/toddler-icon.png"}
           category={"huan"}
-          seeAllLink={"/"}
+          seeAllLink={"/blog/toddler"}
           isOpened={false}
         />
         <Panel
           title={"Child"}
           iconUrl={"/assets/images/Home/Panel/child-icon.png"}
           category={"huan"}
-          seeAllLink={"/"}
+          seeAllLink={"/blog/child"}
           isOpened={false}
         />
         <AdvisoryBoard />
