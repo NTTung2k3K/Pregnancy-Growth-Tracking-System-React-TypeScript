@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +16,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { API_ROUTES } from "@/routes/api";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "@/routes";
 import { AiOutlineLoading } from "react-icons/ai";
 
 interface SignupFormProps {

@@ -1,10 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import OtpInput from "./components/OTPInput";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { API_ROUTES } from "@/routes/api";
-import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
 

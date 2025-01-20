@@ -4,7 +4,6 @@ import { ROUTES } from "@/routes";
 import { API_ROUTES } from "@/routes/api";
 import toast from "react-hot-toast";
 import { setUsername } from "./slice";
-import { error } from "node:console";
 
 function* login(action: any): Generator<any, void, any> {
   const { email, password } = action.payload;
