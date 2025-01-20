@@ -9,7 +9,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import {useGoogleLogin} from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 interface FormValues {
@@ -38,20 +38,20 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
 
   const login = useGoogleLogin({
     onSuccess: async (response) => {
-      try{
+      try {
         const res = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers: {
-              Authorization: `Bearer ${response.access_token}`
-            }
+              Authorization: `Bearer ${response.access_token}`,
+            },
           }
         );
         console.log(res);
-      }catch (err){
+      } catch (err) {
         console.log(err);
       }
-    }, 
+    },
   });
 
   return (
@@ -126,19 +126,20 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
           </form>
 
           <div className="flex items-center justify-center mt-6 my-2">
-            <button 
-              onClick={() => login()} 
+            <button
+              onClick={() => login()}
               className="flex items-center gap-2 bg-white border border-gray-300 p-2 rounded-lg shadow-md hover:shadow-lg"
             >
-              <img 
-                src="/assets/thang/Google_Icons-09-512.webp" 
-                alt="Google Logo" 
+              <img
+                src="/assets/thang/Google_Icons-09-512.webp"
+                alt="Google Logo"
                 className="w-5 h-5"
               />
-              <span className="text-gray-700 font-semibold">Sign in with Google</span>
+              <span className="text-gray-700 font-semibold">
+                Sign in with Google
+              </span>
             </button>
           </div>
-
 
           <div className="border border-slate-500 mx-6"></div>
 

@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   Dialog,
@@ -11,13 +9,6 @@ import {
 import { Button } from "./ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -27,6 +18,8 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 interface SignupFormProps {
   isOpen: boolean;
@@ -37,7 +30,6 @@ interface SignupFormProps {
 interface FormValues {
   email: string;
   password: string;
-  city: string;
   date: string;
 }
 
@@ -50,15 +42,16 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
   } = useForm<FormValues>({
     defaultValues: {
       date: "",
-      city: "",
     },
     mode: "onChange",
   });
 
+  const dispatch = useDispatch();
+
   const [date, setDate] = useState<Date | null>(null);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+    dispatch({ type: "register", payload: data });
   };
 
   // Validation helper
@@ -75,10 +68,14 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
     validate: validateDate,
   });
 
-  register("city", { required: "City is required" });
-
   const commonInputClasses =
     "bg-white p-6 rounded-none border-2 border-slate-300";
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -117,14 +114,19 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
           </div>
 
           {/* Password Input */}
-          <div className="my-2">
+          <div className="my-2 relative">
             <Input
-              type="password"
+              type={showPassword ? "text" : "password"}
               {...register("password", {
                 required: "Password is required",
                 minLength: {
                   value: 6,
                   message: "Password must be at least 6 characters long",
+                },
+                pattern: {
+                  value: /^(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/,
+                  message:
+                    "Password must include at least one uppercase letter, one digit, and one non-alphanumeric character.",
                 },
               })}
               className={commonInputClasses}
@@ -133,28 +135,16 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
             {errors.password && (
               <p className="text-red-500">{errors.password.message}</p>
             )}
-          </div>
-
-          {/* City Select Input */}
-          <div className="my-2">
-            <Select
-              onValueChange={(value) =>
-                setValue("city", value, { shouldValidate: true })
-              }
+            <span
+              onClick={togglePasswordVisibility}
+              className="absolute top-4 right-0 flex items-center pr-3 text-gray-500 cursor-pointer"
             >
-              <SelectTrigger className="w-full bg-white p-6 border-2 border-slate-300">
-                <SelectValue placeholder="Select your city" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="New York">New York</SelectItem>
-                <SelectItem value="Los Angeles">Los Angeles</SelectItem>
-                <SelectItem value="Chicago">Chicago</SelectItem>
-                <SelectItem value="Houston">Houston</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.city && (
-              <p className="text-red-500">{errors.city.message}</p>
-            )}
+              {showPassword ? (
+                <FaRegEyeSlash size={18} />
+              ) : (
+                <FaRegEye size={18} />
+              )}
+            </span>
           </div>
 
           {/* Date Picker Input */}

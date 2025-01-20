@@ -6,6 +6,7 @@ import PregnancyTimeline from "./components/PregnancyTimeline";
 import Tools from "./components/Tools";
 
 const HomeContainer = () => {
+ 
   return (
     <div className="flex flex-col  mt-10 mb-40 px-32">
       <PlatformOverview />

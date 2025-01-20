@@ -53,8 +53,9 @@ const AdvisoryBoard = () => {
         content is complete and accurate.
       </p>
       <div className="grid grid-cols-2">
-        {items.map((item) => (
+        {items.map((item, index) => (
           <Link
+            key={index}
             to={item.id}
             className="flex items-center my-4 mx-20 text-black"
           >

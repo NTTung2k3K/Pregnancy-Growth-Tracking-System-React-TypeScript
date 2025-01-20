@@ -64,8 +64,12 @@ const Tools = () => {
 
   return (
     <div className="w-full grid grid-cols-6 gap-4 mt-10">
-      {items.map((item) => (
-        <Link to={"/"} className="flex flex-col items-center justify-center">
+      {items.map((item, index) => (
+        <Link
+          key={index}
+          to={"/"}
+          className="flex flex-col items-center justify-center"
+        >
           <img className="w-32 mb-2" src={item.imageUrl} alt="" />
           <p className="h-12 text-center">{item.title}</p>
         </Link>

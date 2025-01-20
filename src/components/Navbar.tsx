@@ -53,8 +53,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex justify-between h-10 mt-40 px-32 bg-white">
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <Link
+            key={index}
             to={category.link}
             className="text-sky-900 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
           >
