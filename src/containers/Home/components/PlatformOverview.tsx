@@ -24,8 +24,8 @@ const PlatformOverview = () => {
         BabyCenter is your parenting partner.
       </p>
       <div className="flex justify-around items-center">
-        {items.map((item) => (
-          <div className="w-64 flex items-center bg-white border border-emerald-300 p-2 rounded-lg mx-6">
+        {items.map((item,index) => (
+          <div key={index} className="w-64 flex items-center bg-white border border-emerald-300 p-2 rounded-lg mx-6">
             <img src={item.imgUrl} className="h-12 mr-10" />
             <div className="">
               <p className="text-xl font-semibold text-sky-900">{item.data}</p>

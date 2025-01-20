@@ -30,8 +30,8 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
     mode: "onChange",
   });
 
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
   };
 
   return (
