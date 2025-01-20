@@ -11,5 +11,5 @@ export const ROUTES = {
   BLOG:"/blog/:type",
   BLOG_DETAIL:"/blog-detail/:id",
   APPOINTMENT:"/appointment",
-
+  MEMBERSHIP:"/membership",
 };

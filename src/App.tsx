@@ -5,7 +5,6 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
-
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
 
@@ -17,6 +16,7 @@ const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
 const BlogGridContainer = lazy(() => import("./containers/BlogGrid"));
 const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
+const MembershipContainer = lazy(() => import("./containers/Membership"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -70,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.APPOINTMENT,
     element: <MainLayout children={<AppoinmentContainer />} />,
+  },
+  {
+    path: ROUTES.MEMBERSHIP,
+    element: <MainLayout children={<MembershipContainer />} />,
   },
 ]);
 
