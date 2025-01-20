@@ -1,7 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import OtpInput from "./components/OTPInput";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { API_ROUTES } from "@/routes/api";
+import { AiOutlineLoading } from "react-icons/ai";
+import { Button } from "@/components/ui/button";
 
 interface VerifyFormValues {
   email: string;
@@ -9,9 +12,10 @@ interface VerifyFormValues {
 }
 
 const VerifyOTPContainer = () => {
-    const navigate = useNavigate();
   //   const location = useLocation();
   //   const from = location.state?.from;
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [time, setTime] = useState<number>(300);
   const [isCounting, setIsCounting] = useState<boolean>(false);
@@ -55,11 +59,22 @@ const VerifyOTPContainer = () => {
   const { control, register, handleSubmit, setValue } =
     useForm<VerifyFormValues>();
 
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  };
+
   const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
+    handleLoading();
     const otpCode = Object.values(data.otp).join("");
-    console.log(otpCode);
-    navigate("/auth/new-password");
-    
+    const email = localStorage.getItem("email");
+    const submitedData = { code: otpCode, email: email };
+    dispatch({
+      type: `${API_ROUTES.CONFIRM_REGISTER}`,
+      payload: submitedData,
+    });
   };
 
   //   const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
@@ -127,12 +142,14 @@ const VerifyOTPContainer = () => {
             {isCounting && <span>{formatTime(time)}</span>}
           </div>
 
-          <button
+          <Button
+            disabled={isLoading}
             type="submit"
-            className="w-full mt-4 px-4 py-3 bg-sky-900 text-emerald-400 text-xl rounded-md font-semibold"
+            className="w-full mt-4 px-4 py-5 bg-sky-900 text-emerald-400 text-xl rounded-md font-semibold"
           >
+            {isLoading && <AiOutlineLoading className="animate-spin" />}
             Send
-          </button>
+          </Button>
         </form>
       </div>
     </div>

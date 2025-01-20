@@ -1,6 +1,6 @@
 // store/slices/editorSlice.ts
-import { createSlice } from '@reduxjs/toolkit';
-import { initialState } from './state';
+import { createSlice } from "@reduxjs/toolkit";
+import { initialState } from "./state";
 
 const editorSlice = createSlice({
   name: "auth",
@@ -15,6 +15,6 @@ const editorSlice = createSlice({
   },
 });
 
-
-export const { setUsername, clearUsername } = editorSlice.actions;
+export const { setUsername, clearUsername } =
+  editorSlice.actions;
 export default editorSlice.reducer;
