@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,10 +16,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { API_ROUTES } from "@/routes/api";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/routes";
+import { AiOutlineLoading } from "react-icons/ai";
 
 interface SignupFormProps {
   isOpen: boolean;
@@ -48,11 +52,22 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
 
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [date, setDate] = useState<Date | null>(null);
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    dispatch({ type: "register", payload: data });
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
   };
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    handleLoading();
+    dispatch({ type: `${API_ROUTES.REGISTER}`, payload: data });
+  };
+
 
   // Validation helper
   const validateDate = (value: string) => {
@@ -188,9 +203,12 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
           {/* Submit Button */}
           <div className="flex items-center justify-center mt-6 my-2">
             <Button
+              disabled={isLoading}
+              // onClick={() => handleLoading()}
               type="submit"
-              className="bg-sky-800 text-emerald-300 rounded-full p-6 text-xl hover:bg-sky-950"
+              className=" bg-sky-800 text-emerald-300 rounded-full p-6 text-xl hover:bg-sky-950"
             >
+              {isLoading && <AiOutlineLoading className="animate-spin" />}
               Sign up
             </Button>
           </div>
@@ -202,7 +220,7 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
           <p className="font-semibold my-2 text-xl">Already a member?</p>
           <Button
             onClick={onSwitchToLogin}
-            className="bg-slate-500/20 text-sky-950 border border-black rounded-full p-6 text-xl hover:bg-slate-500/50 hover:border-black my-4"
+            className=" bg-slate-500/20 text-sky-950 border border-black rounded-full p-6 text-xl hover:bg-slate-500/50 hover:border-black my-4"
           >
             Log in
           </Button>

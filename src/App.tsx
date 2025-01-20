@@ -22,6 +22,9 @@ const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
 const VerifyOTPContainer = lazy(() => import("./containers/VerifyOTP"));
 const NewPasswordContainer = lazy(() => import("./containers/NewPassword"));
+const RegisterSuccessContainer = lazy(
+  () => import("./containers/RegisterSuccess")
+);
 
 const router = createBrowserRouter([
   {
@@ -41,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.NEW_PASSWORD,
     element: <MainLayout children={<NewPasswordContainer />} />,
+  },
+  {
+    path: ROUTES.REGISTER_SUCCESS,
+    element: <RegisterSuccessContainer />,
   },
 
   // ------------MAIN PAGES----------------

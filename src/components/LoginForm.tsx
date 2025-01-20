@@ -8,9 +8,14 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useState } from "react";
+import { API_ROUTES } from "@/routes/api";
+import { useDispatch } from "react-redux";
+import { AiOutlineLoading } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 interface FormValues {
   email: string;
@@ -32,8 +37,26 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
     mode: "onChange",
   });
 
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  };
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+    try {
+      handleLoading();
+      dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data, onClose, navigate });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+    // handleLoading();
+    // dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data });
   };
 
   const login = useGoogleLogin({
@@ -117,9 +140,11 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
 
             <div className="flex items-center justify-center mt-6 my-2">
               <Button
+                disabled={isLoading}
                 type="submit"
                 className="bg-sky-800 text-emerald-300 rounded-full p-6 text-xl hover:bg-sky-950"
               >
+                {isLoading && <AiOutlineLoading className="animate-spin" />}
                 Log in
               </Button>
             </div>

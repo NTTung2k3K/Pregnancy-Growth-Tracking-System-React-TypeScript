@@ -1,14 +1,19 @@
+import { useSelector } from "react-redux";
 import AdvisoryBoard from "./components/AdvisoryBoard";
 import Banner from "./components/Banner";
 import Panel from "./components/Panel";
 import PlatformOverview from "./components/PlatformOverview";
 import PregnancyTimeline from "./components/PregnancyTimeline";
 import Tools from "./components/Tools";
+import { selectAuthStateUsername } from "@/modules/Auth/selector";
 
 const HomeContainer = () => {
- 
+  
+  const username = useSelector(selectAuthStateUsername);
+
   return (
     <div className="flex flex-col  mt-10 mb-40 px-32">
+      <div className="">Hello, {username}</div>
       <PlatformOverview />
       <div className="flex flex-col bg-[#F3F2F2] p-4">
         <Banner />

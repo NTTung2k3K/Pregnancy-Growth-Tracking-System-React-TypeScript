@@ -3,6 +3,7 @@ export const ROUTES = {
   RESET_PASSWORD: "/auth/reset-password",
   VERIFY_OTP : "/auth/verify-otp",
   NEW_PASSWORD : "/auth/new-password",
+  REGISTER_SUCCESS : "/auth/register-success",
 
   // Main
   HOME: "/",
