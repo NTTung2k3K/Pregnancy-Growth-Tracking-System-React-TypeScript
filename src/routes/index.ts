@@ -12,4 +12,5 @@ export const ROUTES = {
   BLOG_DETAIL:"/blog-detail/:id",
   APPOINTMENT:"/appointment",
   MEMBERSHIP:"/membership",
+  PAYMENT: "/payment/:pkgId",
 };

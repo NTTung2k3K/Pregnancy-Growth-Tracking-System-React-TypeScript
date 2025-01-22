@@ -8,7 +8,6 @@ export const API_ROUTES = {
 
 
   //Membership
-  MEMBERSHIP:"/membershipppackages/get-pagination",
-
-
+  MEMBERSHIP: "/membershippackages/get-pagination",
+  BUYPACKAGE: "/membershippackages/buy-package",
 };

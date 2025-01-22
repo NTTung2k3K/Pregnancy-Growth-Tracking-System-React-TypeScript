@@ -1,4 +1,4 @@
-import { takeLatest, call, put } from "redux-saga/effects";
+import { takeLatest, call } from "redux-saga/effects";
 import { UserService } from "@/services/user.service";
 import { ROUTES } from "@/routes";
 import { API_ROUTES } from "@/routes/api";

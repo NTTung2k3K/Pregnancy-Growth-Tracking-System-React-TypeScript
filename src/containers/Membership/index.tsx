@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-//import { API_ROUTES } from "@/routes/api";
-import axios from 'axios';
+import { API_ROUTES } from "@/routes/api";
+import { https } from '@/services/config';
+import { useNavigate } from 'react-router-dom';
 
 interface MembershipPackage {
   id: string;
@@ -19,6 +20,8 @@ const MembershipContainer: React.FC = () => {
   const [packages, setPackages] = useState<MembershipPackage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId] = useState<string>("1"); // Thay thế bằng logic lấy UserID thực tế
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMembershipPackages = async () => {
@@ -26,10 +29,9 @@ const MembershipContainer: React.FC = () => {
         setLoading(true);
         setError(null);
 
-
-                const response = await axios.get("https://localhost:7286/api/membershippackages/get-pagination", {
-                  params: { pageNumber: 1, pageSize: 10 },
-                });
+        const response = await https.get(API_ROUTES.MEMBERSHIP, {
+          params: { pageNumber: 1, pageSize: 10 },
+        });
 
         setPackages(response.data.resultObj.items || []);
       } catch (err) {
@@ -42,6 +44,21 @@ const MembershipContainer: React.FC = () => {
 
     fetchMembershipPackages();
   }, []);
+
+  const handleSelect = async (pkgId: string) => {
+    try {
+      const response = await https.post(API_ROUTES.BUYPACKAGE, {
+        packageId: pkgId,
+        userId,
+      });
+      const redirectUrl = response.data.resultObj.redirectUrlVnPay;
+
+      navigate(`/payment/${pkgId}`, { state: { redirectUrl } });
+    } catch (err) {
+      console.error("Error buying package:", err);
+      setError("Failed to initiate payment. Please try again.");
+    }
+  };
 
   if (loading) return <div>Loading membership packages...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -77,7 +94,6 @@ const MembershipContainer: React.FC = () => {
                   />
                 )}
                 <h2 className="text-xl font-semibold text-gray-800 mt-4">{pkg.packageName}</h2>
-                <p className="text-gray-600 mt-2">{pkg.description}</p>
                 <p className="text-4xl font-bold mt-4">
                   {pkg.price ? `$${pkg.price.toFixed(2)}` : `$${pkg.originalPrice.toFixed(2)}`}
                 </p>
@@ -87,6 +103,12 @@ const MembershipContainer: React.FC = () => {
                   </p>
                 )}
                 <p className="text-gray-600 mt-2">Duration: {pkg.duration} days</p>
+                <button
+                  onClick={() => handleSelect(pkg.id)}
+                  className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  Select
+                </button>
               </div>
             ))
           )}

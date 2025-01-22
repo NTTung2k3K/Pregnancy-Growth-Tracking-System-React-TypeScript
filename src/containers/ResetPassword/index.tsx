@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineLoading } from "react-icons/ai";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface FormValues {
   email: string;
