@@ -38,9 +38,9 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
   });
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleLoading = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -51,7 +51,7 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     try {
       handleLoading();
-      dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data, onClose, navigate });
+      dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data, onClose });
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -132,7 +132,10 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
 
             <Link
               to={"/auth/reset-password"}
-              onClick={() => onClose()}
+              onClick={() => {
+                onClose();
+                localStorage.setItem("action", "resetPasword");
+              }}
               className="my-2 text-sm text-sky-800"
             >
               Forgot password?

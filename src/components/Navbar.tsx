@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import SearchContainter from "./SearchContainter";
 import AuthForm from "./AuthForm";
 import { useTheme } from "./theme-provider";
-import { useState } from "react";
 import UserButton from "./UserButton";
+import { CookiesService } from "@/services/cookies.service";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
-  const [isLogged] = useState(false);
+
+  const userId = CookiesService.get();
+
 
   const categories = [
     { name: "Community", link: "/community" },
@@ -49,7 +51,7 @@ const Navbar = () => {
           <div className="mr-2 hover:bg-slate-100 hover:rounded-full hover:cursor-pointer p-2">
             <IoIosNotifications />
           </div>
-          {isLogged ? <UserButton /> : <AuthForm />}
+          {userId ? <UserButton /> : <AuthForm />}
         </div>
       </div>
       <div className="flex justify-between h-10 mt-40 px-32 bg-white">
