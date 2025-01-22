@@ -6,15 +6,15 @@ const editorSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUsername: (state, action) => {
-      state.username = action.payload;
+    setEmail: (state, action) => {
+      state.email = action.payload;
     },
-    clearUsername: (state) => {
-      state.username = null;
+    clearEmail: (state) => {
+      state.email = null;
     },
   },
 });
 
-export const { setUsername, clearUsername } =
+export const { setEmail, clearEmail } =
   editorSlice.actions;
 export default editorSlice.reducer;

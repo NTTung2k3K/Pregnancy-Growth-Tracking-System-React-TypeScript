@@ -3,4 +3,6 @@ export const API_ROUTES = {
   LOGIN: "/auth/user-login",
   REGISTER: "/auth/user-register",
   CONFIRM_REGISTER: "/auth/confirm-user-register",
+  FORGOT_PASSWORD: "/auth/user-forgot-password",
+  RESET_PASSWORD: "/auth/user-reset-password",
 };

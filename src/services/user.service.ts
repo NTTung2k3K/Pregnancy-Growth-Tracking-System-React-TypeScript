@@ -10,4 +10,10 @@ export const UserService = {
     confirmRegister: (data: any) => {
         return https.post("/auth/confirm-user-register", data);
     },
+    forgotPassword: (data: any) => {
+        return https.post("/auth/user-forgot-password", data);
+    },
+    resetPassword: (data: any) => {
+        return https.post("/auth/user-reset-password", data);
+    },
 }

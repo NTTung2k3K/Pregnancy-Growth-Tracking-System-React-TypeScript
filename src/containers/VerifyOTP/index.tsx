@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { API_ROUTES } from "@/routes/api";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface VerifyFormValues {
   email: string;
@@ -15,6 +16,7 @@ const VerifyOTPContainer = () => {
   //   const location = useLocation();
   //   const from = location.state?.from;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [time, setTime] = useState<number>(300);
@@ -74,6 +76,7 @@ const VerifyOTPContainer = () => {
     dispatch({
       type: `${API_ROUTES.CONFIRM_REGISTER}`,
       payload: submitedData,
+      navigate,
     });
   };
 
