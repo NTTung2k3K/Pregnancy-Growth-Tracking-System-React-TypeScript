@@ -6,8 +6,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { CookiesService } from "@/services/cookies.service";
 
 const UserButton = () => {
+  const logout = () => {
+    CookiesService.remove();
+    window.location.href = `/`;
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -18,7 +24,7 @@ const UserButton = () => {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

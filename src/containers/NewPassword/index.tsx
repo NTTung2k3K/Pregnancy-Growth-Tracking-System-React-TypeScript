@@ -1,6 +1,11 @@
+import { Button } from "@/components/ui/button";
+import { API_ROUTES } from "@/routes/api";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { AiOutlineLoading } from "react-icons/ai";
 import { FaExclamationTriangle } from "react-icons/fa";
-import {  useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface ResetFormValues {
   email: string;
@@ -22,6 +27,21 @@ const NewPasswordContainer = () => {
 
   const password = watch("password");
 
+  const location = useLocation();
+
+  const getQueryParams = (queryString: string) => {
+    const params = new URLSearchParams(queryString);
+    return {
+      email: params.get("email"),
+      token: params.get("token"),
+    };
+  };
+
+  // Extract email and token
+  const { email, token } = getQueryParams(location.search);
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   //   const onSubmit = (data: any) => {
   //     const { confirmPassword, ...newData } = data;
 
@@ -37,9 +57,26 @@ const NewPasswordContainer = () => {
   //         toast.error(error.message);
   //       });
   //   };
+
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  };
   const onSubmit = (data: any) => {
-    console.log(data);
-    navigate("/");
+    handleLoading();
+    const submitedData = {
+      email: email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+      token: token,
+    };
+    dispatch({
+      type: `${API_ROUTES.RESET_PASSWORD}`,
+      payload: submitedData,
+      navigate,
+    });
   };
 
   return (
@@ -53,12 +90,6 @@ const NewPasswordContainer = () => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-5">
-          <input
-            type="hidden"
-            {...register("email")}
-            // value={username || ""}
-            value={""}
-          />
           <div className="space-y-4">
             <div className="relative">
               <input
@@ -100,12 +131,14 @@ const NewPasswordContainer = () => {
             </div>
           )}
 
-          <button
+          <Button
+            disabled={isLoading}
             className="w-full mt-5 bg-sky-900 flex justify-center items-center text-emerald-400 p-2 rounded-md text-xl"
             type="submit"
           >
+            {isLoading && <AiOutlineLoading className="animate-spin" />}
             Send
-          </button>
+          </Button>
         </form>
       </div>
     </div>

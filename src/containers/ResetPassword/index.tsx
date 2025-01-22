@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { API_ROUTES } from "@/routes/api";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { AiOutlineLoading } from "react-icons/ai";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 interface FormValues {
@@ -9,7 +13,6 @@ interface FormValues {
 }
 
 const ResetPasswordContainer = () => {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -18,9 +21,22 @@ const ResetPasswordContainer = () => {
     mode: "onChange",
   });
 
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
+  };
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
-    navigate("/auth/verify-otp");
+    handleLoading();
+    console.log(data.email);
+    dispatch({
+      type: `${API_ROUTES.FORGOT_PASSWORD}`,
+      payload: { email: data.email },
+    });
   };
 
   return (
@@ -56,9 +72,11 @@ const ResetPasswordContainer = () => {
 
         <div className="flex items-center justify-center mt-6 my-2">
           <Button
+            disabled={isLoading}
             type="submit"
             className="bg-sky-800 text-emerald-300 rounded-full p-6 text-xl hover:bg-sky-950"
           >
+            {isLoading && <AiOutlineLoading className="animate-spin" />}
             Submit
           </Button>
         </div>

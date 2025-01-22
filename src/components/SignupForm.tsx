@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { API_ROUTES } from "@/routes/api";
 import { AiOutlineLoading } from "react-icons/ai";
+import CalculateForm from "./CalculateForm";
 
 interface SignupFormProps {
   isOpen: boolean;
@@ -62,8 +63,13 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    localStorage.setItem("action", "signup");
     handleLoading();
-    dispatch({ type: `${API_ROUTES.REGISTER}`, payload: data });
+    dispatch({ type: `${API_ROUTES.REGISTER}`, payload: {
+      email: data.email,
+      password: data.password,
+      dueDate: data.date,
+    } });
   };
 
 
@@ -196,13 +202,13 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
             {errors.date && (
               <p className="text-red-500">{errors.date.message}</p>
             )}
+            <CalculateForm />
           </div>
 
           {/* Submit Button */}
           <div className="flex items-center justify-center mt-6 my-2">
             <Button
               disabled={isLoading}
-              // onClick={() => handleLoading()}
               type="submit"
               className=" bg-sky-800 text-emerald-300 rounded-full p-6 text-xl hover:bg-sky-950"
             >
