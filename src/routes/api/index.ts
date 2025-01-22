@@ -3,4 +3,7 @@ export const API_ROUTES = {
   LOGIN: "/auth/user-login",
   REGISTER: "/auth/user-register",
   CONFIRM_REGISTER: "/auth/confirm-user-register",
-};
+
+  //membership
+  MEMBERSHIP:"/membershipppackages/get-pagination"
+}
