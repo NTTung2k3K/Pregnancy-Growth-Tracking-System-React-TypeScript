@@ -5,4 +5,10 @@ export const API_ROUTES = {
   CONFIRM_REGISTER: "/auth/confirm-user-register",
   FORGOT_PASSWORD: "/auth/user-forgot-password",
   RESET_PASSWORD: "/auth/user-reset-password",
+
+
+  //Membership
+  MEMBERSHIP:"/membershipppackages/get-pagination",
+
+
 };
