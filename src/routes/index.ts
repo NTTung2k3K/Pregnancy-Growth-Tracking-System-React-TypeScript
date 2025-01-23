@@ -7,12 +7,13 @@ export const ROUTES = {
 
   // Main
   HOME: "/",
-  ABOUT: "/about",
-  BLOG: "/blog/:type",
-  BLOG_DETAIL: "/blog-detail/:id",
-  APPOINTMENT: "/appointment",
-  MEMBERSHIP: "/membership",
-
+  ABOUT:"/about",
+  BLOG:"/blog/:type",
+  BLOG_DETAIL:"/blog-detail/:id",
+  APPOINTMENT:"/appointment",
+  MEMBERSHIP:"/membership",
+  PAYMENT: "/payment/:pkgId",
+  PAYMENT_RESULT: "/membershippackages/payment-result",
 
   //Dashboard
   DASHBOARD_USERS:"/dashboard/users",

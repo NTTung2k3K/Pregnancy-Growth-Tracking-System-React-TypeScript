@@ -10,8 +10,9 @@ export const API_ROUTES = {
   EMPLOYEE_RESET_PASSWORD: "/auth/employee-reset-password",
 
   //Membership
-  MEMBERSHIP: "/membershipppackages/get-pagination",
-
+  MEMBERSHIP: "/membershippackages/get-pagination",
+  BUYPACKAGE: "/membershippackages/buy-package",
+  
   //Dashboard
   DASHBOARD_USER_UPDATE: "/users/update-user-profile",
 };
