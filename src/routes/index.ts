@@ -13,4 +13,5 @@ export const ROUTES = {
   APPOINTMENT:"/appointment",
   MEMBERSHIP:"/membership",
   PAYMENT: "/payment/:pkgId",
+  PAYMENT_RESULT: "/membershippackages/payment-result",
 };

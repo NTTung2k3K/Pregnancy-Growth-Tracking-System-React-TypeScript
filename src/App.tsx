@@ -18,6 +18,7 @@ const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 const MembershipContainer = lazy(() => import("./containers/Membership"));
 const PaymentPage = lazy(() => import("./containers//Membership/payment"));
+const PaymentResultPage = lazy(() => import("./containers/Membership/payment-result"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -77,8 +78,12 @@ const router = createBrowserRouter([
     element: <MainLayout children={<MembershipContainer />} />,
   },
   {
-    path: "/payment/:pkgId",
+    path: ROUTES.PAYMENT,
     element: <MainLayout children={<PaymentPage />} />, 
+  },
+  {
+    path: ROUTES.PAYMENT_RESULT,
+    element: <MainLayout children={<PaymentResultPage />} />,
   },
 ]);
 

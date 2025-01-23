@@ -10,7 +10,7 @@ interface MembershipPackage {
   originalPrice: number;
   duration: number;
   status?: number;
-  packageLevel?: string; 
+  packageLevel?: string;
   imageUrl?: string;
   discount?: number;
   price?: number;
@@ -20,7 +20,6 @@ const MembershipContainer: React.FC = () => {
   const [packages, setPackages] = useState<MembershipPackage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [userId] = useState<string>("1"); // Thay thế bằng logic lấy UserID thực tế
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,14 +28,11 @@ const MembershipContainer: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        const response = await https.get(API_ROUTES.MEMBERSHIP, {
-          params: { pageNumber: 1, pageSize: 10 },
-        });
-
+        const response = await https.get(API_ROUTES.MEMBERSHIP);
         setPackages(response.data.resultObj.items || []);
       } catch (err) {
-        console.error("Error fetching data:", err); 
-        setError('Failed to fetch membership packages');
+        console.error("Error fetching data:", err);
+        setError("Failed to fetch membership packages");
       } finally {
         setLoading(false);
       }
@@ -45,21 +41,13 @@ const MembershipContainer: React.FC = () => {
     fetchMembershipPackages();
   }, []);
 
-  const handleSelect = async (pkgId: string) => {
-    try {
-      const response = await https.post(API_ROUTES.BUYPACKAGE, {
-        packageId: pkgId,
-        userId,
-      });
-      const redirectUrl = response.data.resultObj.redirectUrlVnPay;
-
-      navigate(`/payment/${pkgId}`, { state: { redirectUrl } });
-    } catch (err) {
-      console.error("Error buying package:", err);
-      setError("Failed to initiate payment. Please try again.");
+  const handleSelect = (pkgId: string) => {
+    const selectedPackage = packages.find(pkg => pkg.id === pkgId);
+    if (selectedPackage) {
+      navigate(`/payment/${pkgId}`, { state: { pkg: selectedPackage, pkgId } });
     }
   };
-
+  
   if (loading) return <div>Loading membership packages...</div>;
   if (error) return <div>Error: {error}</div>;
 

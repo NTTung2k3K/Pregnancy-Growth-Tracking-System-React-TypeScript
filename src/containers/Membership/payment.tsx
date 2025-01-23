@@ -1,29 +1,114 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { https } from "@/services/config";
+import { API_ROUTES } from "@/routes/api";
+import { CookiesService } from "@/services/cookies.service";
 
 const PaymentPage: React.FC = () => {
   const location = useLocation();
-  const { state } = location as { state: { redirectUrl: string } };
+  const { state } = location as { state: { pkg: { packageName: string; description: string; price: string; duration: number }; pkgId: string } };
+  
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!state || !state.redirectUrl) {
-    return <div>Invalid payment details. Please try again.</div>;
-  }
+  useEffect(() => {
+    const initiatePayment = async () => {
+      try {
+        if (!state || !state.pkgId || !state.pkg) {
+          setError("Invalid payment details. Please try again.");
+          return;
+        }
+
+        const userId = CookiesService.get();
+        if (!userId) {
+          setError("User ID not found. Please log in again.");
+          return;
+        }
+
+        const response = await https.post(API_ROUTES.BUYPACKAGE, {
+          packageId: state.pkgId,
+          userId,
+        });
+
+        setRedirectUrl(response.data.resultObj.redirectUrlVnPay);
+      } catch (err) {
+        console.error("Error initiating payment:", err);
+        setError("Failed to initiate payment. Please try again.");
+      }
+    };
+
+    initiatePayment();
+  }, [state]);
 
   const handleProceedToPayment = () => {
-    window.location.href = state.redirectUrl; // Chuyển hướng tới VNPay
+    if (redirectUrl) {
+      window.location.replace(redirectUrl);
+    }
   };
+
+  if (error) {
+    return <div className="text-center text-red-500">{error}</div>;
+  }
+
+  if (!redirectUrl) {
+    return <div className="text-center">Loading payment details...</div>;
+  }
 
   return (
     <div className="bg-gray-50 py-12 px-6">
-      <div className="max-w-3xl mx-auto text-center bg-white shadow-lg p-6 rounded-lg">
-        <h1 className="text-4xl font-bold text-gray-800">Payment Details</h1>
-        <p className="text-gray-600 mt-4">Confirm your membership package and proceed to payment.</p>
-        <button
-          onClick={handleProceedToPayment}
-          className="mt-6 py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600"
-        >
-          Proceed to VNPay
-        </button>
+      <div className="max-w-3xl mx-auto bg-white shadow-xl p-8 rounded-xl border-2 border-blue-200">
+        <h1 className="text-5xl font-extrabold text-blue-600 text-center mb-6">
+          Payment Details
+        </h1>
+        <div className="mt-6">
+          <h2 className="text-3xl font-semibold text-blue-500">Package Information</h2>
+          <div className="mt-6 space-y-6">
+            <div>
+              <label className="block text-blue-700 font-medium">Package Name</label>
+              <input
+                type="text"
+                value={state.pkg?.packageName || ''}
+                readOnly
+                className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
+              />
+            </div>
+            <div>
+              <label className="block text-blue-700 font-medium">Description</label>
+              <textarea
+                value={state.pkg?.description || ''}
+                readOnly
+                className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
+              ></textarea>
+            </div>
+            <div>
+              <label className="block text-blue-700 font-medium">Price</label>
+              <input
+                type="text"
+                value={`$${state.pkg?.price || ''}`}
+                readOnly
+                className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
+              />
+            </div>
+            <div>
+              <label className="block text-blue-700 font-medium">Duration (days)</label>
+              <input
+                type="text"
+                value={state.pkg?.duration || ''}
+                readOnly
+                className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleProceedToPayment}
+            className="py-3 px-8 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+          >
+            Proceed to Payment
+          </button>
+        </div>
       </div>
     </div>
   );
