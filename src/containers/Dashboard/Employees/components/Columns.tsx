@@ -13,33 +13,31 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
 
-export interface User {
+export interface Employee {
   id: string;
-  email: string | null;
   fullName: string | null;
   image: string | null;
   dateOfBirth: string | null;
   address: string | null;
   gender: string | null;
-  bloodGroup: string | null;
   status: string;
-  dueDate: string | null;
+  role: string | null;
 }
 
-const columnFields: { key: keyof User; label: string }[] = [
-  { key: "id", label: "ID" },
+const columnFields: { key: keyof Employee; label: string }[] = [
+  { key: "fullName", label: "FullName" },
   { key: "image", label: "Image" },
   { key: "dateOfBirth", label: "DOB" },
   { key: "address", label: "Address" },
   { key: "gender", label: "Gender" },
-  { key: "bloodGroup", label: "BloodGroup" },
-  { key: "dueDate", label: "DueDate" },
+  { key: "status", label: "Status" },
+  { key: "role", label: "Role" },
 ];
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Employee>[] = [
   ...columnFields.map(({ key, label }) => ({
     accessorKey: key,
-    header: ({ column }: { column: Column<User> }) => {
+    header: ({ column }: { column: Column<Employee> }) => {
       return (
         <Button
           variant="ghost"
@@ -67,7 +65,7 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end" className="text-sky-800">
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_USER_UPDATE.replace(":id", id)}`}
+              to={`${ROUTES.DASHBOARD_EMPLOYEE_UPDATE.replace(":id", id)}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <Pencil className="h-4 w-4 mr-2" />

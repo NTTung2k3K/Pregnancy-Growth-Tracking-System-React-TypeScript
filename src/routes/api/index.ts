@@ -13,5 +13,5 @@ export const API_ROUTES = {
   MEMBERSHIP: "/membershipppackages/get-pagination",
 
   //Dashboard
-  DASHBOARD_USER_UPDATE: "/users/update-user-profile",
+  DASHBOARD_EMPLOYEE_UPDATE: "/employees/update-employee-profile",
 };

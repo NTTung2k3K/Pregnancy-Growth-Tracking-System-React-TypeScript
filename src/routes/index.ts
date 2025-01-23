@@ -15,6 +15,6 @@ export const ROUTES = {
 
 
   //Dashboard
-  DASHBOARD_USERS:"/dashboard/users",
-  DASHBOARD_USER_UPDATE:"/dashboard/user/:id",
+  DASHBOARD_EMPLOYEES:"/dashboard/employees",
+  DASHBOARD_EMPLOYEE_UPDATE:"/dashboard/employee/:id",
 };
