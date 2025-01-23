@@ -1,0 +1,35 @@
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu";
+  import { CookiesService } from "@/services/cookies.service";
+  
+  const UserButton = () => {
+    const logout = () => {
+      CookiesService.remove();
+      window.location.href = `/`;
+    };
+  
+    return (
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="p-0 border-none rounded-full">
+            <img src="/assets/images/logo.png" className="h-10 rounded-full" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </>
+    );
+  };
+  
+  export default UserButton;
+  

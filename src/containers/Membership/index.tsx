@@ -29,6 +29,7 @@ const MembershipContainer: React.FC = () => {
         setError(null);
 
         const response = await https.get(API_ROUTES.MEMBERSHIP);
+
         setPackages(response.data.resultObj.items || []);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -54,9 +55,12 @@ const MembershipContainer: React.FC = () => {
   return (
     <div className="bg-gray-50 py-12 px-6">
       <div className="max-w-7xl mx-auto text-center">
-        <h1 className="text-4xl font-bold text-gray-800">Choose Your Membership Plan</h1>
+        <h1 className="text-4xl font-bold text-gray-800">
+          Choose Your Membership Plan
+        </h1>
         <p className="text-gray-600 mt-4">
-          Find the plan that fits your needs. Flexible and affordable options for everyone.
+          Find the plan that fits your needs. Flexible and affordable options
+          for everyone.
         </p>
         <div className="grid gap-8 mt-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {packages.length === 0 ? (
@@ -66,10 +70,12 @@ const MembershipContainer: React.FC = () => {
               <div
                 key={pkg.id}
                 className={`relative rounded-lg border ${
-                  pkg.packageLevel === 'Gold' ? 'border-yellow-500' : 'border-gray-200'
+                  pkg.packageLevel === "Gold"
+                    ? "border-yellow-500"
+                    : "border-gray-200"
                 } bg-white shadow-lg p-6 flex flex-col`}
               >
-                {pkg.packageLevel === 'Gold' && (
+                {pkg.packageLevel === "Gold" && (
                   <div className="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                     Most Popular
                   </div>
@@ -83,7 +89,9 @@ const MembershipContainer: React.FC = () => {
                 )}
                 <h2 className="text-xl font-semibold text-gray-800 mt-4">{pkg.packageName}</h2>
                 <p className="text-4xl font-bold mt-4">
-                  {pkg.price ? `$${pkg.price.toFixed(2)}` : `$${pkg.originalPrice.toFixed(2)}`}
+                  {pkg.price
+                    ? `$${pkg.price.toFixed(2)}`
+                    : `$${pkg.originalPrice.toFixed(2)}`}
                 </p>
                 {pkg.discount && (
                   <p className="text-sm text-gray-500 line-through">

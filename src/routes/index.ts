@@ -1,9 +1,9 @@
 export const ROUTES = {
   // Auth
   RESET_PASSWORD: "/auth/reset-password",
-  VERIFY_OTP : "/auth/verify-otp",
-  NEW_PASSWORD : "/auth/new-password",
-  REGISTER_SUCCESS : "/auth/register-success",
+  VERIFY_OTP: "/auth/verify-otp",
+  NEW_PASSWORD: "/auth/new-password",
+  EMPLOYEE_LOGIN: "/auth/employee-login",
 
   // Main
   HOME: "/",
@@ -14,4 +14,8 @@ export const ROUTES = {
   MEMBERSHIP:"/membership",
   PAYMENT: "/payment/:pkgId",
   PAYMENT_RESULT: "/membershippackages/payment-result",
+
+  //Dashboard
+  DASHBOARD_USERS:"/dashboard/users",
+  DASHBOARD_USER_UPDATE:"/dashboard/user/:id",
 };
