@@ -9,20 +9,20 @@ import {
 import { Button } from "./ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+// import { Calendar } from "@/components/ui/calendar";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
+// import { CalendarIcon } from "lucide-react";
+// import { format } from "date-fns";
+// import { cn } from "@/lib/utils";
+// import CalculateForm from "./CalculateForm";
 import { useDispatch } from "react-redux";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { API_ROUTES } from "@/routes/api";
 import { AiOutlineLoading } from "react-icons/ai";
-import CalculateForm from "./CalculateForm";
 
 interface SignupFormProps {
   isOpen: boolean;
@@ -33,28 +33,28 @@ interface SignupFormProps {
 interface FormValues {
   email: string;
   password: string;
-  date: string;
+  // date: string;
 }
 
 const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
   const {
     register,
     handleSubmit,
-    setValue,
+    // setValue,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: {
-      date: "",
-    },
+    // defaultValues: {
+    //   date: "",
+    // },
     mode: "onChange",
   });
 
   const dispatch = useDispatch();
+  // const [date, setDate] = useState<Date | null>(null);
 
+  
+  
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const [date, setDate] = useState<Date | null>(null);
-
   const handleLoading = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -63,29 +63,25 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    localStorage.setItem("action", "signup");
     handleLoading();
     dispatch({ type: `${API_ROUTES.REGISTER}`, payload: {
       email: data.email,
       password: data.password,
-      dueDate: data.date,
     } });
   };
 
 
-  // Validation helper
-  const validateDate = (value: string) => {
-    const selectedDate = new Date(value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Ignore time for comparison
-    return selectedDate >= today || "Date cannot be in the past";
-  };
+  // const validateDate = (value: string) => {
+  //   const selectedDate = new Date(value);
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0); // Ignore time for comparison
+  //   return selectedDate >= today || "Date cannot be in the past";
+  // };
 
-  // Register the form fields
-  register("date", {
-    required: "Date is required",
-    validate: validateDate,
-  });
+  // register("date", {
+  //   required: "Date is required",
+  //   validate: validateDate,
+  // });
 
   const commonInputClasses =
     "bg-white p-6 rounded-none border-2 border-slate-300";
@@ -166,8 +162,8 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
             </span>
           </div>
 
-          {/* Date Picker Input */}
-          <div className="my-2">
+          
+          {/* <div className="my-2">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -203,7 +199,7 @@ const SignupForm = ({ isOpen, onClose, onSwitchToLogin }: SignupFormProps) => {
               <p className="text-red-500">{errors.date.message}</p>
             )}
             <CalculateForm />
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <div className="flex items-center justify-center mt-6 my-2">
