@@ -14,5 +14,5 @@ export const API_ROUTES = {
   BUYPACKAGE: "/membershippackages/buy-package",
   
   //Dashboard
-  DASHBOARD_USER_UPDATE: "/users/update-user-profile",
+  DASHBOARD_EMPLOYEE_UPDATE: "/employees/update-employee-profile",
 };

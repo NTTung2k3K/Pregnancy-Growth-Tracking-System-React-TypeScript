@@ -28,9 +28,11 @@ const NewPasswordContainer = lazy(() => import("./containers/NewPassword"));
 const EmployeeLoginContainer = lazy(() => import("./containers/EmployeeLogin"));
 
 //------------DASHBOARD PAGES----------------
-const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
-const UserUpdataContainer = lazy(
-  () => import("./containers/Dashboard/Users/Update")
+const EmployeesContainer = lazy(
+  () => import("./containers/Dashboard/Employees")
+);
+const EmployeeUpdateContainer = lazy(
+  () => import("./containers/Dashboard/Employees/Update")
 );
 
 const router = createBrowserRouter([
@@ -92,12 +94,12 @@ const router = createBrowserRouter([
   },
   //---------- DASHBOARD PAGES-------------
   {
-    path: ROUTES.DASHBOARD_USERS,
-    element: <DashboardLayout children={<UsersContainer />} />,
+    path: ROUTES.DASHBOARD_EMPLOYEES,
+    element: <DashboardLayout children={<EmployeesContainer />} />,
   },
   {
-    path: ROUTES.DASHBOARD_USER_UPDATE,
-    element: <DashboardLayout children={<UserUpdataContainer />} />,
+    path: ROUTES.DASHBOARD_EMPLOYEE_UPDATE,
+    element: <DashboardLayout children={<EmployeeUpdateContainer />} />,
   },
 ]);
 

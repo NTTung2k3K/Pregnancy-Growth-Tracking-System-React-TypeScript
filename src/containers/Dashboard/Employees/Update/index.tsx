@@ -1,5 +1,4 @@
 import { IconBadge } from "@/components/IconBadge";
-import { Actions } from "./components/Actions";
 import { ClipboardPlus, Image, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -8,72 +7,77 @@ import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { API_ROUTES } from "@/routes/api";
+import { Actions } from "./components/Action";
 
-interface UserFormValues {
+interface EmployeeFormValues {
   id: string;
+  fullName: string;
+  image: FileList | null;
   dateOfBirth: string;
   address: string;
   gender: string;
-  bloodGroup: string;
-  dueDate: string;
-  image: FileList | null;
+  role: string;
 }
 
-export interface User {
+export interface Employee {
   id: string;
-  email: string | null;
   fullName: string | null;
   image: string | null;
   dateOfBirth: string | null;
   address: string | null;
   gender: string | null;
-  bloodGroup: string | null;
   status: string;
-  dueDate: string | null;
+  role: string | null;
 }
 
-const UserUpdataContainer = () => {
-  const { register, handleSubmit, setValue } = useForm<UserFormValues>();
+const EmployeeUpdateContainer = () => {
+  const { register, handleSubmit, setValue } = useForm<EmployeeFormValues>();
   const { id } = useParams();
-  const [user, setUser] = useState<User>();
+  const [employee, setEmployee] = useState<Employee>();
 
-  const fetchUser = async () => {
+  const fetchEmployee = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/users/get-user-by-id`, {
-        params: { Id: id },
-      });
-      const fetchedUser = response.data.resultObj || {};
+      const response = await axios.get(
+        `${BASE_URL}/employees/get-employee-by-id`,
+        {
+          params: { Id: id },
+        }
+      );
+      const fetchedEmployee = {
+        ...response.data.resultObj,
+        role: response.data.resultObj.role?.name || null,
+      };
 
       // Set form values using setValue
-      setValue("id", fetchedUser.id || "");
-      setValue("dateOfBirth", fetchedUser.dateOfBirth || "");
-      setValue("address", fetchedUser.address || "");
-      setValue("gender", fetchedUser.gender || "");
-      setValue("bloodGroup", fetchedUser.bloodGroup || "");
-      setValue("dueDate", fetchedUser.dueDate || "");
+      setValue("id", fetchedEmployee.id || "");
+      setValue("fullName", fetchedEmployee.fullName || "");
+      setValue("dateOfBirth", fetchedEmployee.dateOfBirth || "");
+      setValue("address", fetchedEmployee.address || "");
+      setValue("gender", fetchedEmployee.gender || "");
+      setValue("role", fetchedEmployee.role || "");
 
-      setUser(fetchedUser);
+      setEmployee(fetchedEmployee);
     } catch (error) {
-      console.error("Failed to fetch user:", error);
+      console.error("Failed to fetch employee:", error);
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    fetchEmployee();
   }, []);
 
-  const onSubmit = async (data: UserFormValues) => {
+  const onSubmit = async (data: EmployeeFormValues) => {
     try {
       await axios.put(
-        `${BASE_URL + "" + API_ROUTES.DASHBOARD_USER_UPDATE}`,
+        `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_UPDATE}`,
         {
           Id: data.id,
+          FullName: data.fullName,
           Image: data.image,
           DateOfBirth: data.dateOfBirth,
           Address: data.address,
           Gender: data.gender,
-          BloodGroup: data.bloodGroup,
-          DueDate: data.dueDate,
+          Role: data.role,
         },
         {
           headers: {
@@ -81,9 +85,9 @@ const UserUpdataContainer = () => {
           },
         }
       );
-      fetchUser();
+      fetchEmployee();
     } catch (error) {
-      console.error("Failed to update user:", error);
+      console.error("Failed to update employee:", error);
     }
   };
 
@@ -93,7 +97,7 @@ const UserUpdataContainer = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-y-2">
-              <h1 className="text-2xl font-medium">Update User</h1>
+              <h1 className="text-2xl font-medium">Update Employee</h1>
             </div>
             <Actions id={"1"} />
           </div>
@@ -102,7 +106,7 @@ const UserUpdataContainer = () => {
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={UserPen} />
                 <h2 className="text-xl text-sky-900 font-semibold">
-                  User Profile
+                  Employee Profile
                 </h2>
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -112,6 +116,12 @@ const UserUpdataContainer = () => {
                   className="flex-1 p-2"
                   {...register("id")}
                 />
+              </div>
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
+                  Full Name
+                </div>
+                <input className="flex-1 p-2" {...register("fullName")} />
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
@@ -146,25 +156,13 @@ const UserUpdataContainer = () => {
               <div>
                 <div className="flex items-center gap-x-2">
                   <IconBadge icon={ClipboardPlus} />
-                  <h2 className="text-xl text-sky-900 font-semibold">
-                    Medical
-                  </h2>
+                  <h2 className="text-xl text-sky-900 font-semibold">Role</h2>
                 </div>
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                   <div className="font-medium flex items-center mr-10">
-                    Blood Group
+                    Role
                   </div>
-                  <input className="flex-1 p-2" {...register("bloodGroup")} />
-                </div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10">
-                    Due Date
-                  </div>
-                  <input
-                    type="date"
-                    className="flex-1 p-2"
-                    {...register("dueDate")}
-                  />
+                  <input className="flex-1 p-2" {...register("role")} />
                 </div>
               </div>
               <div>
@@ -199,4 +197,4 @@ const UserUpdataContainer = () => {
   );
 };
 
-export default UserUpdataContainer;
+export default EmployeeUpdateContainer;
