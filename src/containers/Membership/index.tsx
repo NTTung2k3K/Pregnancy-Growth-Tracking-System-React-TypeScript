@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-//import { API_ROUTES } from "@/routes/api";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { API_ROUTES } from "@/routes/api";
+import { https } from '@/services/config';
+import { useNavigate } from 'react-router-dom';
 
 interface MembershipPackage {
   id: string;
@@ -19,6 +20,7 @@ const MembershipContainer: React.FC = () => {
   const [packages, setPackages] = useState<MembershipPackage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMembershipPackages = async () => {
@@ -26,12 +28,7 @@ const MembershipContainer: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        const response = await axios.get(
-          "https://localhost:7286/api/membershippackages/get-pagination",
-          {
-            params: { pageNumber: 1, pageSize: 10 },
-          }
-        );
+        const response = await https.get(API_ROUTES.MEMBERSHIP);
 
         setPackages(response.data.resultObj.items || []);
       } catch (err) {
@@ -45,6 +42,13 @@ const MembershipContainer: React.FC = () => {
     fetchMembershipPackages();
   }, []);
 
+  const handleSelect = (pkgId: string) => {
+    const selectedPackage = packages.find(pkg => pkg.id === pkgId);
+    if (selectedPackage) {
+      navigate(`/payment/${pkgId}`, { state: { pkg: selectedPackage, pkgId } });
+    }
+  };
+  
   if (loading) return <div>Loading membership packages...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -83,10 +87,7 @@ const MembershipContainer: React.FC = () => {
                     className="h-32 w-full object-cover rounded-lg"
                   />
                 )}
-                <h2 className="text-xl font-semibold text-gray-800 mt-4">
-                  {pkg.packageName}
-                </h2>
-                <p className="text-gray-600 mt-2">{pkg.description}</p>
+                <h2 className="text-xl font-semibold text-gray-800 mt-4">{pkg.packageName}</h2>
                 <p className="text-4xl font-bold mt-4">
                   {pkg.price
                     ? `$${pkg.price.toFixed(2)}`
@@ -97,9 +98,13 @@ const MembershipContainer: React.FC = () => {
                     Original: ${pkg.originalPrice.toFixed(2)}
                   </p>
                 )}
-                <p className="text-gray-600 mt-2">
-                  Duration: {pkg.duration} days
-                </p>
+                <p className="text-gray-600 mt-2">Duration: {pkg.duration} days</p>
+                <button
+                  onClick={() => handleSelect(pkg.id)}
+                  className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  Select
+                </button>
               </div>
             ))
           )}

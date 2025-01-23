@@ -39,7 +39,6 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
   });
 
   const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleLoading = () => {
     setIsLoading(true);

@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { AiOutlineLoading } from "react-icons/ai";
 import { DialogTrigger } from "@radix-ui/react-dialog";
@@ -38,7 +38,7 @@ const CalculateForm = () => {
     mode: "onChange",
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
 
   const [date, setDate] = useState<Date | null>(null);
 
