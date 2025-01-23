@@ -7,6 +7,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
+const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
 
 // CONTAINERS
 //------------MAIN PAGES----------------
@@ -22,8 +23,12 @@ const MembershipContainer = lazy(() => import("./containers/Membership"));
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
 const VerifyOTPContainer = lazy(() => import("./containers/VerifyOTP"));
 const NewPasswordContainer = lazy(() => import("./containers/NewPassword"));
-const RegisterSuccessContainer = lazy(
-  () => import("./containers/RegisterSuccess")
+const EmployeeLoginContainer = lazy(() => import("./containers/EmployeeLogin"));
+
+//------------DASHBOARD PAGES----------------
+const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
+const UserUpdataContainer = lazy(
+  () => import("./containers/Dashboard/Users/Update")
 );
 
 const router = createBrowserRouter([
@@ -46,8 +51,8 @@ const router = createBrowserRouter([
     element: <MainLayout children={<NewPasswordContainer />} />,
   },
   {
-    path: ROUTES.REGISTER_SUCCESS,
-    element: <RegisterSuccessContainer />,
+    path: ROUTES.EMPLOYEE_LOGIN,
+    element: <EmployeeLoginContainer />,
   },
 
   // ------------MAIN PAGES----------------
@@ -74,6 +79,16 @@ const router = createBrowserRouter([
   {
     path: ROUTES.MEMBERSHIP,
     element: <MainLayout children={<MembershipContainer />} />,
+  },
+
+  //---------- DASHBOARD PAGES-------------
+  {
+    path: ROUTES.DASHBOARD_USERS,
+    element: <DashboardLayout children={<UsersContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_USER_UPDATE,
+    element: <DashboardLayout children={<UserUpdataContainer />} />,
   },
 ]);
 

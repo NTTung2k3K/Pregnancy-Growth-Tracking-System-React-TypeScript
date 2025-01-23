@@ -30,13 +30,21 @@ const ResetPasswordContainer = () => {
     }, 10000);
   };
 
+  const action = localStorage.getItem("action");
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     handleLoading();
-    console.log(data.email);
-    dispatch({
-      type: `${API_ROUTES.FORGOT_PASSWORD}`,
-      payload: { email: data.email },
-    });
+    if (action === "employeeResetPassword") {
+      dispatch({
+        type: `${API_ROUTES.EMPLOYEE_FORGOT_PASSWORD}`,
+        payload: { email: data.email },
+      });
+    } else {
+      dispatch({
+        type: `${API_ROUTES.FORGOT_PASSWORD}`,
+        payload: { email: data.email },
+      });
+    }
   };
 
   return (
