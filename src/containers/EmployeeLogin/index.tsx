@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { API_ROUTES } from "@/routes/api";
 import { Button } from "@/components/ui/button";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ROUTES } from "@/routes";
+import { CookiesEmployeeService } from "@/services/cookies.service";
 
 interface FormValues {
   userName: string;
@@ -14,6 +15,14 @@ interface FormValues {
 }
 
 const EmployeeLoginContainer = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (CookiesEmployeeService.get()) {
+      navigate(`${ROUTES.DASHBOARD_MAIN}`);
+    }
+  }, [navigate]);
+
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,

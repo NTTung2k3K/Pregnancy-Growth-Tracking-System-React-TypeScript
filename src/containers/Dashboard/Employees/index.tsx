@@ -13,6 +13,7 @@ export interface Employee {
   gender: string | null;
   status: string;
   role: string | null;
+  email: string | null;
 }
 
 const EmployeesContainer = () => {

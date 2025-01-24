@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Pencil, Trash, UserPen } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -12,25 +12,25 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
+import axios from "axios";
+import { BASE_URL, configHeaders } from "@/services/config";
+import toast from "react-hot-toast";
 
 export interface Employee {
   id: string;
   fullName: string | null;
   image: string | null;
-  dateOfBirth: string | null;
   address: string | null;
-  gender: string | null;
   status: string;
   role: string | null;
+  email: string | null;
+  gender: string | null;
 }
 
 const columnFields: { key: keyof Employee; label: string }[] = [
   { key: "fullName", label: "FullName" },
-  { key: "image", label: "Image" },
-  { key: "dateOfBirth", label: "DOB" },
-  { key: "address", label: "Address" },
+  { key: "email", label: "Email" },
   { key: "gender", label: "Gender" },
-  { key: "status", label: "Status" },
   { key: "role", label: "Role" },
 ];
 
@@ -49,6 +49,50 @@ export const columns: ColumnDef<Employee>[] = [
       );
     },
   })),
+  {
+    accessorKey: "image",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Image
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const isImageUrl = row.getValue("image") || false;
+      return isImageUrl ? (
+        <img width={120} src={row.getValue("image")} alt="Image" />
+      ) : (
+        <p>No image</p>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const isActive = row.getValue("status") == "Active";
+      return (
+        <Badge className={cn("bg-slate-500", isActive && "bg-emerald-400")}>
+          {isActive ? "Active" : "Inactive"}
+        </Badge>
+      );
+    },
+  },
   {
     id: "actions",
     cell: ({ row }) => {
@@ -72,9 +116,23 @@ export const columns: ColumnDef<Employee>[] = [
                 Edit
               </DropdownMenuItem>
             </Link>
+            <Link
+              className="text-sky-800"
+              to={`${ROUTES.DASHBOARD_EMPLOYEE_DETAIL.replace(":id", id)}`}
+            >
+              <DropdownMenuItem className="cursor-pointer">
+                <UserPen className="h-4 w-4 mr-2" />
+                Detail
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem className="cursor-pointer font-semibold">
-              <Pencil className="h-4 w-4 mr-2" />
-              Delete
+              <div
+                onClick={() => handleDelete(id)}
+                className="w-full flex items-center"
+              >
+                <Trash className="h-4 w-4 mr-2" />
+                <p>Delete</p>
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -82,3 +140,20 @@ export const columns: ColumnDef<Employee>[] = [
     },
   },
 ];
+
+const handleDelete = async (id: string) => {
+  const confirmLeave = window.confirm(" Do you really want to delete?");
+  if (!confirmLeave) return;
+
+  try {
+    await axios.delete(`${BASE_URL}/employees/delete-employee`, {
+      params: { Id: id },
+      headers: configHeaders(),
+    });
+    window.location.href = `/dashboard/employees`;
+    toast.success("Deleted successfully");
+  } catch (error) {
+    console.error("Failed to delete employee:", error);
+    toast.error("Please login again to refresh token");
+  }
+};

@@ -1,11 +1,16 @@
-import { Users } from "lucide-react";
+import { House, Users } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
 const teacherRoutes = [
   {
+    icon: House ,
+    label: "Main",
+    href: "/dashboard/main",
+  },
+  {
     icon: Users,
-    label: "Users",
-    href: "/dashboard/users",
+    label: "Employees",
+    href: "/dashboard/employees",
   },
 ];
 

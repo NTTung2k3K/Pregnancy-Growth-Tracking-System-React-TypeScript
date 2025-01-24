@@ -16,6 +16,9 @@ export const ROUTES = {
   PAYMENT_RESULT: "/membershippackages/payment-result",
 
   //Dashboard
+  DASHBOARD_MAIN:"/dashboard/main",
   DASHBOARD_EMPLOYEES:"/dashboard/employees",
   DASHBOARD_EMPLOYEE_UPDATE:"/dashboard/employee/:id",
+  DASHBOARD_EMPLOYEE_CREATE:"/dashboard/employee/create",
+  DASHBOARD_EMPLOYEE_DETAIL:"/dashboard/employee/detail/:id",
 };

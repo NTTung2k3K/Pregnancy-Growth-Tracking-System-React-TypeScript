@@ -19,7 +19,9 @@ const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 const MembershipContainer = lazy(() => import("./containers/Membership"));
 const PaymentPage = lazy(() => import("./containers//Membership/payment"));
-const PaymentResultPage = lazy(() => import("./containers/Membership/payment-result"));
+const PaymentResultPage = lazy(
+  () => import("./containers/Membership/payment-result")
+);
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -28,11 +30,20 @@ const NewPasswordContainer = lazy(() => import("./containers/NewPassword"));
 const EmployeeLoginContainer = lazy(() => import("./containers/EmployeeLogin"));
 
 //------------DASHBOARD PAGES----------------
+const DashboardMainContainer = lazy(
+  () => import("./containers/Dashboard/Main")
+);
 const EmployeesContainer = lazy(
   () => import("./containers/Dashboard/Employees")
 );
+const EmployeeCreateContainer = lazy(
+  () => import("./containers/Dashboard/Employees/Create")
+);
 const EmployeeUpdateContainer = lazy(
   () => import("./containers/Dashboard/Employees/Update")
+);
+const EmployeeDetailContainer = lazy(
+  () => import("./containers/Dashboard/Employees/Detail")
 );
 
 const router = createBrowserRouter([
@@ -86,7 +97,7 @@ const router = createBrowserRouter([
   },
   {
     path: ROUTES.PAYMENT,
-    element: <MainLayout children={<PaymentPage />} />, 
+    element: <MainLayout children={<PaymentPage />} />,
   },
   {
     path: ROUTES.PAYMENT_RESULT,
@@ -94,12 +105,24 @@ const router = createBrowserRouter([
   },
   //---------- DASHBOARD PAGES-------------
   {
+    path: ROUTES.DASHBOARD_MAIN,
+    element: <DashboardLayout children={<DashboardMainContainer />} />,
+  },
+  {
     path: ROUTES.DASHBOARD_EMPLOYEES,
     element: <DashboardLayout children={<EmployeesContainer />} />,
   },
   {
+    path: ROUTES.DASHBOARD_EMPLOYEE_CREATE,
+    element: <DashboardLayout children={<EmployeeCreateContainer />} />,
+  },
+  {
     path: ROUTES.DASHBOARD_EMPLOYEE_UPDATE,
     element: <DashboardLayout children={<EmployeeUpdateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_EMPLOYEE_DETAIL,
+    element: <DashboardLayout children={<EmployeeDetailContainer />} />,
   },
 ]);
 

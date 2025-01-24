@@ -25,6 +25,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { ROUTES } from "@/routes";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,18 +60,20 @@ export function DataTable<TData, TValue>({
   return (
     <div className="">
       <div className="flex items-center justify-between py-4">
-        {/* <Input
-          placeholder="Filter courses..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+        <Input
+          placeholder="Filter employees by name"
+          value={
+            (table.getColumn("fullName")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("fullName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-        /> */}
-        <Link to={`/teacher/create`}>
-          <Button>
+        />
+        <Link to={ROUTES.DASHBOARD_EMPLOYEE_CREATE}>
+          <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
             <PlusCircle className="h-4 w-4 mr-2" />
-            New course
+            New employee
           </Button>
         </Link>
       </div>
