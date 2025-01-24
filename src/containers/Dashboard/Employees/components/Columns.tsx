@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash, UserPen } from "lucide-react";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  Trash,
+  UserPen,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -13,6 +19,8 @@ import { ROUTES } from "@/routes";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import toast from "react-hot-toast";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export interface Employee {
   id: string;

@@ -16,9 +16,19 @@ export function textConvert(input: string): string {
   }
 }
 
-export function formatDate(inputDate: string) {
-  // Parse the input date string (YYYY-MM-DD)
-  const [year, month, day] = inputDate.split("-").map(Number);
+export function formatDate(inputDate: string | null): string {
+  // Check if the input is null or empty
+  if (!inputDate) {
+    return ""; // Return an empty string for null or empty input
+  }
+
+  // Parse the input date string (handles ISO 8601 format)
+  const date = new Date(inputDate);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return ""; // Return an empty string for invalid date formats
+  }
 
   // Create an array of month names
   const monthNames = [
@@ -36,6 +46,13 @@ export function formatDate(inputDate: string) {
     "December",
   ];
 
-  // Get the month name and return the formatted string
-  return `${monthNames[month - 1]} ${day}, ${year}`;
+  // Get the day, month, and year
+  const year = date.getFullYear();
+  const month = date.getMonth(); // 0-based index
+  const day = date.getDate();
+
+  // Return the formatted string
+  return `${monthNames[month]} ${day}, ${year}`;
 }
+
+
