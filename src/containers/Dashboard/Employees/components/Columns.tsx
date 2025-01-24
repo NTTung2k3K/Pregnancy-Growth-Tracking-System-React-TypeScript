@@ -8,8 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import axios from "axios";

@@ -23,6 +23,25 @@ function* login(action: any): Generator<any, void, any> {
     toast.error(response.data.message);
   }
 }
+function* loginWithGoogle(action: any): Generator<any, void, any> {
+  const { token, email, email_verified, family_name, given_name, name, picture, sub } = action.payload;
+
+  // Gọi API backend để đăng nhập bằng Google, truyền token và các thông tin người dùng
+  const response = yield call(UserService.loginWithGoogle, { 
+    token, email, email_verified, family_name, given_name, name, picture, sub
+  });
+
+  if (response.data.statusCode === 200) {
+    CookiesService.set(response.data.resultObj.id);
+    console.log(response.data.resultObj.id);
+    window.location.href = `/`;
+    action.onClose();
+  } else {
+    toast.error(response.data.message);
+    console.log("thang")
+  }
+}
+
 function* employeeLogin(action: any): Generator<any, void, any> {
   const { userName, password } = action.payload;
 
@@ -122,6 +141,7 @@ function* employeeResetPassword(action: any): Generator<any, void, any> {
 
 export function* watchEditorAuthSaga() {
   yield takeLatest(`${API_ROUTES.LOGIN}`, login);
+  yield takeLatest(`${API_ROUTES.LOGIN_WITH_GOOGLE}`, loginWithGoogle);
   yield takeLatest(`${API_ROUTES.EMPLOYEE_LOGIN}`, employeeLogin);
   yield takeLatest(`${API_ROUTES.REGISTER}`, register);
   yield takeLatest(`${API_ROUTES.CONFIRM_REGISTER}`, confirmRegister);
