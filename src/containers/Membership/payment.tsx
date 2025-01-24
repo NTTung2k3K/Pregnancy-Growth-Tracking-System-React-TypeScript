@@ -6,7 +6,7 @@ import { CookiesService } from "@/services/cookies.service";
 
 const PaymentPage: React.FC = () => {
   const location = useLocation();
-  const { state } = location as { state: { pkg: { packageName: string; description: string; price: string; duration: number }; pkgId: string } };
+  const { state } = location as { state: { pkg: { packageName: string; description: string; price: string; duration: number; packageLevel: string }; pkgId: string } };
   
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +54,11 @@ const PaymentPage: React.FC = () => {
     return <div className="text-center">Loading payment details...</div>;
   }
 
+  // Format price to VND
+  const formattedPrice = state.pkg?.price
+    ? `${Math.round(Number(state.pkg?.price)).toLocaleString()} VND`
+    : '';
+
   return (
     <div className="bg-gray-50 py-12 px-6">
       <div className="max-w-3xl mx-auto bg-white shadow-xl p-8 rounded-xl border-2 border-blue-200">
@@ -84,7 +89,7 @@ const PaymentPage: React.FC = () => {
               <label className="block text-blue-700 font-medium">Price</label>
               <input
                 type="text"
-                value={`$${state.pkg?.price || ''}`}
+                value={formattedPrice}
                 readOnly
                 className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
               />
@@ -94,6 +99,15 @@ const PaymentPage: React.FC = () => {
               <input
                 type="text"
                 value={state.pkg?.duration || ''}
+                readOnly
+                className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
+              />
+            </div>
+            <div>
+              <label className="block text-blue-700 font-medium">Package Level</label>
+              <input
+                type="text"
+                value={state.pkg?.packageLevel || ''}
                 readOnly
                 className="w-full border-2 border-blue-300 px-4 py-3 rounded-lg bg-blue-100 text-gray-700"
               />

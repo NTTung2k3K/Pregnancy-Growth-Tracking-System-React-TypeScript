@@ -48,7 +48,7 @@ const MembershipContainer: React.FC = () => {
       navigate(`/payment/${pkgId}`, { state: { pkg: selectedPackage, pkgId } });
     }
   };
-  
+
   if (loading) return <div>Loading membership packages...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -63,51 +63,59 @@ const MembershipContainer: React.FC = () => {
           for everyone.
         </p>
         <div className="grid gap-8 mt-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {packages.length === 0 ? (
-            <div>No membership packages available</div>
-          ) : (
-            packages.map((pkg) => (
+          {packages.map((pkg) => {
+            const formattedPrice = pkg.price
+              ? `${Math.round(pkg.price).toLocaleString()} VND`
+              : `${Math.round(pkg.originalPrice).toLocaleString()} VND`;
+
+            return (
               <div
                 key={pkg.id}
-                className={`relative rounded-lg border ${
-                  pkg.packageLevel === "Gold"
-                    ? "border-yellow-500"
-                    : "border-gray-200"
-                } bg-white shadow-lg p-6 flex flex-col`}
+                className="rounded-2xl border border-gray-200 shadow-sm bg-white"
               >
-                {pkg.packageLevel === "Gold" && (
-                  <div className="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                    Most Popular
+                <div className="p-6 sm:px-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-t-2xl text-white">
+                  <h2 className="text-xl font-bold">
+                    {pkg.packageName}
+                  </h2>
+                  <div className="mt-2 text-3xl font-bold">
+                    {formattedPrice} <span className="text-sm">for {pkg.duration} days</span>
                   </div>
-                )}
-                {pkg.imageUrl && (
-                  <img
-                    src={pkg.imageUrl}
-                    alt={pkg.packageName}
-                    className="h-32 w-full object-cover rounded-lg"
-                  />
-                )}
-                <h2 className="text-xl font-semibold text-gray-800 mt-4">{pkg.packageName}</h2>
-                <p className="text-4xl font-bold mt-4">
-                  {pkg.price
-                    ? `$${pkg.price.toFixed(2)}`
-                    : `$${pkg.originalPrice.toFixed(2)}`}
-                </p>
-                {pkg.discount && (
-                  <p className="text-sm text-gray-500 line-through">
-                    Original: ${pkg.originalPrice.toFixed(2)}
+                </div>
+
+                <div className="p-6 sm:px-8">
+                  <p className="text-lg font-medium text-gray-900 sm:text-xl">
+                    Package Detail:
                   </p>
-                )}
-                <p className="text-gray-600 mt-2">Duration: {pkg.duration} days</p>
-                <button
-                  onClick={() => handleSelect(pkg.id)}
-                  className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  Select
-                </button>
+                  <ul className="mt-2 text-gray-700">
+                    <li>
+                      <strong>Level:</strong> {pkg.packageLevel || "Not specified"}
+                    </li>
+                    <li>
+                      <strong>Description:</strong> {pkg.description || "No description available"}
+                    </li>
+                    {pkg.imageUrl && (
+                      <li className="mt-4">
+                        <img
+                          src={pkg.imageUrl}
+                          alt={pkg.packageName}
+                          className="h-32 w-full object-cover rounded-lg"
+                        />
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+                <div className="p-6 sm:px-8 bg-white">
+                  <button
+                    className="mt-6 block w-full rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-center text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                    onClick={() => handleSelect(pkg.id)}
+                  >
+                    Buy Now
+                  </button>
+                </div>
               </div>
-            ))
-          )}
+            );
+          })}
         </div>
       </div>
     </div>
