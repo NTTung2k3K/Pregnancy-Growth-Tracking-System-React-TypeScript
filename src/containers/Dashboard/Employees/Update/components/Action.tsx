@@ -1,18 +1,16 @@
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { Trash } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
+//import { useState } from "react";
 
 interface ActionsProps {
   id: string;
 }
 
-export const Actions = ({ id }: ActionsProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const Actions = ({ /*id*/ }: ActionsProps) => {
+  //const [isLoading, setIsLoading] = useState(false);
 
-  const onClick = async () => {
+  //const onClick = async () => {
     // try {
     //   setIsLoading(true);
     //   if (isPublished) {
@@ -33,7 +31,7 @@ export const Actions = ({ id }: ActionsProps) => {
     // } finally {
     //   setIsLoading(false);
     // }
-  };
+  //};
 
   const onDelete = async () => {
     // try {

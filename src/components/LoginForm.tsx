@@ -10,13 +10,14 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+//import axios from "axios";
 import { useState } from "react";
 import { API_ROUTES } from "@/routes/api";
 import { useDispatch } from "react-redux";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { https } from "@/services/config";
 
 interface FormValues {
   email: string;
@@ -59,7 +60,8 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
   const login = useGoogleLogin({
     onSuccess: async (response) => {
       try {
-        const res = await axios.get(
+        // Gọi API userinfo của Google để lấy thông tin chi tiết người dùng
+        const res = await https.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers: {
@@ -67,13 +69,20 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
             },
           }
         );
-        console.log(res);
+        dispatch({ type: `${API_ROUTES.LOGIN_WITH_GOOGLE}`, payload: res.data });
+        toast.success("Successfully logged in with Google!");
+        onClose();
       } catch (err) {
-        console.log(err);
+        console.error("Login with Google failed:", err);
+        toast.error("Failed to login with Google. Please try again.");
       }
     },
+    onError: (error) => {
+      console.error("Google login error:", error);
+      toast.error("Google login failed. Please try again.");
+    },
   });
-
+  
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {

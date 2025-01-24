@@ -5,6 +5,9 @@ export const UserService = {
     login: (data: any) => {
         return https.post(API_ROUTES.LOGIN, data);
     },
+    loginWithGoogle: (data: any) => {
+        return https.post(API_ROUTES.LOGIN_WITH_GOOGLE, data);
+    },
     register: (data: any) => {
         return https.post(API_ROUTES.REGISTER, data);
     },
