@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import {
   CookiesEmployeeService,
   CookiesService,
+  CookiesTokenService,
 } from "@/services/cookies.service";
 import { EmployeeService } from "@/services/employee.service";
 
@@ -51,7 +52,8 @@ function* employeeLogin(action: any): Generator<any, void, any> {
 
   if (response.data.statusCode === 200) {
     CookiesEmployeeService.set(response.data.resultObj.id);
-    window.location.href = `/dashboard`;
+    CookiesTokenService.set(response.data.resultObj.accessToken)
+    window.location.href = `/dashboard/main`;
   } else {
     toast.error(response.data.message);
   }

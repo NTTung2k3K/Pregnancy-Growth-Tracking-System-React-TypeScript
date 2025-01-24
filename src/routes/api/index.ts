@@ -16,4 +16,5 @@ export const API_ROUTES = {
   
   //Dashboard
   DASHBOARD_EMPLOYEE_UPDATE: "/employees/update-employee-profile",
+  DASHBOARD_EMPLOYEE_CREATE: "/employees/create-employee",
 };
