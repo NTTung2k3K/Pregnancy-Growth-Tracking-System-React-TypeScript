@@ -6,6 +6,7 @@ import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
+import { formatDate } from "@/lib/text";
 
 export interface Employee {
   id: string;
@@ -81,7 +82,7 @@ const EmployeeDetailContainer = () => {
               <div className="font-medium flex items-center mr-10">
                 Date Of Birth
               </div>
-              <p className="flex-1 p-2">{employee?.dateOfBirth}</p>
+              <p className="flex-1 p-2">{formatDate(employee?.dateOfBirth!)}</p>
             </div>
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
               <div className="font-medium flex items-center mr-10">Address</div>
