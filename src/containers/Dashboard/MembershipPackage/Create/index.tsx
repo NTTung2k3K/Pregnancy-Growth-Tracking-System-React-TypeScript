@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import { Image, UserPen } from "lucide-react";
+import { CircleArrowLeft, Image, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -10,6 +10,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { ROUTES } from "@/routes";
 
 interface MembershipPackageFormValues {
   packageName: string;
@@ -37,11 +39,11 @@ export interface MembershipPackage {
   showPriority: number;
 }
 
-interface Status {
+export interface Status {
   id: number;
   status: string;
 }
-interface PackageLevel {
+export interface PackageLevel {
   id: number;
   status: string;
 }
@@ -154,205 +156,213 @@ const MembershipPackageCreateContainer = () => {
   };
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-y-2">
-              <h1 className="text-2xl font-medium">
-                Create membership package
-              </h1>
+      <div className="p-6">
+        <Link to={ROUTES.DASHBOARD_MEMBERSHIPPACKAGE}>
+          <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
+            <CircleArrowLeft />
+            Back
+          </Button>
+        </Link>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-y-2">
+                <h1 className="text-2xl font-medium">
+                  Create membership package
+                </h1>
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-            <div>
-              {/* Username Field */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6 ">
-                  Package Name
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+              <div>
+                {/* Username Field */}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Package Name
+                  </div>
+                  <input
+                    className="flex-1 p-2 bg-white"
+                    {...register("packageName", {
+                      required: "Package Name is required",
+                      minLength: {
+                        value: 2,
+                        message: "Package name must be at least 2 characters",
+                      },
+                    })}
+                  />
                 </div>
-                <input
-                  className="flex-1 p-2 bg-white"
-                  {...register("packageName", {
-                    required: "Package Name is required",
-                    minLength: {
-                      value: 2,
-                      message: "Package name must be at least 2 characters",
-                    },
-                  })}
-                />
-              </div>
-              {errors.packageName && (
-                <p className="text-red-500">{errors.packageName.message}</p>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6  w-1/6">
-                  Description
+                {errors.packageName && (
+                  <p className="text-red-500">{errors.packageName.message}</p>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6  w-1/6">
+                    Description
+                  </div>
+                  <textarea
+                    className="flex-1 p-2 bg-white h-40"
+                    {...register("description", {
+                      minLength: {
+                        value: 2,
+                        message: "Description must be at least 2 characters",
+                      },
+                    })}
+                  />
                 </div>
-                <textarea
-                  className="flex-1 p-2 bg-white"
-                  {...register("description", {
-                    minLength: {
-                      value: 2,
-                      message: "Description must be at least 2 characters",
-                    },
-                  })}
-                />
-              </div>
-              {errors.description && (
-                <p className="text-red-500">{errors.description.message}</p>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6 ">
-                  Original Price
+                {errors.description && (
+                  <p className="text-red-500">{errors.description.message}</p>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Original Price
+                  </div>
+                  <input
+                    {...register("originalPrice", {
+                      required: "Original price is required",
+                    })}
+                    className="flex-1 p-2 bg-white"
+                    value={displayValue} // Hiển thị giá trị định dạng
+                    onChange={handleInputChange} // Xử lý khi người dùng nhập
+                    onBlur={
+                      (e) => register("originalPrice").onBlur(e) // Gọi hàm onBlur mặc định của react-hook-form nếu cần
+                    }
+                  />
                 </div>
-                <input
-                  {...register("originalPrice", {
-                    required: "Original price is required",
-                  })}
-                  className="flex-1 p-2 bg-white"
-                  value={displayValue} // Hiển thị giá trị định dạng
-                  onChange={handleInputChange} // Xử lý khi người dùng nhập
-                  onBlur={
-                    (e) => register("originalPrice").onBlur(e) // Gọi hàm onBlur mặc định của react-hook-form nếu cần
-                  }
-                />
-              </div>
-              {errors.originalPrice && (
-                <p className="text-red-500">{errors.originalPrice.message}</p>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6 ">
-                  Discount(%)
+                {errors.originalPrice && (
+                  <p className="text-red-500">{errors.originalPrice.message}</p>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Discount(%)
+                  </div>
+                  <input
+                    type="number"
+                    className="flex-1 p-2 bg-white"
+                    {...register("discount", {
+                      required: "Discount is required",
+                      validate: (value) =>
+                        value >= 0 || "Discount must be positive",
+                    })}
+                    min={1}
+                  />
                 </div>
-                <input
-                  type="number"
-                  className="flex-1 p-2 bg-white"
-                  {...register("discount", {
-                    required: "Discount is required",
-                    validate: (value) =>
-                      value >= 0 || "Discount must be positive",
-                  })}
-                  min={1}
-                />
-              </div>
-              {errors.discount && (
-                <p className="text-red-500">{errors.discount.message}</p>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6 ">
-                  Duration
+                {errors.discount && (
+                  <p className="text-red-500">{errors.discount.message}</p>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Duration
+                  </div>
+                  <input
+                    type="number"
+                    className="flex-1 p-2 bg-white"
+                    {...register("duration", {
+                      required: "Duration is required",
+                      validate: (value) =>
+                        value > 0 || "Duration must be positive",
+                    })}
+                    min={1}
+                  />
                 </div>
-                <input
-                  type="number"
-                  className="flex-1 p-2 bg-white"
-                  {...register("duration", {
-                    required: "Duration is required",
-                    validate: (value) =>
-                      value > 0 || "Duration must be positive",
-                  })}
-                  min={1}
-                />
+                {errors.duration && (
+                  <p className="text-red-500">{errors.duration.message}</p>
+                )}
               </div>
-              {errors.duration && (
-                <p className="text-red-500">{errors.duration.message}</p>
-              )}
-            </div>
 
-            <div className="space-y-6">
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6 ">
-                  Show priority
-                </div>
-                <input
-                  type="number"
-                  className="flex-1 p-2 bg-white"
-                  {...register("showPriority", {
-                    required: " Show priority is required",
-                    validate: (value) =>
-                      value > 0 || "Show priority must be greater than 0",
-                  })}
-                  min={1}
-                />
-              </div>
-              {errors.showPriority && (
-                <p className="text-red-500">{errors.showPriority.message}</p>
-              )}
-              <div>
+              <div className="space-y-6">
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                   <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    Package Level
+                    Show priority
                   </div>
-                  <select
+                  <input
+                    type="number"
                     className="flex-1 p-2 bg-white"
-                    {...register("packageLevel", {
-                      required: "Package Level is required",
+                    {...register("showPriority", {
+                      required: " Show priority is required",
+                      validate: (value) =>
+                        value > 0 || "Show priority must be greater than 0",
                     })}
-                  >
-                    <option value="">Select package level</option>
-                    {packageLevel.map((item: PackageLevel) => (
-                      <option value={item.id}>{item.status}</option>
-                    ))}
-                  </select>
+                    min={1}
+                  />
                 </div>
-              </div>
-              {errors.packageLevel && (
-                <p className="text-red-500">{errors.packageLevel.message}</p>
-              )}
-              <div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    Status
+                {errors.showPriority && (
+                  <p className="text-red-500">{errors.showPriority.message}</p>
+                )}
+                <div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Package Level
+                    </div>
+                    <select
+                      className="flex-1 p-2 bg-white"
+                      {...register("packageLevel", {
+                        required: "Package Level is required",
+                      })}
+                    >
+                      <option value="">Select package level</option>
+                      {packageLevel.map((item: PackageLevel) => (
+                        <option value={item.id}>{item.status}</option>
+                      ))}
+                    </select>
                   </div>
-                  <select
-                    className="flex-1 p-2 bg-white"
-                    {...register("status", {
-                      required: "Status Level is required",
-                    })}
-                  >
-                    <option value="">Select status</option>
-                    {status.map((item) => (
-                      <option value={item.id}>{item.status}</option>
-                    ))}
-                  </select>
                 </div>
-              </div>
-              {errors.packageLevel && (
-                <p className="text-red-500">{errors.packageLevel.message}</p>
-              )}
-              {/* Image Upload */}
-              <div className="">
-                <div className="flex items-center gap-x-2">
-                  <IconBadge icon={Image} />
-                  <h2 className="text-xl text-sky-900 font-semibold">
-                    Thumbnail
-                  </h2>
+                {errors.packageLevel && (
+                  <p className="text-red-500">{errors.packageLevel.message}</p>
+                )}
+                <div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Status
+                    </div>
+                    <select
+                      className="flex-1 p-2 bg-white"
+                      {...register("status", {
+                        required: "Status Level is required",
+                      })}
+                    >
+                      <option value="">Select status</option>
+                      {status.map((item) => (
+                        <option value={item.id}>{item.status}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex justify-center ">
-                    <Avatar className="h-52 w-52 border text-center ">
-                      <AvatarImage src={imageTemp} />
-                      <AvatarFallback className="flex w-full h-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
-                        ?
-                      </AvatarFallback>
-                      <AvatarOverlay onFileChange={handleFileChange} />
-                    </Avatar>
+                {errors.packageLevel && (
+                  <p className="text-red-500">{errors.packageLevel.message}</p>
+                )}
+                {/* Image Upload */}
+                <div className="">
+                  <div className="flex items-center gap-x-2">
+                    <IconBadge icon={Image} />
+                    <h2 className="text-xl text-sky-900 font-semibold">
+                      Thumbnail
+                    </h2>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-center ">
+                      <Avatar className="h-52 w-52 border text-center ">
+                        <AvatarImage src={imageTemp} />
+                        <AvatarFallback className="flex w-full h-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
+                          ?
+                        </AvatarFallback>
+                        <AvatarOverlay onFileChange={handleFileChange} />
+                      </Avatar>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="flex items-center justify-end mt-10 mr-10">
+              <Button
+                disabled={isLoading}
+                className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
+                type="submit"
+              >
+                {isLoading && <AiOutlineLoading className="animate-spin" />}
+                Save
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center justify-end mt-10 mr-10">
-            <Button
-              disabled={isLoading}
-              className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
-              type="submit"
-            >
-              {isLoading && <AiOutlineLoading className="animate-spin" />}
-              Save
-            </Button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </>
   );
 };

@@ -79,4 +79,7 @@ export default {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  corePlugins: {
+    pointerEvents: true, // Make sure pointer events utilities are enabled
+  },
 };

@@ -158,7 +158,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: ROUTES.DASHBOARD_EMPLOYEE_UPDATE,
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_UPDATE,
     element: (
       <DashboardLayout
         children={<MembershipPackageDashboardUpdateContainer />}
