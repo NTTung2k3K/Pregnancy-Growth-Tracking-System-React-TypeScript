@@ -5,6 +5,9 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
+import MembershipPackageCreateContainer from "@/containers/Dashboard/MembershipPackage/Create";
+import MembershipPackageUpdateContainer from "@/containers/Dashboard/MembershipPackage/Update";
+import MembershipPackageDetailContainer from "@/containers/Dashboard/MembershipPackage/Detail";
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
 const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
@@ -44,6 +47,21 @@ const EmployeeUpdateContainer = lazy(
 );
 const EmployeeDetailContainer = lazy(
   () => import("./containers/Dashboard/Employees/Detail")
+);
+//------------MEMBERSHIP-PACKAGE PAGES----------------
+const MembershipPackagesDashboardContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage")
+);
+const MembershipPackageDashboardCreateContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage/Create")
+);
+
+const MembershipPackageDashboardUpdateContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage/Update")
+);
+
+const MembershipPackageDashboardDetailContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage/Detail")
 );
 
 const router = createBrowserRouter([
@@ -123,6 +141,37 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_EMPLOYEE_DETAIL,
     element: <DashboardLayout children={<EmployeeDetailContainer />} />,
+  },
+  //---------- MEMBERSHIP-PACKAGE PAGES-------------
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE,
+    element: (
+      <DashboardLayout children={<MembershipPackagesDashboardContainer />} />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_CREATE,
+    element: (
+      <DashboardLayout
+        children={<MembershipPackageDashboardCreateContainer />}
+      />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_UPDATE,
+    element: (
+      <DashboardLayout
+        children={<MembershipPackageDashboardUpdateContainer />}
+      />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_DETAIL,
+    element: (
+      <DashboardLayout
+        children={<MembershipPackageDashboardDetailContainer />}
+      />
+    ),
   },
 ]);
 

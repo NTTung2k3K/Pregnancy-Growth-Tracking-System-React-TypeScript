@@ -1,9 +1,9 @@
-import { House, Users } from "lucide-react";
+import { House, Package, Users } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
 const teacherRoutes = [
   {
-    icon: House ,
+    icon: House,
     label: "Main",
     href: "/dashboard/main",
   },
@@ -11,6 +11,11 @@ const teacherRoutes = [
     icon: Users,
     label: "Employees",
     href: "/dashboard/employees",
+  },
+  {
+    icon: Package,
+    label: "Membership Packages",
+    href: "/dashboard/membership-packages",
   },
 ];
 

@@ -7,18 +7,26 @@ export const ROUTES = {
 
   // Main
   HOME: "/",
-  ABOUT:"/about",
-  BLOG:"/blog/:type",
-  BLOG_DETAIL:"/blog-detail/:id",
-  APPOINTMENT:"/appointment",
-  MEMBERSHIP:"/membership",
+  ABOUT: "/about",
+  BLOG: "/blog/:type",
+  BLOG_DETAIL: "/blog-detail/:id",
+  APPOINTMENT: "/appointment",
+  MEMBERSHIP: "/membership",
   PAYMENT: "/payment/:pkgId",
   PAYMENT_RESULT: "/membershippackages/payment-result",
 
   //Dashboard
-  DASHBOARD_MAIN:"/dashboard/main",
-  DASHBOARD_EMPLOYEES:"/dashboard/employees",
-  DASHBOARD_EMPLOYEE_UPDATE:"/dashboard/employee/:id",
-  DASHBOARD_EMPLOYEE_CREATE:"/dashboard/employee/create",
-  DASHBOARD_EMPLOYEE_DETAIL:"/dashboard/employee/detail/:id",
+  DASHBOARD_MAIN: "/dashboard/main",
+  DASHBOARD_EMPLOYEES: "/dashboard/employees",
+  DASHBOARD_EMPLOYEE_UPDATE: "/dashboard/employee/:id",
+  DASHBOARD_EMPLOYEE_CREATE: "/dashboard/employee/create",
+  DASHBOARD_EMPLOYEE_DETAIL: "/dashboard/employee/detail/:id",
+
+  //Dashboard
+  DASHBOARD_MEMBERSHIPPACKAGE: "/dashboard/membership-packages",
+  DASHBOARD_MEMBERSHIPPACKAGE_UPDATE: "/dashboard/membership-package/:id",
+  DASHBOARD_MEMBERSHIPPACKAGE_CREATE: "/dashboard/membership-package/create",
+  DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/dashboard/membership-package/detail/:id",
+
+
 };
