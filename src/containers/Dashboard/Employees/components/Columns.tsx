@@ -149,8 +149,8 @@ export const columns: ColumnDef<Employee>[] = [
 ];
 
 const handleDelete = async (id: string) => {
-  const confirmLeave = window.confirm(" Do you really want to delete?");
-  if (!confirmLeave) return;
+  const confirm = window.confirm(" Do you really want to delete?");
+  if (!confirm) return;
 
   try {
     await axios.delete(`${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_DELETE}`, {
