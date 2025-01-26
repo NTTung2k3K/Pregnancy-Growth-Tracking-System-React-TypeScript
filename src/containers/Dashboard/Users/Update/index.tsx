@@ -96,7 +96,7 @@ const UserUpdateContainer = () => {
   return (
     <div>
       <div className="mt-10">
-        <Link className="p-6" to={ROUTES.DASHBOARD_EMPLOYEES}>
+        <Link className="p-6" to={ROUTES.DASHBOARD_USERS}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
             <CircleArrowLeft />
             Back
