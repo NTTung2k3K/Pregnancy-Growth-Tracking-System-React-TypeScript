@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
-import { ROUTES } from "@/routes";
 
 interface EmployeeFormValues {
   username: string;
@@ -56,7 +55,7 @@ const EmployeeCreateContainer = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await axios.get(`${BASE_URL + API_ROUTES.DASHBOARD_ROLES_ALL}`);
+      const response = await axios.get(`${BASE_URL}/role/all`);
       setRoles(response.data.resultObj.items);
     } catch (error) {
       console.error("Failed to fetch roles:", error);
@@ -98,7 +97,7 @@ const EmployeeCreateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.DASHBOARD_EMPLOYEES}`;
+        window.location.href = `/dashboard/employees`;
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);

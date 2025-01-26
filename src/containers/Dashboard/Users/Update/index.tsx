@@ -10,34 +10,23 @@ import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
 import { formatDate } from "@/lib/text";
+import { User } from "../components/IUser";
 import { API_ROUTES } from "@/routes/api";
 
-interface EmployeeFormValues {
+interface UserFormValues {
   status: number;
 }
 
-export interface Employee {
-  id: string;
-  fullName: string | null;
-  image: string | null;
-  dateOfBirth: string | null;
-  address: string | null;
-  gender: string | null;
-  status: string;
-  role: string | null;
-  email: string | null;
-}
-
-const EmployeeUpdateContainer = () => {
-  const { register, handleSubmit, setValue } = useForm<EmployeeFormValues>();
+const UserUpdateContainer = () => {
+  const { register, handleSubmit, setValue } = useForm<UserFormValues>();
   const { id } = useParams();
-  const [employee, setEmployee] = useState<Employee>();
+  const [employee, setEmployee] = useState<User>();
   const [status, setStatus] = useState([]);
 
   const fetchStatus = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_GET_STATUS}`
+        `${BASE_URL + API_ROUTES.DASHBOARD_USER_GET_STATUS}`
       );
       setStatus(response.data.resultObj);
     } catch (error) {
@@ -52,7 +41,7 @@ const EmployeeUpdateContainer = () => {
   const fetchEmployee = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_DETAIL}`,
+        `${BASE_URL + API_ROUTES.DASHBOARD_USER_DETAIL}`,
         {
           params: { Id: id },
         }
@@ -83,18 +72,18 @@ const EmployeeUpdateContainer = () => {
     }, 10000);
   };
 
-  const onSubmit = async (data: EmployeeFormValues) => {
+  const onSubmit = async (data: UserFormValues) => {
     try {
       handleLoading();
       const response = await axios.put(
-        `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_UPDATE_STATUS}`,
+        `${BASE_URL + API_ROUTES.DASHBOARD_USER_UPDATE_STATUS}`,
         {
           id: id,
           status: Number(data.status),
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `/dashboard/employees`;
+        window.location.href = `${ROUTES.DASHBOARD_USERS}`;
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -170,12 +159,6 @@ const EmployeeUpdateContainer = () => {
                 </div>
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                   <div className="font-medium flex items-center mr-10">
-                    Role
-                  </div>
-                  <p className="flex-1 p-2">{employee?.role}</p>
-                </div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10">
                     Status
                   </div>
                   <select className="flex-1 p-2" {...register("status")}>
@@ -217,4 +200,4 @@ const EmployeeUpdateContainer = () => {
   );
 };
 
-export default EmployeeUpdateContainer;
+export default UserUpdateContainer;

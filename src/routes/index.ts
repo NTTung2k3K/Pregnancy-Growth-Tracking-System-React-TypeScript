@@ -17,16 +17,22 @@ export const ROUTES = {
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
+
+  //--------EMPLOYEES
   DASHBOARD_EMPLOYEES: "/dashboard/employees",
   DASHBOARD_EMPLOYEE_UPDATE: "/dashboard/employee/:id",
   DASHBOARD_EMPLOYEE_CREATE: "/dashboard/employee/create",
   DASHBOARD_EMPLOYEE_DETAIL: "/dashboard/employee/detail/:id",
 
-  //Dashboard
+  //--------USERs
+  DASHBOARD_USERS: "/dashboard/users",
+  DASHBOARD_USER_UPDATE: "/dashboard/user/:id",
+  DASHBOARD_USER_DETAIL: "/dashboard/user/detail/:id",
+
+  //-----------MEMBERSHIPPACKAGE
   DASHBOARD_MEMBERSHIPPACKAGE: "/dashboard/membership-packages",
   DASHBOARD_MEMBERSHIPPACKAGE_UPDATE: "/dashboard/membership-package/:id",
   DASHBOARD_MEMBERSHIPPACKAGE_CREATE: "/dashboard/membership-package/create",
-  DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/dashboard/membership-package/detail/:id",
-
-
+  DASHBOARD_MEMBERSHIPPACKAGE_DETAIL:
+    "/dashboard/membership-package/detail/:id",
 };

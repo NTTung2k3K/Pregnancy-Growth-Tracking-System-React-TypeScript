@@ -5,9 +5,6 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
-import MembershipPackageCreateContainer from "@/containers/Dashboard/MembershipPackage/Create";
-import MembershipPackageUpdateContainer from "@/containers/Dashboard/MembershipPackage/Update";
-import MembershipPackageDetailContainer from "@/containers/Dashboard/MembershipPackage/Detail";
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
 const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
@@ -36,6 +33,8 @@ const EmployeeLoginContainer = lazy(() => import("./containers/EmployeeLogin"));
 const DashboardMainContainer = lazy(
   () => import("./containers/Dashboard/Main")
 );
+
+//------------------------------EMPLOYEES
 const EmployeesContainer = lazy(
   () => import("./containers/Dashboard/Employees")
 );
@@ -62,6 +61,15 @@ const MembershipPackageDashboardUpdateContainer = lazy(
 
 const MembershipPackageDashboardDetailContainer = lazy(
   () => import("./containers/Dashboard/MembershipPackage/Detail")
+);
+
+//------------------------------USERS
+const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
+const UserDetailContainer = lazy(
+  () => import("./containers/Dashboard/Users/Detail")
+);
+const UserUpdateContainer = lazy(
+  () => import("./containers/Dashboard/Users/Update")
 );
 
 const router = createBrowserRouter([
@@ -126,6 +134,9 @@ const router = createBrowserRouter([
     path: ROUTES.DASHBOARD_MAIN,
     element: <DashboardLayout children={<DashboardMainContainer />} />,
   },
+
+  //-----------------------EMPLOYEES
+
   {
     path: ROUTES.DASHBOARD_EMPLOYEES,
     element: <DashboardLayout children={<EmployeesContainer />} />,
@@ -142,7 +153,24 @@ const router = createBrowserRouter([
     path: ROUTES.DASHBOARD_EMPLOYEE_DETAIL,
     element: <DashboardLayout children={<EmployeeDetailContainer />} />,
   },
+
+  //-----------------------USERS
+
+  {
+    path: ROUTES.DASHBOARD_USERS,
+    element: <DashboardLayout children={<UsersContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_USER_DETAIL,
+    element: <DashboardLayout children={<UserDetailContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_USER_UPDATE,
+    element: <DashboardLayout children={<UserUpdateContainer />} />,
+  },
+
   //---------- MEMBERSHIP-PACKAGE PAGES-------------
+
   {
     path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE,
     element: (

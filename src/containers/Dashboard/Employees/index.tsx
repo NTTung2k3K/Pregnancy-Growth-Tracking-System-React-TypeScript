@@ -3,6 +3,7 @@ import { columns } from "./components/Columns";
 import { DataTable } from "./components/DataTable";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
+import { API_ROUTES } from "@/routes/api";
 
 export interface Employee {
   id: string;
@@ -20,7 +21,9 @@ const EmployeesContainer = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
 
   const fetchEmployees = async () => {
-    const response = await axios.get(`${BASE_URL}/employees/get-all-doctor`);
+    const response = await axios.get(
+      `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEES_ALL}`
+    );
     const formattedResult = response.data.resultObj.map((item: any) => ({
       ...item,
       role: item.role?.name || null,

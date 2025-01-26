@@ -21,30 +21,19 @@ import { BASE_URL, configHeaders } from "@/services/config";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { User } from "./IUser";
 import { API_ROUTES } from "@/routes/api";
 
-export interface Employee {
-  id: string;
-  fullName: string | null;
-  image: string | null;
-  address: string | null;
-  status: string;
-  role: string | null;
-  email: string | null;
-  gender: string | null;
-}
-
-const columnFields: { key: keyof Employee; label: string }[] = [
+const columnFields: { key: keyof User; label: string }[] = [
   { key: "fullName", label: "FullName" },
   { key: "email", label: "Email" },
   { key: "gender", label: "Gender" },
-  { key: "role", label: "Role" },
 ];
 
-export const columns: ColumnDef<Employee>[] = [
+export const columns: ColumnDef<User>[] = [
   ...columnFields.map(({ key, label }) => ({
     accessorKey: key,
-    header: ({ column }: { column: Column<Employee> }) => {
+    header: ({ column }: { column: Column<User> }) => {
       return (
         <Button
           variant="ghost"
@@ -116,7 +105,7 @@ export const columns: ColumnDef<Employee>[] = [
           <DropdownMenuContent align="end" className="text-sky-800">
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_EMPLOYEE_UPDATE.replace(":id", id)}`}
+              to={`${ROUTES.DASHBOARD_USER_UPDATE.replace(":id", id)}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <Pencil className="h-4 w-4 mr-2" />
@@ -125,7 +114,7 @@ export const columns: ColumnDef<Employee>[] = [
             </Link>
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_EMPLOYEE_DETAIL.replace(":id", id)}`}
+              to={`${ROUTES.DASHBOARD_USER_DETAIL.replace(":id", id)}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <UserPen className="h-4 w-4 mr-2" />
@@ -153,11 +142,11 @@ const handleDelete = async (id: string) => {
   if (!confirmLeave) return;
 
   try {
-    await axios.delete(`${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_DELETE}`, {
+    await axios.delete(`${BASE_URL+API_ROUTES.DASHBOARD_USER_DELETE}`, {
       params: { Id: id },
       headers: configHeaders(),
     });
-    window.location.href = `${ROUTES.DASHBOARD_EMPLOYEES}`;
+    window.location.href = `${ROUTES.DASHBOARD_USERS}`;
     toast.success("Deleted successfully");
   } catch (error) {
     console.error("Failed to delete employee:", error);
