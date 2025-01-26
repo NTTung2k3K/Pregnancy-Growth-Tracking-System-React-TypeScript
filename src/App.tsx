@@ -24,6 +24,8 @@ const PaymentPage = lazy(() => import("./containers//Membership/payment"));
 const PaymentResultPage = lazy(
   () => import("./containers/Membership/payment-result")
 );
+const ChildrenGridContainer = lazy(() => import("./containers/Children"));
+const ChildCreateContainer = lazy(() => import("./containers/Children/Create"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -131,6 +133,14 @@ const router = createBrowserRouter([
     path: ROUTES.PAYMENT_RESULT,
     element: <MainLayout children={<PaymentResultPage />} />,
   },
+  {
+    path: ROUTES.CHILDREN,
+    element: <MainLayout children={<ChildrenGridContainer />} />,
+  },
+  {
+    path: ROUTES.CHILDREN_CREATE,
+    element: <MainLayout children={<ChildCreateContainer />} />,
+  },
   //---------- DASHBOARD PAGES-------------
   {
     path: ROUTES.DASHBOARD_MAIN,
@@ -217,13 +227,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Toaster />
-        <Suspense fallback={<Loading />}>
-          <ScrollToTop router={router} />
-          <RouterProvider router={router} />
-        </Suspense>
-      </ThemeProvider>
+      <Toaster />
+      <Suspense fallback={<Loading />}>
+        <ScrollToTop router={router} />
+        <RouterProvider router={router} />
+      </Suspense>
     </>
   );
 }

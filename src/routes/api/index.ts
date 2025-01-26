@@ -10,6 +10,9 @@ export const API_ROUTES = {
   EMPLOYEE_FORGOT_PASSWORD: "/auth/employee-forgot-password",
   EMPLOYEE_RESET_PASSWORD: "/auth/employee-reset-password",
 
+  //CHILD
+  CHILD_CREATE: "/child/create",
+
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
@@ -17,7 +20,7 @@ export const API_ROUTES = {
   //Dashboard
 
   //-------EMPLOYEES
-  DASHBOARD_EMPLOYEES_ALL:"/employees/get-all-doctor",
+  DASHBOARD_EMPLOYEES_ALL: "/employees/get-all-doctor",
   DASHBOARD_EMPLOYEE_UPDATE_PROFILE: "/employees/update-employee-profile",
   DASHBOARD_EMPLOYEE_CREATE: "/employees/create-employee",
   DASHBOARD_EMPLOYEE_DETAIL: "/employees/get-employee-by-id",
@@ -25,24 +28,19 @@ export const API_ROUTES = {
   DASHBOARD_EMPLOYEE_DELETE: "/employees/delete-employee",
 
   //-------USERS
-  DASHBOARD_USERS_ALL:"/users/get-all-user",
+  DASHBOARD_USERS_ALL: "/users/get-all-user",
   DASHBOARD_USER_UPDATE_PROFILE: "/employees/update-employee-profile",
   DASHBOARD_USER_CREATE: "/employees/create-employee",
   DASHBOARD_USER_DETAIL: "/users/get-user-by-id",
   DASHBOARD_USER_UPDATE_STATUS: "/employees/update-employee-status",
   DASHBOARD_USER_DELETE: "/employees/delete-employee",
 
-
-
   //--------ROLES
-  DASHBOARD_ROLES_ALL:"/role/all",
+  DASHBOARD_ROLES_ALL: "/role/all",
 
   //--------STATUS
   DASHBOARD_EMPLOYEE_GET_STATUS: "/employees/get-employee-status",
   DASHBOARD_USER_GET_STATUS: "/users/get-user-status",
-
-
-
 
   //Dashboard Membership Package
   DASHBOARD_MEMBERSHIPPACKAGE_UPDATE: "/membershippackages/update",

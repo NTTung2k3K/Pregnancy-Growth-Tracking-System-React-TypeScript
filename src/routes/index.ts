@@ -14,6 +14,8 @@ export const ROUTES = {
   MEMBERSHIP: "/membership",
   PAYMENT: "/payment/:pkgId",
   PAYMENT_RESULT: "/membershippackages/payment-result",
+  CHILDREN:"/children",
+  CHILDREN_CREATE:"/children/create",
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
