@@ -5,6 +5,8 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
+import PaymentContainer from "@/containers/Dashboard/Payment";
+import PaymentDetailContainer from "@/containers/Dashboard/Payment/Detail";
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
 const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
@@ -200,6 +202,15 @@ const router = createBrowserRouter([
         children={<MembershipPackageDashboardDetailContainer />}
       />
     ),
+  },
+  //-----------------------Admin PAYMENTS----------------
+  {
+    path: ROUTES.DASHBOARD_PAYMENT,
+    element: <DashboardLayout children={<PaymentContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_PAYMENT_DETAIL,
+    element: <DashboardLayout children={<PaymentDetailContainer />} />,
   },
 ]);
 
