@@ -33,6 +33,8 @@ const EmployeeLoginContainer = lazy(() => import("./containers/EmployeeLogin"));
 const DashboardMainContainer = lazy(
   () => import("./containers/Dashboard/Main")
 );
+
+//------------------------------EMPLOYEES
 const EmployeesContainer = lazy(
   () => import("./containers/Dashboard/Employees")
 );
@@ -44,6 +46,15 @@ const EmployeeUpdateContainer = lazy(
 );
 const EmployeeDetailContainer = lazy(
   () => import("./containers/Dashboard/Employees/Detail")
+);
+
+//------------------------------USERS
+const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
+const UserDetailContainer = lazy(
+  () => import("./containers/Dashboard/Users/Detail")
+);
+const UserUpdateContainer = lazy(
+  () => import("./containers/Dashboard/Users/Update")
 );
 
 const router = createBrowserRouter([
@@ -108,6 +119,9 @@ const router = createBrowserRouter([
     path: ROUTES.DASHBOARD_MAIN,
     element: <DashboardLayout children={<DashboardMainContainer />} />,
   },
+
+  //-----------------------EMPLOYEES
+
   {
     path: ROUTES.DASHBOARD_EMPLOYEES,
     element: <DashboardLayout children={<EmployeesContainer />} />,
@@ -123,6 +137,21 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_EMPLOYEE_DETAIL,
     element: <DashboardLayout children={<EmployeeDetailContainer />} />,
+  },
+
+  //-----------------------USERS
+
+  {
+    path: ROUTES.DASHBOARD_USERS,
+    element: <DashboardLayout children={<UsersContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_USER_DETAIL,
+    element: <DashboardLayout children={<UserDetailContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_USER_UPDATE,
+    element: <DashboardLayout children={<UserUpdateContainer />} />,
   },
 ]);
 

@@ -15,6 +15,31 @@ export const API_ROUTES = {
   BUYPACKAGE: "/membershippackages/buy-package",
   
   //Dashboard
-  DASHBOARD_EMPLOYEE_UPDATE: "/employees/update-employee-profile",
+
+  //-------EMPLOYEES
+  DASHBOARD_EMPLOYEES_ALL:"/employees/get-all-doctor",
+  DASHBOARD_EMPLOYEE_UPDATE_PROFILE: "/employees/update-employee-profile",
   DASHBOARD_EMPLOYEE_CREATE: "/employees/create-employee",
+  DASHBOARD_EMPLOYEE_DETAIL: "/employees/get-employee-by-id",
+  DASHBOARD_EMPLOYEE_UPDATE_STATUS: "/employees/update-employee-status",
+  DASHBOARD_EMPLOYEE_DELETE: "/employees/delete-employee",
+
+  //-------USERS
+  DASHBOARD_USERS_ALL:"/users/get-all-user",
+  DASHBOARD_USER_UPDATE_PROFILE: "/employees/update-employee-profile",
+  DASHBOARD_USER_CREATE: "/employees/create-employee",
+  DASHBOARD_USER_DETAIL: "/users/get-user-by-id",
+  DASHBOARD_USER_UPDATE_STATUS: "/employees/update-employee-status",
+  DASHBOARD_USER_DELETE: "/employees/delete-employee",
+
+
+
+  //--------ROLES
+  DASHBOARD_ROLES_ALL:"/role/all",
+
+  //--------STATUS
+  DASHBOARD_EMPLOYEE_GET_STATUS: "/employees/get-employee-status",
+  DASHBOARD_USER_GET_STATUS: "/users/get-user-status",
+
+
 };

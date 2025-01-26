@@ -17,8 +17,19 @@ export const ROUTES = {
 
   //Dashboard
   DASHBOARD_MAIN:"/dashboard/main",
+
+  //--------EMPLOYEES
   DASHBOARD_EMPLOYEES:"/dashboard/employees",
   DASHBOARD_EMPLOYEE_UPDATE:"/dashboard/employee/:id",
   DASHBOARD_EMPLOYEE_CREATE:"/dashboard/employee/create",
   DASHBOARD_EMPLOYEE_DETAIL:"/dashboard/employee/detail/:id",
+  
+  
+  //--------USERs
+  DASHBOARD_USERS:"/dashboard/users",
+  DASHBOARD_USER_UPDATE:"/dashboard/user/:id",
+  DASHBOARD_USER_DETAIL:"/dashboard/user/detail/:id",
+
+
+
 };
