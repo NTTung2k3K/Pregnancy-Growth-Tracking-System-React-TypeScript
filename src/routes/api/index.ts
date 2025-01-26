@@ -13,7 +13,7 @@ export const API_ROUTES = {
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
-  
+
   //Dashboard
 
   //-------EMPLOYEES
@@ -42,4 +42,11 @@ export const API_ROUTES = {
   DASHBOARD_USER_GET_STATUS: "/users/get-user-status",
 
 
+
+
+  //Dashboard Membership Package
+  DASHBOARD_MEMBERSHIPPACKAGE_UPDATE: "/membershippackages/update",
+  DASHBOARD_MEMBERSHIPPACKAGE_CREATE: "/membershippackages/create",
+  DASHBOARD_MEMBERSHIPPACKAGE_DELETE: "/membershippackages/delete",
+  DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/membershippackages/get-package",
 };

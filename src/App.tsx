@@ -47,6 +47,21 @@ const EmployeeUpdateContainer = lazy(
 const EmployeeDetailContainer = lazy(
   () => import("./containers/Dashboard/Employees/Detail")
 );
+//------------MEMBERSHIP-PACKAGE PAGES----------------
+const MembershipPackagesDashboardContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage")
+);
+const MembershipPackageDashboardCreateContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage/Create")
+);
+
+const MembershipPackageDashboardUpdateContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage/Update")
+);
+
+const MembershipPackageDashboardDetailContainer = lazy(
+  () => import("./containers/Dashboard/MembershipPackage/Detail")
+);
 
 //------------------------------USERS
 const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
@@ -152,6 +167,39 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_USER_UPDATE,
     element: <DashboardLayout children={<UserUpdateContainer />} />,
+  },
+
+  //---------- MEMBERSHIP-PACKAGE PAGES-------------
+
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE,
+    element: (
+      <DashboardLayout children={<MembershipPackagesDashboardContainer />} />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_CREATE,
+    element: (
+      <DashboardLayout
+        children={<MembershipPackageDashboardCreateContainer />}
+      />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_UPDATE,
+    element: (
+      <DashboardLayout
+        children={<MembershipPackageDashboardUpdateContainer />}
+      />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_DETAIL,
+    element: (
+      <DashboardLayout
+        children={<MembershipPackageDashboardDetailContainer />}
+      />
+    ),
   },
 ]);
 

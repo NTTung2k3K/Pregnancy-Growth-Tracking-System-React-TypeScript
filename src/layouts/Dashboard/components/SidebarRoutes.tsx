@@ -1,4 +1,4 @@
-import { House, UserCog, Users } from "lucide-react";
+import { House, Package, UserCog, Users } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
 const teacherRoutes = [
@@ -16,6 +16,11 @@ const teacherRoutes = [
     icon: Users,
     label: "Users",
     href: "/dashboard/users",
+  },
+  {
+    icon: Package,
+    label: "Membership Packages",
+    href: "/dashboard/membership-packages",
   },
 ];
 

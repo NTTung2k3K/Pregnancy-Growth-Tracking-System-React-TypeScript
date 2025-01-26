@@ -69,7 +69,10 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
             },
           }
         );
-        dispatch({ type: `${API_ROUTES.LOGIN_WITH_GOOGLE}`, payload: res.data });
+        dispatch({
+          type: `${API_ROUTES.LOGIN_WITH_GOOGLE}`,
+          payload: res.data,
+        });
         toast.success("Successfully logged in with Google!");
         onClose();
       } catch (err) {
@@ -82,7 +85,7 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
       toast.error("Google login failed. Please try again.");
     },
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
