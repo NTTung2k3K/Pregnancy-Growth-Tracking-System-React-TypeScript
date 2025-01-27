@@ -14,8 +14,8 @@ export const ROUTES = {
   MEMBERSHIP: "/membership",
   PAYMENT: "/payment/:pkgId",
   PAYMENT_RESULT: "/membershippackages/payment-result",
-  CHILDREN:"/children",
-  CHILDREN_CREATE:"/children/create",
+  CHILDREN: "/children",
+  CHILDREN_CREATE: "/children/create",
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
@@ -41,4 +41,10 @@ export const ROUTES = {
   //-----------PAYMENT
   DASHBOARD_PAYMENT: "/dashboard/payments",
   DASHBOARD_PAYMENT_DETAIL: "/dashboard/payment/detail/:id",
+  //-----------------APPOINTMENT
+  DASHBOARD_APPOINTMENT: "/admin/appointments",
+  DASHBOARD_APPOINTMENT_DETAIL: "/admin/appointment/detail/:id",
+  DASHBOARD_APPOINTMENT_UPDATE: "/admin/appointment/:id",
+  DASHBOARD_APPOINTMENT_CREATE: "/admin/appointment/create",
+
 };

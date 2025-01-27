@@ -7,6 +7,11 @@ import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
 import PaymentContainer from "@/containers/Dashboard/Payment";
 import PaymentDetailContainer from "@/containers/Dashboard/Payment/Detail";
+import AppointmentContainer from "@/containers/Appointment";
+import AppointmentCreateContainer from "@/containers/Dashboard/Appointment/Create";
+import AppointmentUpdateContainer from "@/containers/Dashboard/Appointment/Update";
+import AppointmentDetailContainer from "@/containers/Dashboard/Appointment/Detail";
+import AppointmentAdminContainer from "@/containers/Dashboard/Appointment";
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
 const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
@@ -221,6 +226,23 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_PAYMENT_DETAIL,
     element: <DashboardLayout children={<PaymentDetailContainer />} />,
+  },
+  //-----------------------Admin APPOINTMENTS----------------
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT,
+    element: <DashboardLayout children={<AppointmentAdminContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_CREATE,
+    element: <DashboardLayout children={<AppointmentCreateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_UPDATE,
+    element: <DashboardLayout children={<AppointmentUpdateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_DETAIL,
+    element: <DashboardLayout children={<AppointmentDetailContainer />} />,
   },
 ]);
 

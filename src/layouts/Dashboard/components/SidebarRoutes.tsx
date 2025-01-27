@@ -1,4 +1,11 @@
-import { HandCoins, House, Package, UserCog, Users } from "lucide-react";
+import {
+  HandCoins,
+  House,
+  Package,
+  SquareMousePointer,
+  UserCog,
+  Users,
+} from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
 const teacherRoutes = [
@@ -26,6 +33,11 @@ const teacherRoutes = [
     icon: HandCoins,
     label: "Membership Packages",
     href: "/dashboard/payments",
+  },
+  {
+    icon: SquareMousePointer,
+    label: "Appointments",
+    href: "/admin/appointments",
   },
 ];
 
