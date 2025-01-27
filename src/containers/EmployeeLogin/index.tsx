@@ -16,10 +16,15 @@ interface FormValues {
 
 const EmployeeLoginContainer = () => {
   const navigate = useNavigate();
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     if (CookiesEmployeeService.get()) {
-      navigate(`${ROUTES.DASHBOARD_MAIN}`);
+      if (role === "Admin") {
+        navigate(`${ROUTES.DASHBOARD_MAIN}`);
+      } else {
+        navigate(`${ROUTES.DASHBOARD_DOCTOR}`);
+      }
     }
   }, [navigate]);
 

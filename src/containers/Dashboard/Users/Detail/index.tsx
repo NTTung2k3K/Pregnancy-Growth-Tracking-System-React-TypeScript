@@ -21,7 +21,7 @@ const UserDetailContainer = () => {
   const { id } = useParams();
   const [user, setUser] = useState<User>();
 
-  const fetchEmployee = async () => {
+  const fetchUser = async () => {
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_USER_DETAIL}`,
@@ -29,18 +29,18 @@ const UserDetailContainer = () => {
           params: { Id: id },
         }
       );
-      const fetchedEmployee = {
+      const fetchedUser = {
         ...response.data.resultObj,
         role: response.data.resultObj.role?.name || null,
       };
-      setUser(fetchedEmployee);
+      setUser(fetchedUser);
     } catch (error) {
       console.error("Failed to fetch employee:", error);
     }
   };
 
   useEffect(() => {
-    fetchEmployee();
+    fetchUser();
   }, []);
 
   return (

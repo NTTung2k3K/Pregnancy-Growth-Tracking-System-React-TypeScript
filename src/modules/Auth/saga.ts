@@ -24,11 +24,27 @@ function* login(action: any): Generator<any, void, any> {
   }
 }
 function* loginWithGoogle(action: any): Generator<any, void, any> {
-  const { token, email, email_verified, family_name, given_name, name, picture, sub } = action.payload;
+  const {
+    token,
+    email,
+    email_verified,
+    family_name,
+    given_name,
+    name,
+    picture,
+    sub,
+  } = action.payload;
 
   // Gọi API backend để đăng nhập bằng Google, truyền token và các thông tin người dùng
-  const response = yield call(UserService.loginWithGoogle, { 
-    token, email, email_verified, family_name, given_name, name, picture, sub
+  const response = yield call(UserService.loginWithGoogle, {
+    token,
+    email,
+    email_verified,
+    family_name,
+    given_name,
+    name,
+    picture,
+    sub,
   });
 
   if (response.data.statusCode === 200) {
@@ -38,7 +54,7 @@ function* loginWithGoogle(action: any): Generator<any, void, any> {
     action.onClose();
   } else {
     toast.error(response.data.message);
-    console.log("thang")
+    console.log("thang");
   }
 }
 
@@ -52,8 +68,13 @@ function* employeeLogin(action: any): Generator<any, void, any> {
 
   if (response.data.statusCode === 200) {
     CookiesEmployeeService.set(response.data.resultObj.id);
-    CookiesTokenService.set(response.data.resultObj.accessToken)
-    window.location.href = `/dashboard/main`;
+    CookiesTokenService.set(response.data.resultObj.accessToken);
+    localStorage.setItem("role", response.data.resultObj.roles[0]);
+    if (response.data.resultObj.roles[0] === "Admin") {
+      window.location.href = ROUTES.DASHBOARD_MAIN;
+    } else {
+      window.location.href = ROUTES.DASHBOARD_DOCTOR;
+    }
   } else {
     toast.error(response.data.message);
   }

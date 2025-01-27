@@ -1,21 +1,39 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { CookiesEmployeeService } from "@/services/cookies.service";
+import { accessRules, canAccess } from "@/routes/rules";
+import { ROUTES } from "@/routes";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const navigate = useNavigate();
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     if (!CookiesEmployeeService.get()) {
       navigate("/");
+      return;
     }
-  }, [navigate]);
+
+    if (role && role in accessRules) {
+      const hasAccess = canAccess(
+        role as keyof typeof accessRules,
+        currentPath
+      );
+
+      if (!hasAccess) {
+        navigate(ROUTES.DASHBOARD_DOCTOR);
+      }
+    }
+  }, [currentPath, navigate, role]);
 
   return (
     <div className="h-full">

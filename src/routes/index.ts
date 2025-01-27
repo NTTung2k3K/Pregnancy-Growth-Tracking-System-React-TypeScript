@@ -16,15 +16,18 @@ export const ROUTES = {
   PAYMENT_RESULT: "/membershippackages/payment-result",
   CHILDREN:"/children",
   CHILDREN_CREATE:"/children/create",
+  PROFILE:"/profile",
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
+  DASHBOARD_DOCTOR: "/dashboard/doctor",
 
   //--------EMPLOYEES
   DASHBOARD_EMPLOYEES: "/dashboard/employees",
   DASHBOARD_EMPLOYEE_UPDATE: "/dashboard/employee/:id",
   DASHBOARD_EMPLOYEE_CREATE: "/dashboard/employee/create",
   DASHBOARD_EMPLOYEE_DETAIL: "/dashboard/employee/detail/:id",
+  DASHBOARD_EMPLOYEE_PROFILE: "/dashboard/profile",
 
   //--------USERs
   DASHBOARD_USERS: "/dashboard/users",

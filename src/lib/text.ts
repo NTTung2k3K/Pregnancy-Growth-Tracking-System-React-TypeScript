@@ -55,4 +55,8 @@ export function formatDate(inputDate: string | null): string {
   return `${monthNames[month]} ${day}, ${year}`;
 }
 
+export function formatDateSliceTime(dateString: string): string {
+  return dateString.split("T")[0];
+}
+
 
