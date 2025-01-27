@@ -1,4 +1,11 @@
-import { House, Package, UserCog, UserPen, Users } from "lucide-react";
+import {
+  House,
+  Package,
+  UserCog,
+  UserPen,
+  Users,
+  HandCoins,
+} from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { ROUTES } from "@/routes";
 
@@ -40,6 +47,11 @@ const doctorRoutes = [
     icon: UserPen,
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
+  {
+    icon: HandCoins,
+    label: "Membership Packages",
+    href: "/dashboard/payments",
   },
 ];
 

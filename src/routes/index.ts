@@ -40,4 +40,8 @@ export const ROUTES = {
   DASHBOARD_MEMBERSHIPPACKAGE_CREATE: "/dashboard/membership-package/create",
   DASHBOARD_MEMBERSHIPPACKAGE_DETAIL:
     "/dashboard/membership-package/detail/:id",
+
+  //-----------PAYMENT
+  DASHBOARD_PAYMENT: "/dashboard/payments",
+  DASHBOARD_PAYMENT_DETAIL: "/dashboard/payment/detail/:id",
 };
