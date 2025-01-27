@@ -35,6 +35,11 @@ const adminRoutes = [
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
   },
+  {
+    icon: HandCoins,
+    label: "Payment",
+    href: "/dashboard/payments",
+  },
 ];
 
 const doctorRoutes = [
@@ -48,11 +53,7 @@ const doctorRoutes = [
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
   },
-  {
-    icon: HandCoins,
-    label: "Membership Packages",
-    href: "/dashboard/payments",
-  },
+  
 ];
 
 export const SidebarRoutes = () => {
