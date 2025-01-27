@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import { ROUTES } from "./routes";
 import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "./components/theme-provider";
+// import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
 import PaymentContainer from "@/containers/Dashboard/Payment";
 import PaymentDetailContainer from "@/containers/Dashboard/Payment/Detail";
@@ -26,6 +26,7 @@ const PaymentResultPage = lazy(
 );
 const ChildrenGridContainer = lazy(() => import("./containers/Children"));
 const ChildCreateContainer = lazy(() => import("./containers/Children/Create"));
+const UserProfileContainer = lazy(() => import("./containers/Profile"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -39,6 +40,7 @@ const DashboardMainContainer = lazy(
 );
 
 //------------------------------EMPLOYEES
+const DoctorContainer = lazy(() => import("./containers/Dashboard/Doctor"));
 const EmployeesContainer = lazy(
   () => import("./containers/Dashboard/Employees")
 );
@@ -51,7 +53,12 @@ const EmployeeUpdateContainer = lazy(
 const EmployeeDetailContainer = lazy(
   () => import("./containers/Dashboard/Employees/Detail")
 );
+const EmployeeProfileContainer = lazy(
+  () => import("./containers/Dashboard/Profile")
+);
+
 //------------MEMBERSHIP-PACKAGE PAGES----------------
+
 const MembershipPackagesDashboardContainer = lazy(
   () => import("./containers/Dashboard/MembershipPackage")
 );
@@ -141,6 +148,10 @@ const router = createBrowserRouter([
     path: ROUTES.CHILDREN_CREATE,
     element: <MainLayout children={<ChildCreateContainer />} />,
   },
+  {
+    path: ROUTES.PROFILE,
+    element: <MainLayout children={<UserProfileContainer />} />,
+  },
   //---------- DASHBOARD PAGES-------------
   {
     path: ROUTES.DASHBOARD_MAIN,
@@ -148,7 +159,10 @@ const router = createBrowserRouter([
   },
 
   //-----------------------EMPLOYEES
-
+  {
+    path: ROUTES.DASHBOARD_DOCTOR,
+    element: <DashboardLayout children={<DoctorContainer />} />,
+  },
   {
     path: ROUTES.DASHBOARD_EMPLOYEES,
     element: <DashboardLayout children={<EmployeesContainer />} />,
@@ -164,6 +178,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_EMPLOYEE_DETAIL,
     element: <DashboardLayout children={<EmployeeDetailContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+    element: <DashboardLayout children={<EmployeeProfileContainer />} />,
   },
 
   //-----------------------USERS
