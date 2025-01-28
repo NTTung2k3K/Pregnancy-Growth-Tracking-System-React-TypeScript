@@ -22,7 +22,7 @@ import { set } from "date-fns";
 export interface AppointmentCreateForm {
   userId: string;
   name: string;
-  childId: number;
+  childIds: number[];
   appointmentTemplateId: number;
   appointmentDate: string;
   appointmentSlot: number;
@@ -57,6 +57,51 @@ const AppointmentCreateContainer = () => {
   const [appointmentTemplates, setAppointmentTemplates] = useState<
     AppointmentTemplate[]
   >([]);
+  const [selectedChildren, setSelectedChildren] = useState([]); // List of selected children
+
+  const handleAddChild = () => {
+    // Add a new child selection placeholder
+    setSelectedChildren((prev) => [...prev, null]);
+  };
+
+  const handleRemoveChild = (index) => {
+    // Remove a child from the selected list
+    setSelectedChildren((prev) => {
+      const newSelection = [...prev];
+      newSelection.splice(index, 1);
+      return newSelection;
+    });
+  };
+
+  const handleSelectChild = (value, index) => {
+    console.log(value, index);
+
+    setSelectedChildren((prev) => {
+      const newSelection = [...prev];
+
+      // Check if the new value already exists in the array
+      if (!newSelection.includes(value)) {
+        newSelection[index] = value; // Update the current index with the new value
+      } else {
+        toast.error("Child already selected");
+      }
+      console.log(newSelection);
+
+      return newSelection;
+    });
+  };
+
+  const getAvailableChildren = (index) => {
+    // Include currently selected value at index
+    console.log(index);
+
+    const currentlySelected = selectedChildren[index];
+    return childsOfUser.filter(
+      (child) =>
+        !selectedChildren.includes(child.id.toString()) ||
+        child.id.toString() === currentlySelected
+    );
+  };
 
   const fetchUsers = async () => {
     try {
@@ -96,6 +141,8 @@ const AppointmentCreateContainer = () => {
       );
       if (response.data.statusCode === 200) {
         setAvailableSlots(response.data.resultObj);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Failed to fetch roles:", error);
@@ -123,12 +170,14 @@ const AppointmentCreateContainer = () => {
   const onSubmit = async (data: AppointmentCreateForm) => {
     try {
       setIsLoading(true);
+      const numericChildIds = data.childIds.map((id) => Number(id));
+
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_CREATE}`,
         {
           userId: data.userId,
           name: data.name,
-          childId: data.childId,
+          childIds: numericChildIds,
           appointmentTemplateId: data.appointmentTemplateId,
           appointmentDate: data.appointmentDate,
           appointmentSlot: data.appointmentSlot,
@@ -329,35 +378,73 @@ const AppointmentCreateContainer = () => {
                 {errors.userId && (
                   <p className="text-red-500">{errors.userId.message}</p>
                 )}
-                <div>
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10 w-1/6 ">
-                      Child
-                    </div>
-                    <select
-                      className="flex-1 p-2 bg-white"
-                      {...register("childId", {
-                        required: "Child is required",
-                      })}
-                    >
-                      <option value="">
-                        {childsOfUser.length == 0
-                          ? "No child available"
-                          : "Select child"}
-                      </option>
-                      {childsOfUser.map((item: Child) => (
-                        <option value={item.id}>
-                          Name: {item.name} | Blood type: {item.bloodType}
-                        </option>
+                <div className="bg-slate-100 rounded-md py-3 ">
+                  <div className="mb-4 flex   bg-slate-100 rounded-md p-4">
+                    <label className="block mb-2 mt-2 font-medium mr-10 w-1/6">
+                      Childs &nbsp;
+                      {selectedChildren.length === 0 && (
+                        <span className="text-red-500">*</span>
+                      )}
+                    </label>
+                    <div className="gap-2">
+                      {selectedChildren.map((child, index) => (
+                        <div
+                          key={index}
+                          className="mx-2 mb-2 flex items-center space-x-2"
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <div className="flex flex-col ">
+                            <select
+                              {...register(`childIds.${index}`, {
+                                required: "Child is required", // Validate required
+                              })}
+                              className="bg-white p-2 rounded mr-2 w-64"
+                              value={child || ""}
+                              onChange={(e) =>
+                                handleSelectChild(e.target.value, index)
+                              }
+                            >
+                              <option value="" disabled>
+                                Select a child
+                              </option>
+                              {getAvailableChildren(index).map((child) => (
+                                <option key={child.id} value={child.id}>
+                                  {child.name}
+                                </option>
+                              ))}
+                            </select>
+                            {errors.childIds?.[index] && (
+                              <span className="text-red-500 text-sm">
+                                {errors.childIds[index].message}
+                              </span>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="bg-red-400"
+                            onClick={() => handleRemoveChild(index)}
+                          >
+                            Remove
+                          </button>
+                        </div>
                       ))}
-                    </select>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      onClick={handleAddChild}
+                      disabled={selectedChildren.length >= childsOfUser.length}
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
+                    >
+                      Thêm trẻ em
+                    </button>
                   </div>
                 </div>
-                {errors.childId && (
-                  <p className="text-red-500">{errors.childId.message}</p>
-                )}
               </div>
             </div>
+
             <div className="flex items-center justify-end mt-10 mr-10">
               <Button
                 disabled={isLoading}

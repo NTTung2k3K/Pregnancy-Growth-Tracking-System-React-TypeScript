@@ -48,7 +48,7 @@ export const columns: ColumnDef<Appointment>[] = [
     // },
   },
   {
-    accessorKey: "childs[0].name",
+    accessorKey: "childs",
     header: ({ column }) => {
       return (
         <Button
@@ -61,7 +61,13 @@ export const columns: ColumnDef<Appointment>[] = [
       );
     },
     cell: ({ row }) => {
-      return <p>{row.original.childs.at(0)?.name}</p>;
+      return (
+        <ul className="list-disc pl-4">
+          {row.original.childs.map((child, index) => (
+            <li key={index}>{child.name}</li>
+          ))}
+        </ul>
+      );
     },
   },
   {

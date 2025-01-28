@@ -1,7 +1,15 @@
 import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image } from "lucide-react";
+import {
+  Baby,
+  BadgeAlert,
+  BriefcaseMedicalIcon,
+  CircleArrowLeft,
+  FileUser,
+  Image,
+  SquareMousePointer,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import { useEffect, useState } from "react";
@@ -14,26 +22,42 @@ import { AvatarOverlay } from "@/containers/Dashboard/Appointment/Create/compone
 import { log } from "console";
 import { Appointment } from "@/containers/Dashboard/Appointment";
 import { Status } from "@/containers/Dashboard/MembershipPackage/Create";
+import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 
 export interface AppointmentUpdateForm {
   id: number;
   userId: string;
-  childId: number;
+  childsUpdated: ChildsUpdated[];
   name: string;
   fee: number;
-  appointmentDate: string;
   status: number;
-  appointmentSlot: number;
-  appointmentTemplateId: number;
   notes: string;
-  isDoctorUpdate: boolean;
   result: string;
   description: string;
 }
+
+export interface ChildsUpdated {
+  userId: string;
+  name: string;
+  fetalGender: string;
+  pregnancyStage: string;
+  weightEstimate: number;
+  heightEstimate: number;
+  dueDate: string;
+  deliveryPlan: string;
+  complications: string;
+  photoUrl: string;
+  bloodType: string;
+  pregnancyWeekAtBirth: string;
+  isGenerateSampleAppointments: boolean;
+  id: number;
+}
+
 const AppointmentUpdateContainer = () => {
   const {
     register,
     handleSubmit,
+    control,
     setValue,
     formState: { errors },
   } = useForm<AppointmentUpdateForm>({
@@ -188,6 +212,12 @@ const AppointmentUpdateContainer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-3">
             <div>
               {/* Username Field */}
+              <div className="flex items-center gap-x-2 my-5">
+                <IconBadge icon={SquareMousePointer} />
+                <h2 className="text-xl text-sky-900 font-semibold">
+                  Appointment information
+                </h2>
+              </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6 ">
                   Appointment Name
@@ -208,7 +238,7 @@ const AppointmentUpdateContainer = () => {
               )}
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6  w-1/6">
+                <div className="font-medium flex items-center mr-10   w-1/6">
                   Description
                 </div>
                 <textarea
@@ -260,6 +290,36 @@ const AppointmentUpdateContainer = () => {
                 <p className="text-red-500">{errors.result.message}</p>
               )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10 w-1/6">
+                  Appointment Date
+                </div>
+                <input
+                  type="text"
+                  value={new Date(
+                    appointment?.appointmentDate
+                  ).toLocaleDateString("vi-VN")}
+                  disabled
+                  className="bg-gray-100 p-2 w-full"
+                />
+              </div>
+              {errors.appointmentDate && (
+                <p className="text-red-500">{errors.appointmentDate.message}</p>
+              )}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10 w-1/6 ">
+                  Appointment Slot
+                </div>
+                <input
+                  type="text"
+                  value={appointment?.appointmentSlot}
+                  disabled
+                  className="bg-gray-100 p-2 w-full"
+                />
+              </div>
+              {errors.appointmentSlot && (
+                <p className="text-red-500">{errors.appointmentSlot.message}</p>
+              )}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6 ">
                   Status
                 </div>
@@ -278,33 +338,13 @@ const AppointmentUpdateContainer = () => {
               {errors.status && (
                 <p className="text-red-500">{errors.status.message}</p>
               )}
-              {appointment?.doctors.map((doctor) => (
-                <>
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10 w-1/6 ">
-                      Doctor name
-                    </div>
-                    <input
-                      className="flex-1 p-2 bg-gray-100"
-                      value={doctor.fullName}
-                      disabled
-                    />
-                  </div>
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10 w-1/6 ">
-                      Doctor phone number
-                    </div>
-                    <input
-                      className="flex-1 p-2 bg-gray-100"
-                      value={doctor.phoneNumber}
-                      disabled
-                    />
-                  </div>
-                </>
-              ))}
             </div>
 
             <div className="space-y-6">
+              <div className="flex items-center gap-x-2 my-5">
+                <IconBadge icon={BadgeAlert} />
+                <h2 className="text-xl text-sky-900 font-semibold">Issue</h2>
+              </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6 ">
                   Issue
@@ -337,36 +377,40 @@ const AppointmentUpdateContainer = () => {
               {errors.description && (
                 <p className="text-red-500">{errors.description.message}</p>
               )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6">
-                  Appointment Date
-                </div>
-                <input
-                  type="text"
-                  value={new Date(
-                    appointment?.appointmentDate
-                  ).toLocaleDateString("vi-VN")}
-                  disabled
-                  className="bg-gray-100 p-2 w-full"
-                />
+              {appointment?.doctors.map((doctor) => (
+                <>
+                  <div className="flex items-center gap-x-2 my-5">
+                    <IconBadge icon={BriefcaseMedicalIcon} />
+                    <h2 className="text-xl text-sky-900 font-semibold">
+                      Doctor
+                    </h2>
+                  </div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Doctor name
+                    </div>
+                    <input
+                      className="flex-1 p-2 bg-gray-100"
+                      value={doctor.fullName}
+                      disabled
+                    />
+                  </div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Doctor phone number
+                    </div>
+                    <input
+                      className="flex-1 p-2 bg-gray-100"
+                      value={doctor.phoneNumber}
+                      disabled
+                    />
+                  </div>
+                </>
+              ))}
+              <div className="flex items-center gap-x-2 my-5">
+                <IconBadge icon={FileUser} />
+                <h2 className="text-xl text-sky-900 font-semibold">Customer</h2>
               </div>
-              {errors.appointmentDate && (
-                <p className="text-red-500">{errors.appointmentDate.message}</p>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10 w-1/6 ">
-                  Appointment Slot
-                </div>
-                <input
-                  type="text"
-                  value={appointment?.appointmentSlot}
-                  disabled
-                  className="bg-gray-100 p-2 w-full"
-                />
-              </div>
-              {errors.appointmentSlot && (
-                <p className="text-red-500">{errors.appointmentSlot.message}</p>
-              )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6 ">
                   Customer name
@@ -409,45 +453,91 @@ const AppointmentUpdateContainer = () => {
                   {appointment?.user.email}
                 </a>
               </div>
-              {appointment?.childs.map((child) => (
-                <div>
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10 w-1/6 ">
-                      Child name
-                    </div>
-                    <input
-                      className="flex-1 p-2 bg-gray-100"
-                      value={child.name}
-                      disabled
-                    />
-                  </div>
-                  {/* dueDate */}
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10 w-1/6 ">
-                      Due date
-                    </div>
-                    <input
-                      className="flex-1 p-2 bg-gray-100"
-                      value={new Date(child.dueDate).toLocaleDateString(
-                        "vi-VN"
-                      )}
-                      disabled
-                    />
-                  </div>
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10 w-1/6 ">
-                      Pregnancy week at birth
-                    </div>
-                    <input
-                      className="flex-1 p-2 bg-gray-100"
-                      value={child.pregnancyWeekAtBirth}
-                      disabled
-                    />
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
+          {appointment?.childs.map((child, index) => (
+            <div className="w-full">
+              <div className="flex items-center gap-x-2 my-5">
+                <IconBadge icon={Baby} />
+                <h2 className="text-xl text-sky-900 font-semibold">
+                  Child: <span className="text-blue-300">{child.name}</span>
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 gap-x-6">
+                <div className=" flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Child name
+                  </div>
+                  <input
+                    className="flex-1 p-2 bg-gray-100"
+                    value={child.name}
+                    disabled
+                  />
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Due date
+                  </div>
+                  <input
+                    className="flex-1 p-2 bg-gray-100"
+                    value={new Date(child.dueDate).toLocaleDateString("vi-VN")}
+                    disabled
+                  />
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Pregnancy week at birth
+                  </div>
+                  <input
+                    className="flex-1 p-2 bg-gray-100"
+                    value={child.pregnancyWeekAtBirth}
+                    disabled
+                  />
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    BloodType
+                  </div>
+                  <input
+                    className="flex-1 p-2 bg-gray-100"
+                    value={child.bloodType}
+                    disabled
+                  />
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Height
+                  </div>
+                  <input
+                    className={`p-2 bg-white w-full ${
+                      errors?.childsUpdated?.[index]?.heightEstimate
+                        ? "border-red-500"
+                        : ""
+                    }`}
+                    {...register(`childsUpdated[${index}].heightEstimate`, {
+                      required: "Height is required",
+                      validate: {
+                        positiveValue: (value) =>
+                          value > 0 || "Height must be greater than 0", // Kiểm tra điều kiện > 0
+                      },
+                    })}
+                    type="number"
+                    placeholder="Enter height estimate"
+                  />
+                  {/* Hiển thị lỗi nếu có */}
+                </div>
+              </div>
+              {errors?.childsUpdated?.[index]?.heightEstimate && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.childsUpdated[index].heightEstimate?.message ||
+                    "This field is required."}
+                </p>
+              )}
+              <div className="my-4">
+                <GrowthCharts child={child} />
+              </div>
+            </div>
+          ))}
           <div className="flex items-center justify-end mt-10 mr-10">
             <Button
               disabled={isLoading}
