@@ -60,6 +60,14 @@ const UserButton = () => {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
+            <Link
+              className="text-black font-normal w-full"
+              to={ROUTES.APPOINTMENTS}
+            >
+              Appointments
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <Link className="text-black font-normal w-full" to={ROUTES.PROFILE}>
               Profile
             </Link>

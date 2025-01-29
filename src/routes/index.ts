@@ -17,6 +17,8 @@ export const ROUTES = {
   CHILDREN: "/children",
   CHILDREN_CREATE: "/children/create",
   PROFILE: "/profile",
+  APPOINTMENT_HISTORY: "/appointment/history",
+
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",

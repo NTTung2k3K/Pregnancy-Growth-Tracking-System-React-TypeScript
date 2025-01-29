@@ -32,19 +32,14 @@ const adminRoutes = [
     href: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE,
   },
   {
-    icon: UserPen,
-    label: "Profile",
-    href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
-  },
-  {
     icon: HandCoins,
     label: "Payment",
     href: "/dashboard/payments",
   },
   {
-    icon: SquareMousePointer,
-    label: "Appointments",
-    href: "/admin/appointments",
+    icon: UserPen,
+    label: "Profile",
+    href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
   },
 ];
 
@@ -53,6 +48,11 @@ const doctorRoutes = [
     icon: House,
     label: "Main",
     href: ROUTES.DASHBOARD_DOCTOR,
+  },
+  {
+    icon: SquareMousePointer,
+    label: "Appointments",
+    href: ROUTES.DASHBOARD_APPOINTMENT,
   },
   {
     icon: UserPen,

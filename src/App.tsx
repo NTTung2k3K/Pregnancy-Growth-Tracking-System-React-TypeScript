@@ -5,13 +5,7 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 // import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
-import PaymentContainer from "@/containers/Dashboard/Payment";
-import PaymentDetailContainer from "@/containers/Dashboard/Payment/Detail";
-import AppointmentContainer from "@/containers/Appointment";
-import AppointmentCreateContainer from "@/containers/Dashboard/Appointment/Create";
-import AppointmentUpdateContainer from "@/containers/Dashboard/Appointment/Update";
-import AppointmentDetailContainer from "@/containers/Dashboard/Appointment/Detail";
-import AppointmentAdminContainer from "@/containers/Dashboard/Appointment";
+
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
 const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
@@ -24,6 +18,10 @@ const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
 const BlogGridContainer = lazy(() => import("./containers/BlogGrid"));
 const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
+const AppoinmentHistoryContainer = lazy(
+  () => import("./containers/Appointment-History")
+);
+
 const MembershipContainer = lazy(() => import("./containers/Membership"));
 const PaymentPage = lazy(() => import("./containers//Membership/payment"));
 const PaymentResultPage = lazy(
@@ -42,6 +40,25 @@ const EmployeeLoginContainer = lazy(() => import("./containers/EmployeeLogin"));
 //------------DASHBOARD PAGES----------------
 const DashboardMainContainer = lazy(
   () => import("./containers/Dashboard/Main")
+);
+//-----------DASHBOARD PAYMENT ADMIN
+const PaymentContainer = lazy(() => import("@/containers/Dashboard/Payment"));
+const PaymentDetailContainer = lazy(
+  () => import("@/containers/Dashboard/Payment/Detail")
+);
+//-----------DASHBOARD APPOINTMENT DOCTOR
+
+const AppointmentCreateContainer = lazy(
+  () => import("@/containers/Dashboard/Appointment/Create")
+);
+const AppointmentUpdateContainer = lazy(
+  () => import("@/containers/Dashboard/Appointment/Update")
+);
+const AppointmentDetailContainer = lazy(
+  () => import("@/containers/Dashboard/Appointment/Detail")
+);
+const AppointmentAdminContainer = lazy(
+  () => import("@/containers/Dashboard/Appointment")
 );
 
 //------------------------------EMPLOYEES
@@ -132,6 +149,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.APPOINTMENT,
     element: <MainLayout children={<AppoinmentContainer />} />,
+  },
+  {
+    path: ROUTES.APPOINTMENT_HISTORY,
+    element: <MainLayout children={<AppoinmentHistoryContainer />} />,
   },
   {
     path: ROUTES.MEMBERSHIP,
