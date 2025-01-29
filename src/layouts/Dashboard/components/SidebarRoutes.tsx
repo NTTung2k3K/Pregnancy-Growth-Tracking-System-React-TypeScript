@@ -1,10 +1,11 @@
 import {
+  HandCoins,
   House,
   Package,
+  SquareMousePointer,
   UserCog,
   UserPen,
   Users,
-  HandCoins,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { ROUTES } from "@/routes";
@@ -40,6 +41,11 @@ const adminRoutes = [
     label: "Payment",
     href: "/dashboard/payments",
   },
+  {
+    icon: SquareMousePointer,
+    label: "Appointments",
+    href: "/admin/appointments",
+  },
 ];
 
 const doctorRoutes = [
@@ -53,7 +59,6 @@ const doctorRoutes = [
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
   },
-  
 ];
 
 export const SidebarRoutes = () => {

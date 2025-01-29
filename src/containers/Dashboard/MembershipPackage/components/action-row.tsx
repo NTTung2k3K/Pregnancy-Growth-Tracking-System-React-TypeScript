@@ -57,17 +57,26 @@ export default function ActionRow({ id }: { id: number }) {
   };
 
   const handleDelete = async (id: string) => {
+    event.preventDefault();
     const confirmLeave = window.confirm(" Do you really want to delete?");
     if (!confirmLeave) return;
 
     try {
-      await axios.delete(`${BASE_URL}/membershippackages/delete`, {
+      const res = await axios.delete(`${BASE_URL}/membershippackages/delete`, {
         params: { Id: id },
         headers: configHeaders(),
       });
-      navigate("/dashboard/membership-packages");
-      window.location.href = `/dashboard/membership-packages`;
-      toast.success("Deleted successfully");
+      // navigate("/dashboard/membership-packages");
+      console.log(res);
+
+      if (res.data.status === 200) {
+        toast.success("Deleted successfully");
+        setTimeout(() => {
+          window.location.href = `/dashboard/membership-packages`;
+        }, 1000); // Đợi một chút để thông báo hiển thị
+      } else {
+        toast.error(res.data.message);
+      }
     } catch (error) {
       console.error("Failed to delete employee:", error);
       toast.error("Please login again to refresh token");

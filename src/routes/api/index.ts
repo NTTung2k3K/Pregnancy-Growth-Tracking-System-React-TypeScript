@@ -50,4 +50,9 @@ export const API_ROUTES = {
   DASHBOARD_MEMBERSHIPPACKAGE_CREATE: "/membershippackages/create",
   DASHBOARD_MEMBERSHIPPACKAGE_DELETE: "/membershippackages/delete",
   DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/membershippackages/get-package",
+  //-----------------APPOINTMENT
+  DASHBOARD_APPOINTMENT_ALL: "/appointments/get-all",
+  DASHBOARD_APPOINTMENT_UPDATE: "/appointments/update",
+  DASHBOARD_APPOINTMENT_CREATE: "/appointments/create",
+
 };
