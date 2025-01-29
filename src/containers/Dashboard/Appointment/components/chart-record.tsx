@@ -195,30 +195,42 @@ export function GrowthCharts({ child }: { child: Child }) {
               <div className="grid grid-cols-2">
                 {records.map((record, index) => (
                   <li key={index}>
-                    <strong>Week {record.weekOfPregnancy}:</strong> <br></br>
+                    <strong>Week {record.weekOfPregnancy}:</strong> <br />
                     <span className="italic">
                       Record{" "}
                       {new Date(record.recordedAt).toLocaleDateString("vi-VN")}
                     </span>
                     <ul className="list-none pl-3">
                       <li>
-                        🧠 Head Circumference: {record.headCircumference} cm
-                        (Standard:{" "}
+                        🧠 Head Circumference:{" "}
+                        <span className="font-bold text-blue-500">
+                          {record.headCircumference}
+                        </span>{" "}
+                        cm (Standard:{" "}
                         {record.fetalGrowthStandardModelView.headCircumference}{" "}
                         cm)
                       </li>
                       <li>
                         🩺 Abdominal Circumference:{" "}
-                        {record.abdominalCircumference} cm (Standard:{" "}
+                        <span className="font-bold text-blue-500">
+                          {record.abdominalCircumference}
+                        </span>{" "}
+                        cm (Standard:{" "}
                         {
                           record.fetalGrowthStandardModelView
                             .abdominalCircumference
                         }{" "}
                         cm)
                       </li>
-                      <li>❤️ Fetal Heart Rate: {record.fetalHeartRate} bpm</li>
-
-                      {/* Display Gestational Age and Standard Height/Weight */}
+                      <li>
+                        ❤️ Fetal Heart Rate:{" "}
+                        <span className="font-bold text-blue-500">
+                          {record.fetalHeartRate}
+                        </span>{" "}
+                        bpm (Standard:{" "}
+                        {record.fetalGrowthStandardModelView.fetalHeartRate}{" "}
+                        bpm)
+                      </li>
                       <li>
                         🍼 Gestational Age:{" "}
                         {record.fetalGrowthStandardModelView.gestationalAge}{" "}

@@ -91,8 +91,9 @@ export const columns: ColumnDef<Appointment>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { id } = row.original;
-      return <ActionRow id={id} />;
+      const { id, status } = row.original;
+
+      return <ActionRow id={id} status={status} />;
     },
   },
 ];

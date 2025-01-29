@@ -13,7 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { data, Link, useParams } from "react-router-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
@@ -32,32 +32,27 @@ export interface AppointmentUpdateForm {
   fee: number;
   status: number;
   notes: string;
+  weekOfPregnancy: number;
+  healthCondition: string;
   result: string;
   description: string;
 }
 
 export interface ChildsUpdated {
-  userId: string;
-  name: string;
-  fetalGender: string;
-  pregnancyStage: string;
-  weightEstimate: number;
-  heightEstimate: number;
-  dueDate: string;
-  deliveryPlan: string;
-  complications: string;
-  photoUrl: string;
-  bloodType: string;
-  pregnancyWeekAtBirth: string;
-  isGenerateSampleAppointments: boolean;
-  id: number;
+  childId: number;
+  weekOfPregnancy: number;
+  weight: number;
+  height: number;
+  headCircumference: number;
+  abdominalCircumference: number;
+  fetalHeartRate: number;
+  healthCondition: string;
 }
 
 const AppointmentUpdateContainer = () => {
   const {
     register,
     handleSubmit,
-    control,
     setValue,
     formState: { errors },
   } = useForm<AppointmentUpdateForm>({
@@ -91,20 +86,13 @@ const AppointmentUpdateContainer = () => {
 
       // Set form values using setValue
       setValue("id", fetchedAppointment.id || "");
-      setValue("userId", fetchedAppointment.userId || "");
+      setValue("userId", fetchedAppointment.user.id || "");
       setValue("name", fetchedAppointment.name || "");
-      setValue("childId", fetchedAppointment.childId || "");
-      setValue(
-        "appointmentTemplateId",
-        fetchedAppointment.appointmentTemplateId
-      );
-      setValue("appointmentDate", fetchedAppointment.appointmentDate || "");
-      setValue("appointmentSlot", fetchedAppointment.appointmentSlot || "");
       setValue("notes", fetchedAppointment.notes || "");
       setValue("description", fetchedAppointment.description || "");
-      setValue("isDoctorUpdate", fetchedAppointment.isDoctorUpdate || false);
       setValue("result", fetchedAppointment.result || "");
       setValue("fee", fetchedAppointment.fee || "");
+      setValue("status", fetchedAppointment.status || "");
 
       const statusId = statusData.find(
         (x) => x.status === fetchedAppointment.status
@@ -156,23 +144,21 @@ const AppointmentUpdateContainer = () => {
 
   const onSubmit = async (data: AppointmentUpdateForm) => {
     try {
+      console.log(data);
+
       setIsLoading(true);
       const response = await axios.put(
-        `${BASE_URL}/Appointments/update`,
+        `${BASE_URL}/appointments/update-by-doctor`,
         {
           id: data.id,
           userId: data.userId,
-          childId: data.childId,
-          name: "string",
-          fee: 0,
-          appointmentDate: "2025-01-27T16:53:53.998Z",
-          status: 0,
-          appointmentSlot: 0,
-          appointmentTemplateId: 0,
-          notes: "string",
-          isDoctorUpdate: true,
-          result: "string",
-          description: "string",
+          childsUpdated: data.childsUpdated,
+          name: data.name,
+          fee: unformatNumber(displayValue),
+          status: data.status,
+          notes: data.notes,
+          result: data.result,
+          description: data.description,
         },
         {
           headers: configHeaders(),
@@ -374,8 +360,8 @@ const AppointmentUpdateContainer = () => {
                   }
                 />
               </div>
-              {errors.description && (
-                <p className="text-red-500">{errors.description.message}</p>
+              {errors.fee && (
+                <p className="text-red-500">{errors.fee.message}</p>
               )}
               {appointment?.doctors.map((doctor) => (
                 <>
@@ -455,89 +441,329 @@ const AppointmentUpdateContainer = () => {
               </div>
             </div>
           </div>
-          {appointment?.childs.map((child, index) => (
-            <div className="w-full">
-              <div className="flex items-center gap-x-2 my-5">
-                <IconBadge icon={Baby} />
-                <h2 className="text-xl text-sky-900 font-semibold">
-                  Child: <span className="text-blue-300">{child.name}</span>
-                </h2>
+          {appointment?.childs.map((child, index) => {
+            const maxWeekRecord = child.fetalGrowthRecordModelViews.reduce(
+              (max, record) =>
+                record.weekOfPregnancy > max ? record.weekOfPregnancy : max,
+              0
+            );
+
+            // Tạo danh sách tuần từ maxWeekRecord + 1 đến 41
+            const weeks = Array.from(
+              { length: 41 - (maxWeekRecord + 1) + 1 },
+              (_, i) => maxWeekRecord + 1 + i
+            );
+
+            return (
+              <div className="w-full">
+                <input
+                  type="hidden"
+                  {...register(`childsUpdated[${index}].childId`, {
+                    value: child.id,
+                  })}
+                />
+
+                <div className="flex items-center gap-x-2 my-5">
+                  <IconBadge icon={Baby} />
+                  <h2 className="text-xl text-sky-900 font-semibold">
+                    Child: <span className="text-blue-300">{child.name}</span>
+                  </h2>
+                </div>
+                <div className="grid grid-cols-2 gap-x-6">
+                  <div className=" flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Child name
+                    </div>
+                    <input
+                      className="flex-1 p-2 bg-gray-100"
+                      value={child.name}
+                      disabled
+                    />
+                  </div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Due date
+                    </div>
+                    <input
+                      className="flex-1 p-2 bg-gray-100"
+                      value={new Date(child.dueDate).toLocaleDateString(
+                        "vi-VN"
+                      )}
+                      disabled
+                    />
+                  </div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Pregnancy week at birth
+                    </div>
+                    <input
+                      className="flex-1 p-2 bg-gray-100"
+                      value={child.pregnancyWeekAtBirth}
+                      disabled
+                    />
+                  </div>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      BloodType
+                    </div>
+                    <input
+                      className="flex-1 p-2 bg-gray-100"
+                      value={child.bloodType}
+                      disabled
+                    />
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Height (cm)
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        className={`p-2 bg-white w-full ${
+                          errors?.childsUpdated?.[index]?.height
+                            ? "border-red-500"
+                            : ""
+                        }`}
+                        {...register(`childsUpdated[${index}].height`, {
+                          required: "Height is required",
+                          validate: {
+                            positiveValue: (value) =>
+                              value > 0 || "Height must be greater than 0", // Kiểm tra điều kiện > 0
+                          },
+                          onChange: (e) => {
+                            if (Number(e.target.value) <= 0) {
+                              setValue(`childsUpdated[${index}].height`, 1);
+                            }
+                          },
+                        })}
+                        type="number"
+                        placeholder="Enter height"
+                      />
+                      {errors?.childsUpdated?.[index]?.height && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index].height?.message ||
+                            "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Weight (kg)
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        className={`p-2 bg-white w-full ${
+                          errors?.childsUpdated?.[index]?.weight
+                            ? "border-red-500"
+                            : ""
+                        }`}
+                        {...register(`childsUpdated[${index}].weight`, {
+                          required: "Weight is required",
+                          validate: {
+                            positiveValue: (value) =>
+                              value > 0 || "Weight must be greater than 0", // Kiểm tra điều kiện > 0
+                          },
+                          onChange: (e) => {
+                            if (Number(e.target.value) <= 0) {
+                              setValue(`childsUpdated[${index}].weight`, 1);
+                            }
+                          },
+                        })}
+                        type="number"
+                        placeholder="Enter weight estimate"
+                      />
+                      {errors?.childsUpdated?.[index]?.weight && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index].weight?.message ||
+                            "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Head Circumference (cm)
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        className={`p-2 bg-white w-full ${
+                          errors?.childsUpdated?.[index]?.headCircumference
+                            ? "border-red-500"
+                            : ""
+                        }`}
+                        {...register(
+                          `childsUpdated[${index}].headCircumference`,
+                          {
+                            required: "Head circumference is required",
+                            validate: {
+                              positiveValue: (value) =>
+                                value > 0 ||
+                                "Head circumference must be greater than 0", // Kiểm tra điều kiện > 0
+                            },
+                            onChange: (e) => {
+                              if (Number(e.target.value) <= 0) {
+                                setValue(
+                                  `childsUpdated[${index}].headCircumference`,
+                                  1
+                                );
+                              }
+                            },
+                          }
+                        )}
+                        type="number"
+                        placeholder="Enter head circumference"
+                      />
+                      {errors?.childsUpdated?.[index]?.headCircumference && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index]?.headCircumference
+                            ?.message || "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Abdominal Circumference (cm)
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        className={`p-2 bg-white w-full ${
+                          errors?.childsUpdated?.[index]?.abdominalCircumference
+                            ? "border-red-500"
+                            : ""
+                        }`}
+                        {...register(
+                          `childsUpdated[${index}].abdominalCircumference`,
+                          {
+                            required: "Abdominal circumference is required",
+                            validate: {
+                              positiveValue: (value) =>
+                                value > 0 ||
+                                "Abdominal circumference must be greater than 0", // Kiểm tra điều kiện > 0
+                            },
+                            onChange: (e) => {
+                              if (Number(e.target.value) <= 0) {
+                                setValue(
+                                  `childsUpdated[${index}].abdominalCircumference`,
+                                  1
+                                );
+                              }
+                            },
+                          }
+                        )}
+                        type="number"
+                        placeholder="Enter abdominal circumference"
+                      />
+                      {errors?.childsUpdated?.[index]
+                        ?.abdominalCircumference && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index].abdominalCircumference
+                            ?.message || "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Fetal Heart Rate (bpm)
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        className={`p-2 bg-white w-full ${
+                          errors?.childsUpdated?.[index]?.fetalHeartRate
+                            ? "border-red-500"
+                            : ""
+                        }`}
+                        {...register(`childsUpdated[${index}].fetalHeartRate`, {
+                          required: "Fetal Heart Rate is required",
+                          validate: {
+                            positiveValue: (value) =>
+                              value > 0 ||
+                              "Fetal heart rate must be greater than 0", // Kiểm tra điều kiện > 0
+                          },
+                          onChange: (e) => {
+                            if (Number(e.target.value) <= 0) {
+                              setValue(
+                                `childsUpdated[${index}].fetalHeartRate`,
+                                1
+                              );
+                            }
+                          },
+                        })}
+                        type="number"
+                        placeholder="Enter fetal heart rate"
+                      />
+                      {errors?.childsUpdated?.[index]?.fetalHeartRate && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index].fetalHeartRate
+                            ?.message || "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Week Of Pregnancy
+                    </div>
+                    <div className="flex-1">
+                      <select
+                        className="flex-1 w-full p-2 bg-white"
+                        {...register(
+                          `childsUpdated[${index}].weekOfPregnancy`,
+                          {
+                            required: "Week is required",
+                          }
+                        )}
+                      >
+                        <option value="">Select week</option>
+                        {weeks.map((week) => (
+                          <option key={week} value={week}>
+                            {week}
+                          </option>
+                        ))}
+                      </select>
+                      {errors?.childsUpdated?.[index]?.weekOfPregnancy && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index].weekOfPregnancy
+                            ?.message || "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      Health Condition
+                    </div>
+                    <div className="flex-1">
+                      <textarea
+                        className={`p-2 bg-white w-full  h-40 ${
+                          errors?.childsUpdated?.[index]?.healthCondition
+                            ? "border-red-500"
+                            : ""
+                        }`}
+                        {...register(
+                          `childsUpdated[${index}].healthCondition`,
+                          {
+                            required: "Health Condition is required",
+                          }
+                        )}
+                      />
+                      {errors?.childsUpdated?.[index]?.healthCondition && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.childsUpdated[index].healthCondition
+                            ?.message || "This field is required."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="my-4">
+                  <GrowthCharts child={child} />
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-x-6">
-                <div className=" flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    Child name
-                  </div>
-                  <input
-                    className="flex-1 p-2 bg-gray-100"
-                    value={child.name}
-                    disabled
-                  />
-                </div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    Due date
-                  </div>
-                  <input
-                    className="flex-1 p-2 bg-gray-100"
-                    value={new Date(child.dueDate).toLocaleDateString("vi-VN")}
-                    disabled
-                  />
-                </div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    Pregnancy week at birth
-                  </div>
-                  <input
-                    className="flex-1 p-2 bg-gray-100"
-                    value={child.pregnancyWeekAtBirth}
-                    disabled
-                  />
-                </div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    BloodType
-                  </div>
-                  <input
-                    className="flex-1 p-2 bg-gray-100"
-                    value={child.bloodType}
-                    disabled
-                  />
-                </div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
-                    Height
-                  </div>
-                  <input
-                    className={`p-2 bg-white w-full ${
-                      errors?.childsUpdated?.[index]?.heightEstimate
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                    {...register(`childsUpdated[${index}].heightEstimate`, {
-                      required: "Height is required",
-                      validate: {
-                        positiveValue: (value) =>
-                          value > 0 || "Height must be greater than 0", // Kiểm tra điều kiện > 0
-                      },
-                    })}
-                    type="number"
-                    placeholder="Enter height estimate"
-                  />
-                  {/* Hiển thị lỗi nếu có */}
-                </div>
-              </div>
-              {errors?.childsUpdated?.[index]?.heightEstimate && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.childsUpdated[index].heightEstimate?.message ||
-                    "This field is required."}
-                </p>
-              )}
-              <div className="my-4">
-                <GrowthCharts child={child} />
-              </div>
-            </div>
-          ))}
+            );
+          })}
           <div className="flex items-center justify-end mt-10 mr-10">
             <Button
               disabled={isLoading}
