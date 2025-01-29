@@ -10,6 +10,10 @@ export const API_ROUTES = {
   EMPLOYEE_FORGOT_PASSWORD: "/auth/employee-forgot-password",
   EMPLOYEE_RESET_PASSWORD: "/auth/employee-reset-password",
 
+  //PROFILE
+  USER_UPDATE_PROFILE: "/users/update-user-profile",
+
+
   //CHILD
   CHILD_CREATE: "/child/create",
 
@@ -29,7 +33,6 @@ export const API_ROUTES = {
 
   //-------USERS
   DASHBOARD_USERS_ALL: "/users/get-all-user",
-  DASHBOARD_USER_UPDATE_PROFILE: "/employees/update-employee-profile",
   DASHBOARD_USER_CREATE: "/employees/create-employee",
   DASHBOARD_USER_DETAIL: "/users/get-user-by-id",
   DASHBOARD_USER_UPDATE_STATUS: "/employees/update-employee-status",

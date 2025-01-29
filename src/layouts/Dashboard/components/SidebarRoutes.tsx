@@ -4,34 +4,41 @@ import {
   Package,
   SquareMousePointer,
   UserCog,
+  UserPen,
   Users,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
+import { ROUTES } from "@/routes";
 
-const teacherRoutes = [
+const adminRoutes = [
   {
     icon: House,
     label: "Main",
-    href: "/dashboard/main",
+    href: ROUTES.DASHBOARD_MAIN,
   },
   {
     icon: UserCog,
     label: "Employees",
-    href: "/dashboard/employees",
+    href: ROUTES.DASHBOARD_EMPLOYEES,
   },
   {
     icon: Users,
     label: "Users",
-    href: "/dashboard/users",
+    href: ROUTES.DASHBOARD_USERS,
   },
   {
     icon: Package,
     label: "Membership Packages",
-    href: "/dashboard/membership-packages",
+    href: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE,
+  },
+  {
+    icon: UserPen,
+    label: "Profile",
+    href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
   },
   {
     icon: HandCoins,
-    label: "Membership Packages",
+    label: "Payment",
     href: "/dashboard/payments",
   },
   {
@@ -41,10 +48,26 @@ const teacherRoutes = [
   },
 ];
 
+const doctorRoutes = [
+  {
+    icon: House,
+    label: "Main",
+    href: ROUTES.DASHBOARD_DOCTOR,
+  },
+  {
+    icon: UserPen,
+    label: "Profile",
+    href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
+];
+
 export const SidebarRoutes = () => {
+  const role = localStorage.getItem("role");
+  const routes = role === "Admin" ? adminRoutes : doctorRoutes;
+
   return (
     <div className="flex flex-col w-full">
-      {teacherRoutes.map((route) => (
+      {routes.map((route) => (
         <SidebarItem
           key={route.href}
           icon={route.icon}
