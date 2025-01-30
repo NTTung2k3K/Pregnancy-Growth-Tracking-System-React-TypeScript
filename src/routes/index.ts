@@ -14,13 +14,19 @@ export const ROUTES = {
   MEMBERSHIP: "/membership",
   PAYMENT: "/payment/:pkgId",
   PAYMENT_RESULT: "/membershippackages/payment-result",
-  CHILDREN: "/children",
-  CHILDREN_CREATE: "/children/create",
-  PROFILE: "/profile",
+  CHILDREN:"/children",
+  CHILDREN_CREATE:"/children/create",
+  CHILDREN_DETAIL:"/child/:childId",
+  PROFILE:"/profile",
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
   DASHBOARD_DOCTOR: "/dashboard/doctor",
+
+  //------CHILDREN
+  DASHBOARD_CHILDREN: "/dashboard/children",
+  DASHBOARD_CHILDREN_DETAIL: "/dashboard/child/:childId",
+
 
   //--------EMPLOYEES
   DASHBOARD_EMPLOYEES: "/dashboard/employees",
@@ -29,7 +35,7 @@ export const ROUTES = {
   DASHBOARD_EMPLOYEE_DETAIL: "/dashboard/employee/detail/:id",
   DASHBOARD_EMPLOYEE_PROFILE: "/dashboard/profile",
 
-  //--------USERs
+  //--------USERS
   DASHBOARD_USERS: "/dashboard/users",
   DASHBOARD_USER_UPDATE: "/dashboard/user/:id",
   DASHBOARD_USER_DETAIL: "/dashboard/user/detail/:id",

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { truncate } from "@/lib/text";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CookiesService } from "@/services/cookies.service";
 import { Child } from "../Dashboard/Children/components/IChild";
@@ -13,19 +13,18 @@ import { ROUTES } from "@/routes";
 const ChildrenGridContainer = () => {
   const id = CookiesService.get();
   const [children, setChildren] = useState<Child[]>([]);
-  const { type } = useParams();
   const [visibleCount, setVisibleCount] = useState(4);
   const [showAll, setShowAll] = useState(false);
 
   const fetchChildren = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_USER_DETAIL}`,
+        `${BASE_URL + API_ROUTES.CHILD_BY_USER_ID}`,
         {
           params: { Id: id },
         }
       );
-      setChildren(response.data.resultObj.childs);
+      setChildren(response.data.resultObj);
     } catch (error) {
       console.error("Failed to fetch employee:", error);
     }
@@ -82,13 +81,20 @@ const ChildrenGridContainer = () => {
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
         {children.slice(0, visibleCount).map((item, index) => (
-          <Link to={"/blog-detail/123"} className="p-1" key={index}>
+          <Link
+            to={`${ROUTES.CHILDREN_DETAIL.replace(
+              ":childId",
+              String(item.id)
+            )}`}
+            className="p-1"
+            key={index}
+          >
             <Card>
               <CardContent className="w-full h-80 flex aspect-square p-0 border-r-4 border-b-4 border-r-emerald-300 border-b-emerald-300 rounded-xl">
-                <div className="flex flex-col">
+                <div className="w-full flex flex-col">
                   <img
                     className="rounded-t-lg h-44 object-cover"
-                    src={"/assets/images/Home/PanelCarousel/carousel-1.jpg"}
+                    src={item.photoUrl || ""}
                     alt=""
                   />
                   <div className="p-4 leading-6">

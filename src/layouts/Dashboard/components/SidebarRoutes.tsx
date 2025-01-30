@@ -6,6 +6,7 @@ import {
   UserCog,
   UserPen,
   Users,
+  Baby,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { ROUTES } from "@/routes";
@@ -25,6 +26,11 @@ const adminRoutes = [
     icon: Users,
     label: "Users",
     href: ROUTES.DASHBOARD_USERS,
+  },
+  {
+    icon: Baby,
+    label: "Children",
+    href: ROUTES.DASHBOARD_CHILDREN,
   },
   {
     icon: Package,

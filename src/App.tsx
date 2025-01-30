@@ -32,6 +32,7 @@ const PaymentResultPage = lazy(
 const ChildrenGridContainer = lazy(() => import("./containers/Children"));
 const ChildCreateContainer = lazy(() => import("./containers/Children/Create"));
 const UserProfileContainer = lazy(() => import("./containers/Profile"));
+const ChildDetailContainer = lazy(() => import("./containers/Children/Detail"));
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -60,6 +61,14 @@ const EmployeeDetailContainer = lazy(
 );
 const EmployeeProfileContainer = lazy(
   () => import("./containers/Dashboard/Profile")
+);
+
+//------------------------------CHILDREN
+const ChildrenDashboardContainer = lazy(
+  () => import("./containers/Dashboard/Children")
+);
+const ChildDashboardDetailContainer = lazy(
+  () => import("./containers/Dashboard/Children/Detail")
 );
 
 //------------MEMBERSHIP-PACKAGE PAGES----------------
@@ -157,6 +166,10 @@ const router = createBrowserRouter([
     path: ROUTES.PROFILE,
     element: <MainLayout children={<UserProfileContainer />} />,
   },
+  {
+    path: ROUTES.CHILDREN_DETAIL,
+    element: <MainLayout children={<ChildDetailContainer />} />,
+  },
   //---------- DASHBOARD PAGES-------------
   {
     path: ROUTES.DASHBOARD_MAIN,
@@ -202,6 +215,17 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_USER_UPDATE,
     element: <DashboardLayout children={<UserUpdateContainer />} />,
+  },
+
+  //-----------------------CHILDREN
+
+  {
+    path: ROUTES.DASHBOARD_CHILDREN,
+    element: <DashboardLayout children={<ChildrenDashboardContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_CHILDREN_DETAIL,
+    element: <DashboardLayout children={<ChildDashboardDetailContainer />} />,
   },
 
   //---------- MEMBERSHIP-PACKAGE PAGES-------------

@@ -40,7 +40,7 @@ const UserProfileContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
 
-  const fetchEmployee = async () => {
+  const fetchUser = async () => {
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_USER_DETAIL}`,
@@ -63,12 +63,12 @@ const UserProfileContainer = () => {
       setValue("gender", fetchedUser.gender === "Male" ? 1 : 0);
       setValue("dateOfBirth", formatDateSliceTime(fetchedUser.dateOfBirth));
     } catch (error) {
-      console.error("Failed to fetch employee:", error);
+      console.error("Failed to update user:", error);
     }
   };
 
   useEffect(() => {
-    fetchEmployee();
+    fetchUser();
   }, []);
 
   const onSubmit = async (data: UserFormValue) => {
@@ -332,7 +332,10 @@ const UserProfileContainer = () => {
                   {user?.childs.map((child: Child, index) => (
                     <Link
                       className="flex justify-between text-black font-normal bg-white rounded-md p-2 my-2 hover:text-black"
-                      to={`/`}
+                      to={`${ROUTES.CHILDREN_DETAIL.replace(
+                        ":childId",
+                        String(child.id)
+                      )}`}
                       key={index}
                     >
                       <p>Baby: {child.name}</p>
