@@ -56,7 +56,9 @@ const EmployeeCreateContainer = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await axios.get(`${BASE_URL + API_ROUTES.DASHBOARD_ROLES_ALL}`);
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_ROLES_ALL}`
+      );
       setRoles(response.data.resultObj.items);
     } catch (error) {
       console.error("Failed to fetch roles:", error);

@@ -377,7 +377,7 @@ const MembershipPackageUpdateContainer = () => {
                   <select
                     className="flex-1 p-2 bg-white"
                     {...register("status", {
-                      required: "Status Level is required",
+                      required: "Status is required",
                     })}
                   >
                     <option value="">Select status</option>
@@ -387,8 +387,8 @@ const MembershipPackageUpdateContainer = () => {
                   </select>
                 </div>
               </div>
-              {errors.packageLevel && (
-                <p className="text-red-500">{errors.packageLevel.message}</p>
+              {errors.status && (
+                <p className="text-red-500">{errors.status.message}</p>
               )}
               {/* Image Upload */}
               <div className="">

@@ -79,16 +79,9 @@ const MembershipPackageCreateContainer = () => {
     fetchStatus();
   }, []);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: MembershipPackageFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_CREATE}`,
         {
@@ -116,6 +109,8 @@ const MembershipPackageCreateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to create MembershipPackage:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
