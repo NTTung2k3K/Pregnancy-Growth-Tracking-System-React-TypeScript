@@ -77,6 +77,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   /* Làm icon rõ hơn */
 }
 
+.rdp-button {
+  background-color: white !important;
+  color: black !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

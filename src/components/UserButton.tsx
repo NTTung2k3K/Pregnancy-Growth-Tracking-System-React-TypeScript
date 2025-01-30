@@ -62,7 +62,7 @@ const UserButton = () => {
           <DropdownMenuItem>
             <Link
               className="text-black font-normal w-full"
-              to={ROUTES.APPOINTMENTS}
+              to={ROUTES.APPOINTMENT_HISTORY}
             >
               Appointments
             </Link>
