@@ -137,9 +137,19 @@ const UserDetailContainer = () => {
                 <IconBadge icon={Baby} />
                 <h2 className="text-xl text-sky-900 font-semibold">Children</h2>
               </div>
-              <div className="flex items-center justify-center mt-4 border bg-slate-100 rounded-md p-4">
-                {user?.childs.map((child: Child) => (
-                  <div className="">huan</div>
+              <div className="flex flex-col  mt-4 border bg-slate-100 rounded-md p-4">
+                {user?.childs.map((child: Child, index) => (
+                  <Link
+                    className="flex justify-between text-black font-normal bg-white rounded-md p-2 my-2 hover:text-black"
+                    to={`${ROUTES.DASHBOARD_CHILDREN_DETAIL.replace(
+                      ":childId",
+                      String(child.id)
+                    )}`}
+                    key={index}
+                  >
+                    <p>Baby: {child.name}</p>
+                    <p>Date Of Birth: {formatDate(child.dueDate)}</p>
+                  </Link>
                 ))}
               </div>
             </div>

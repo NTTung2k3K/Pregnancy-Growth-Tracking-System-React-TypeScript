@@ -5,6 +5,7 @@ import {
   UserPen,
   Users,
   HandCoins,
+  Baby,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { ROUTES } from "@/routes";
@@ -24,6 +25,11 @@ const adminRoutes = [
     icon: Users,
     label: "Users",
     href: ROUTES.DASHBOARD_USERS,
+  },
+  {
+    icon: Baby,
+    label: "Children",
+    href: ROUTES.DASHBOARD_CHILDREN,
   },
   {
     icon: Package,
@@ -53,7 +59,6 @@ const doctorRoutes = [
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
   },
-  
 ];
 
 export const SidebarRoutes = () => {
