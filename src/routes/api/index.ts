@@ -13,15 +13,21 @@ export const API_ROUTES = {
   //PROFILE
   USER_UPDATE_PROFILE: "/users/update-user-profile",
 
-
   //CHILD
+  CHILD_BY_USER_ID: "/child/get-child-by-user-id",
+  CHILD_DETAIL: "/child",
   CHILD_CREATE: "/child/create",
+  CHILD_UPDATE: "/child/update",
+  CHILD_DELETE: "/child/delete",
 
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
 
   //Dashboard
+
+  //---------CHILDREN
+  DASHBOARD_CHILDREN_ALL: "/child/all",
 
   //-------EMPLOYEES
   DASHBOARD_EMPLOYEES_ALL: "/employees/get-all-doctor",
