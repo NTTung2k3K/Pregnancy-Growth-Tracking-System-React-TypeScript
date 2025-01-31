@@ -4,6 +4,7 @@ import { ROUTES } from "@/routes";
 import { API_ROUTES } from "@/routes/api";
 import toast from "react-hot-toast";
 import {
+  CookiesEmployee2Service,
   CookiesEmployeeService,
   CookiesService,
   CookiesTokenService,
@@ -68,6 +69,8 @@ function* employeeLogin(action: any): Generator<any, void, any> {
 
   if (response.data.statusCode === 200) {
     CookiesEmployeeService.set(response.data.resultObj.id);
+    CookiesEmployee2Service.set(JSON.stringify(response.data.resultObj));
+
     CookiesTokenService.set(response.data.resultObj.accessToken);
     localStorage.setItem("role", response.data.resultObj.roles[0]);
     if (response.data.resultObj.roles[0] === "Admin") {

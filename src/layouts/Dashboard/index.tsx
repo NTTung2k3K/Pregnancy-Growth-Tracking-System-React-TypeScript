@@ -5,6 +5,8 @@ import Sidebar from "./components/Sidebar";
 import { CookiesEmployeeService } from "@/services/cookies.service";
 import { accessRules, canAccess } from "@/routes/rules";
 import { ROUTES } from "@/routes";
+import AuthWatcher from "@/containers/Dashboard/AutoWatcher";
+import { setupAxiosInterceptors } from "@/services/config";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -34,6 +36,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       }
     }
   }, [currentPath, navigate, role]);
+  setupAxiosInterceptors(); // Kích hoạt interceptor trước khi app chạy
 
   return (
     <div className="h-full">
@@ -44,6 +47,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Sidebar />
       </div>
       <main className="md:pl-56 pt-[80px] h-full">{children}</main>
+      <AuthWatcher />
     </div>
   );
 };

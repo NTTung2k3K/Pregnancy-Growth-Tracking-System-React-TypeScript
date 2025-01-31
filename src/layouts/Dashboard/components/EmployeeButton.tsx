@@ -8,12 +8,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ROUTES } from "@/routes";
-import { CookiesEmployeeService } from "@/services/cookies.service";
+import {
+  CookiesEmployee2Service,
+  CookiesEmployeeService,
+} from "@/services/cookies.service";
 import { Link } from "react-router-dom";
 
 const EmployeeButton = () => {
   const logout = () => {
     CookiesEmployeeService.remove();
+    CookiesEmployee2Service.remove();
+
     window.location.href = ROUTES.EMPLOYEE_LOGIN;
   };
 
