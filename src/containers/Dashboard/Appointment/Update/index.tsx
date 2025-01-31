@@ -23,6 +23,7 @@ import { log } from "console";
 import { Appointment } from "@/containers/Dashboard/Appointment";
 import { Status } from "@/containers/Dashboard/MembershipPackage/Create";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
+import { getSlotString } from "@/lib/utils";
 
 export interface AppointmentUpdateForm {
   id: number;
@@ -297,7 +298,7 @@ const AppointmentUpdateContainer = () => {
                 </div>
                 <input
                   type="text"
-                  value={appointment?.appointmentSlot}
+                  value={getSlotString(appointment?.appointmentSlot)}
                   disabled
                   className="bg-gray-100 p-2 w-full"
                 />

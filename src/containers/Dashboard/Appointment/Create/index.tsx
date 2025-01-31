@@ -19,6 +19,7 @@ import {
   User,
 } from "@/containers/Dashboard/Appointment";
 import { set } from "date-fns";
+import { getSlotString } from "@/lib/utils";
 export interface AppointmentCreateForm {
   userId: string;
   name: string;
@@ -341,7 +342,7 @@ const AppointmentCreateContainer = () => {
                         : "Select available slot"}
                     </option>
                     {availableSlots?.slots?.map((slot: number) => (
-                      <option value={slot}>{slot}</option>
+                      <option value={slot}>{getSlotString(slot)}</option>
                     ))}
                   </select>
                 </div>

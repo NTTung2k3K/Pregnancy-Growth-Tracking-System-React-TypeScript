@@ -19,6 +19,7 @@ import { ROUTES } from "@/routes";
 import { Appointment } from "@/containers/Dashboard/Appointment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
+import { getSlotString } from "@/lib/utils";
 
 const AppointmentDetailContainer = () => {
   const { id } = useParams();
@@ -115,7 +116,9 @@ const AppointmentDetailContainer = () => {
               <div className="font-medium flex items-center mr-10 w-1/6">
                 Appointment Slot
               </div>
-              <p className="flex-1 p-2">{appointment?.appointmentSlot}</p>
+              <p className="flex-1 p-2">
+                {getSlotString(appointment?.appointmentSlot)}
+              </p>
             </div>
 
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">

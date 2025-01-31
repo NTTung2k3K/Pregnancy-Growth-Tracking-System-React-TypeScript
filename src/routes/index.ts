@@ -14,10 +14,13 @@ export const ROUTES = {
   MEMBERSHIP: "/membership",
   PAYMENT: "/payment/:pkgId",
   PAYMENT_RESULT: "/membershippackages/payment-result",
-  CHILDREN:"/children",
-  CHILDREN_CREATE:"/children/create",
-  CHILDREN_DETAIL:"/child/:childId",
-  PROFILE:"/profile",
+  CHILDREN: "/children",
+  CHILDREN_CREATE: "/children/create",
+  PROFILE: "/profile",
+  APPOINTMENT_HISTORY: "/appointment/history",
+  APPOINTMENT_BOOKING: "/appointment/booking",
+
+  CHILDREN_DETAIL: "/child/:childId",
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
