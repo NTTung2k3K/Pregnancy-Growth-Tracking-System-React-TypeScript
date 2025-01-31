@@ -6,12 +6,12 @@ import AuthForm from "./AuthForm";
 import { useTheme } from "./theme-provider";
 import UserButton from "./UserButton";
 import { CookiesService } from "@/services/cookies.service";
+import { ROUTES } from "@/routes";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
 
   const userId = CookiesService.get();
-
 
   const categories = [
     { name: "Community", link: "/community" },
@@ -25,7 +25,7 @@ const Navbar = () => {
     { name: "Family", link: "/community" },
     { name: "Courses", link: "/community" },
     { name: "Registry Builder", link: "/community" },
-    { name: "Baby Products", link: "/community" },
+    { name: "Booking appointment", link: ROUTES.APPOINTMENT_BOOKING },
   ];
 
   return (

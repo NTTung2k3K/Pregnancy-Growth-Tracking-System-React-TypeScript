@@ -21,7 +21,9 @@ const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 const AppoinmentHistoryContainer = lazy(
   () => import("./containers/Appointment-History")
 );
-
+const AppoinmentBookingContainer = lazy(
+  () => import("./containers/Appointment-Booking")
+);
 const MembershipContainer = lazy(() => import("./containers/Membership"));
 const PaymentPage = lazy(() => import("./containers//Membership/payment"));
 const PaymentResultPage = lazy(
@@ -153,6 +155,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.APPOINTMENT_HISTORY,
     element: <MainLayout children={<AppoinmentHistoryContainer />} />,
+  },
+  {
+    path: ROUTES.APPOINTMENT_BOOKING,
+    element: <MainLayout children={<AppoinmentBookingContainer />} />,
   },
   {
     path: ROUTES.MEMBERSHIP,

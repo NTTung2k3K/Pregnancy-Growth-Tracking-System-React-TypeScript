@@ -6,6 +6,7 @@ import { columns } from "@/containers/Dashboard/Appointment/components/Columns";
 
 export interface Appointment {
   id: number;
+  name: string;
   appointmentSlot: number;
   appointmentDate: string;
   status: string;

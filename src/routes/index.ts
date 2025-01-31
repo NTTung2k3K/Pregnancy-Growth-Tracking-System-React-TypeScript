@@ -18,6 +18,7 @@ export const ROUTES = {
   CHILDREN_CREATE: "/children/create",
   PROFILE: "/profile",
   APPOINTMENT_HISTORY: "/appointment/history",
+  APPOINTMENT_BOOKING: "/appointment/booking",
 
 
   //Dashboard

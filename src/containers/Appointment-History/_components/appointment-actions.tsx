@@ -33,6 +33,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 import { CookiesService } from "@/services/cookies.service";
+import { getSlotString } from "@/lib/utils";
 
 interface AppointmentActionsProps {
   id: string;
@@ -159,8 +160,7 @@ export function AppointmentActions({
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
                     <span>
-                      Time:{" "}
-                      {new Date(appointment.appointmentDate).toTimeString()}
+                      Time: {getSlotString(appointment.appointmentSlot)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">

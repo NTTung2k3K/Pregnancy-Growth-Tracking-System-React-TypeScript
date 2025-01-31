@@ -9,6 +9,7 @@ import { Appointment } from "@/containers/Dashboard/Appointment";
 import ActionRow from "@/containers/Dashboard/Appointment/components/action-row";
 
 const columnFields: { key: keyof Appointment; label: string }[] = [
+  { key: "name", label: "Name" },
   { key: "user.fullName", label: "Customer name" },
   { key: "user.phoneNumber", label: "Phone number" },
 ];
