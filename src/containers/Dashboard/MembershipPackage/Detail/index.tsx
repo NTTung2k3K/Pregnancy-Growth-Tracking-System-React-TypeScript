@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image, ShieldCheck, UserPen } from "lucide-react";
+import { CircleArrowLeft, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";

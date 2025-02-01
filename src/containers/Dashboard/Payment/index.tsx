@@ -44,7 +44,7 @@ export interface Package {
   status: string;
   packageLevel: string;
   originalPrice: number;
-  imageUrl: any;
+  imageUrl: string;
   discount: number;
   showPriority: number;
 }

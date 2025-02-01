@@ -9,7 +9,6 @@ import ActionRow from "@/containers/Dashboard/Payment/components/action-row";
 import { Payment } from "@/containers/Dashboard/Payment";
 
 const columnFields: { key: keyof Payment; label: string }[] = [
-  { key: "userMembership.user.fullName", label: "Name of buyer" },
   { key: "paymentMethod", label: "Payment Method" },
   { key: "paymentDate", label: "Payment Date" },
 ];
@@ -29,6 +28,23 @@ export const columns: ColumnDef<Payment>[] = [
       );
     },
   })),
+  {
+    accessorKey: "userMembership.user.fullName",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name of buyer
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{row.original.userMembership.user.fullName}</p>;
+    },
+  },
   {
     accessorKey: "amount",
     header: ({ column }) => {

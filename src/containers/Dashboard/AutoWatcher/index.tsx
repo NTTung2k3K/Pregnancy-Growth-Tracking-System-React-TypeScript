@@ -6,7 +6,6 @@ import {
   CookiesTokenService,
 } from "@/services/cookies.service";
 import { BASE_URL } from "@/services/config";
-import { useNavigate } from "react-router-dom";
 
 const refreshToken = async () => {
   try {

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Area,
   AreaChart,
@@ -12,27 +11,20 @@ import {
   Line,
 } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const chartConfig = {
-  height: {
-    label: "Height (cm)",
-    color: "#8884d8",
-  },
-  weight: {
-    label: "Weight (kg)",
-    color: "#82ca9d",
-  },
-};
+// const chartConfig = {
+//   height: {
+//     label: "Height (cm)",
+//     color: "#8884d8",
+//   },
+//   weight: {
+//     label: "Weight (kg)",
+//     color: "#82ca9d",
+//   },
+// };
 
-type FetalGrowthRecord = {
+export type FetalGrowthRecord = {
   recordedAt: string;
   weekOfPregnancy: number;
   weight: number;
@@ -44,6 +36,7 @@ type FetalGrowthRecord = {
   fetalGrowthStandardModelView: {
     averageHeight: number;
     averageWeight: number;
+    fetalHeartRate: number;
     minHeight: number;
     maxHeight: number;
     minWeight: number;
@@ -66,8 +59,6 @@ export function GrowthCharts({ child }: { child: Child }) {
   if (!records || records.length === 0) {
     return <div>No growth records available for {child.name}.</div>;
   }
-  const [showHeight, setShowHeight] = React.useState(true);
-  const [showWeight, setShowWeight] = React.useState(true);
 
   const chartData = records.map((record) => ({
     week: record.weekOfPregnancy,

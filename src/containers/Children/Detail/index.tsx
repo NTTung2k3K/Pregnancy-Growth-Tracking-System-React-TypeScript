@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { IconBadge } from "@/components/IconBadge";
 import {
   CircleArrowLeft,
@@ -13,13 +14,12 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { API_ROUTES } from "@/routes/api";
 import { useForm } from "react-hook-form";
-import { CookiesService } from "@/services/cookies.service";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
-import { formatDate, formatDateSliceTime } from "@/lib/text";
+import { formatDateSliceTime } from "@/lib/text";
 import { Child } from "@/containers/Dashboard/Children/components/IChild";
 
 interface ChildFormValue {
@@ -38,7 +38,6 @@ interface ChildFormValue {
 
 const ChildDetailContainer = () => {
   const { childId } = useParams();
-  const userId = CookiesService.get();
   const [child, setChild] = useState<Child>();
   const {
     register,

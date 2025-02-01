@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "@/containers/Dashboard/MembershipPackage/Create/components/AvatarOverlay";
-import { log } from "console";
 
 interface MembershipPackageFormValues {
   id: number;
@@ -39,6 +38,10 @@ export interface MembershipPackage {
   imageUrl: string;
   discount: number;
   showPriority: number;
+}
+export interface AppointmentStatusHandler {
+  status: Status[];
+  packageLevel: PackageLevel[];
 }
 
 interface Status {
@@ -83,7 +86,9 @@ const MembershipPackageUpdateContainer = () => {
     }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fetchMembershipPackage = async (statusData: any) => {
+  const fetchMembershipPackage = async (
+    statusData: AppointmentStatusHandler
+  ) => {
     try {
       const response = await axios.get(
         `${BASE_URL}/membershippackages/get-by-id`,

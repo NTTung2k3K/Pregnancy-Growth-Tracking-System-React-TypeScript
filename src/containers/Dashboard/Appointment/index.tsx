@@ -3,6 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { DataTable } from "@/containers/Dashboard/Appointment/components/DataTable";
 import { columns } from "@/containers/Dashboard/Appointment/components/Columns";
+import { FetalGrowthRecord } from "@/containers/Dashboard/Appointment/components/chart-record";
 
 export interface Appointment {
   id: number;
@@ -10,8 +11,10 @@ export interface Appointment {
   appointmentSlot: number;
   appointmentDate: string;
   status: string;
+  description: string;
   fee: number;
   notes: string;
+  result: string;
   user: User;
   doctors: Doctor[];
   appointmentTemplate: AppointmentTemplate;
@@ -43,6 +46,7 @@ export interface Doctor {
   gender: string;
   email: string;
   status: string;
+  phoneNumber: string;
   role: Role;
 }
 
@@ -75,6 +79,7 @@ export interface Child {
   photoUrl: string;
   bloodType: string;
   pregnancyWeekAtBirth: number;
+  fetalGrowthRecordModelViews: FetalGrowthRecord[];
 }
 
 const AppointmentAdminContainer = () => {

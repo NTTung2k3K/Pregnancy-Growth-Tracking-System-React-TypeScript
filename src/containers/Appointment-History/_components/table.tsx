@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Calendar, MoreHorizontal, Pencil, UserPen } from "lucide-react";
-import { format, isAfter } from "date-fns";
+import { Calendar } from "lucide-react";
+import { isAfter } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -32,14 +33,6 @@ import { appointmentService } from "@/routes/api/services/appointment-api";
 import { CookiesService } from "@/services/cookies.service";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
-import { Link } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { ROUTES } from "@/routes";
 import { AppointmentActions } from "@/containers/Appointment-History/_components/appointment-actions";
 export interface AppointmentStatusType {
   id: number;
@@ -51,7 +44,7 @@ export interface AppointmentResponseModel {
   appointmentDate: string;
   status: string;
   fee: number;
-  notes: any;
+  notes: string;
   result: any;
   description: any;
   name: string;
@@ -138,7 +131,15 @@ export default function AppointmentManagement() {
         );
         setStatusOptions(response.data.resultObj);
       } catch (error) {
-        toast.error(error.message);
+        if (error instanceof Error) {
+          if (error instanceof Error) {
+            toast.error(error.message);
+          } else {
+            toast.error("An unknown error occurred");
+          }
+        } else {
+          toast.error("An unknown error occurred");
+        }
       }
     };
 
@@ -186,7 +187,15 @@ export default function AppointmentManagement() {
         toast.error("Failed to fetch appointments");
       }
     } catch (error) {
-      toast.error(error.message);
+      if (error instanceof Error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("An unknown error occurred");
+        }
+      } else {
+        toast.error("An unknown error occurred");
+      }
     } finally {
       setIsLoading(false);
     }

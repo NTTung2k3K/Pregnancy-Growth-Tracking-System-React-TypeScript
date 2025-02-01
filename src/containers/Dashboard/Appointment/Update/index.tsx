@@ -5,21 +5,17 @@ import {
   BriefcaseMedicalIcon,
   CircleArrowLeft,
   FileUser,
-  Image,
   SquareMousePointer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import { useEffect, useState } from "react";
-import { data, Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AvatarOverlay } from "@/containers/Dashboard/Appointment/Create/components/AvatarOverlay";
-import { log } from "console";
 import { Appointment } from "@/containers/Dashboard/Appointment";
 import { Status } from "@/containers/Dashboard/MembershipPackage/Create";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
@@ -78,11 +74,12 @@ const AppointmentUpdateContainer = () => {
     }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fetchAppointment = async (statusData: any) => {
+  const fetchAppointment = async (statusData: Status[]) => {
     try {
       const response = await axios.get(`${BASE_URL}/appointments/get-by-id`, {
         params: { id: id },
       });
+
       const fetchedAppointment = response.data.resultObj;
 
       // Set form values using setValue
@@ -99,7 +96,7 @@ const AppointmentUpdateContainer = () => {
         (x) => x.status === fetchedAppointment.status
       )?.id;
 
-      setValue("status", statusId?.toString() || "0");
+      setValue("status", statusId || 0);
       setDisplayValue(formatNumber(fetchedAppointment.fee.toString()));
       setAppointment(fetchedAppointment);
     } catch (error) {
@@ -283,29 +280,25 @@ const AppointmentUpdateContainer = () => {
                 <input
                   type="text"
                   value={new Date(
-                    appointment?.appointmentDate
+                    appointment?.appointmentDate || new Date()
                   ).toLocaleDateString("vi-VN")}
                   disabled
                   className="bg-gray-100 p-2 w-full"
                 />
               </div>
-              {errors.appointmentDate && (
-                <p className="text-red-500">{errors.appointmentDate.message}</p>
-              )}
+
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6 ">
                   Appointment Slot
                 </div>
                 <input
                   type="text"
-                  value={getSlotString(appointment?.appointmentSlot)}
+                  value={getSlotString(appointment?.appointmentSlot ?? 1)}
                   disabled
                   className="bg-gray-100 p-2 w-full"
                 />
               </div>
-              {errors.appointmentSlot && (
-                <p className="text-red-500">{errors.appointmentSlot.message}</p>
-              )}
+
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6 ">
                   Status
@@ -342,9 +335,7 @@ const AppointmentUpdateContainer = () => {
                   disabled
                 />
               </div>
-              {errors.appointmentSlot && (
-                <p className="text-red-500">{errors.appointmentSlot.message}</p>
-              )}
+
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6  w-1/6">
                   Fee
@@ -459,7 +450,7 @@ const AppointmentUpdateContainer = () => {
               <div className="w-full">
                 <input
                   type="hidden"
-                  {...register(`childsUpdated[${index}].childId`, {
+                  {...register(`childsUpdated.${index}.childId`, {
                     value: child.id,
                   })}
                 />
@@ -524,7 +515,7 @@ const AppointmentUpdateContainer = () => {
                             ? "border-red-500"
                             : ""
                         }`}
-                        {...register(`childsUpdated[${index}].height`, {
+                        {...register(`childsUpdated.${index}.height`, {
                           required: "Height is required",
                           validate: {
                             positiveValue: (value) =>
@@ -532,7 +523,7 @@ const AppointmentUpdateContainer = () => {
                           },
                           onChange: (e) => {
                             if (Number(e.target.value) <= 0) {
-                              setValue(`childsUpdated[${index}].height`, 1);
+                              setValue(`childsUpdated.${index}.height`, 1);
                             }
                           },
                         })}
@@ -558,7 +549,7 @@ const AppointmentUpdateContainer = () => {
                             ? "border-red-500"
                             : ""
                         }`}
-                        {...register(`childsUpdated[${index}].weight`, {
+                        {...register(`childsUpdated.${index}.weight`, {
                           required: "Weight is required",
                           validate: {
                             positiveValue: (value) =>
@@ -566,7 +557,7 @@ const AppointmentUpdateContainer = () => {
                           },
                           onChange: (e) => {
                             if (Number(e.target.value) <= 0) {
-                              setValue(`childsUpdated[${index}].weight`, 1);
+                              setValue(`childsUpdated.${index}.weight`, 1);
                             }
                           },
                         })}
@@ -593,7 +584,7 @@ const AppointmentUpdateContainer = () => {
                             : ""
                         }`}
                         {...register(
-                          `childsUpdated[${index}].headCircumference`,
+                          `childsUpdated.${index}.headCircumference`,
                           {
                             required: "Head circumference is required",
                             validate: {
@@ -604,7 +595,7 @@ const AppointmentUpdateContainer = () => {
                             onChange: (e) => {
                               if (Number(e.target.value) <= 0) {
                                 setValue(
-                                  `childsUpdated[${index}].headCircumference`,
+                                  `childsUpdated.${index}.headCircumference`,
                                   1
                                 );
                               }
@@ -634,7 +625,7 @@ const AppointmentUpdateContainer = () => {
                             : ""
                         }`}
                         {...register(
-                          `childsUpdated[${index}].abdominalCircumference`,
+                          `childsUpdated.${index}.abdominalCircumference`,
                           {
                             required: "Abdominal circumference is required",
                             validate: {
@@ -645,7 +636,7 @@ const AppointmentUpdateContainer = () => {
                             onChange: (e) => {
                               if (Number(e.target.value) <= 0) {
                                 setValue(
-                                  `childsUpdated[${index}].abdominalCircumference`,
+                                  `childsUpdated.${index}.abdominalCircumference`,
                                   1
                                 );
                               }
@@ -675,7 +666,7 @@ const AppointmentUpdateContainer = () => {
                             ? "border-red-500"
                             : ""
                         }`}
-                        {...register(`childsUpdated[${index}].fetalHeartRate`, {
+                        {...register(`childsUpdated.${index}.fetalHeartRate`, {
                           required: "Fetal Heart Rate is required",
                           validate: {
                             positiveValue: (value) =>
@@ -685,7 +676,7 @@ const AppointmentUpdateContainer = () => {
                           onChange: (e) => {
                             if (Number(e.target.value) <= 0) {
                               setValue(
-                                `childsUpdated[${index}].fetalHeartRate`,
+                                `childsUpdated.${index}.fetalHeartRate`,
                                 1
                               );
                             }
@@ -709,12 +700,9 @@ const AppointmentUpdateContainer = () => {
                     <div className="flex-1">
                       <select
                         className="flex-1 w-full p-2 bg-white"
-                        {...register(
-                          `childsUpdated[${index}].weekOfPregnancy`,
-                          {
-                            required: "Week is required",
-                          }
-                        )}
+                        {...register(`childsUpdated.${index}.weekOfPregnancy`, {
+                          required: "Week is required",
+                        })}
                       >
                         <option value="">Select week</option>
                         {weeks.map((week) => (
@@ -742,12 +730,9 @@ const AppointmentUpdateContainer = () => {
                             ? "border-red-500"
                             : ""
                         }`}
-                        {...register(
-                          `childsUpdated[${index}].healthCondition`,
-                          {
-                            required: "Health Condition is required",
-                          }
-                        )}
+                        {...register(`childsUpdated.${index}.healthCondition`, {
+                          required: "Health Condition is required",
+                        })}
                       />
                       {errors?.childsUpdated?.[index]?.healthCondition && (
                         <p className="text-red-500 text-sm mt-1">

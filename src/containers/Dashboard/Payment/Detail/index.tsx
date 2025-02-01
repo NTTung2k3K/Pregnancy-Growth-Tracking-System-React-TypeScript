@@ -1,5 +1,4 @@
-import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image, ShieldCheck, UserPen } from "lucide-react";
+import { CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
@@ -7,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import { Payment } from "@/containers/Dashboard/Payment";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const PaymentDetailContainer = () => {
   const { id } = useParams();
@@ -100,7 +98,10 @@ const PaymentDetailContainer = () => {
                 Original Price
               </div>
               <p className="flex-1 p-2">
-                {payment?.userMembership.package.originalPrice}
+                {Math.round(
+                  payment?.userMembership?.package?.originalPrice ?? 0
+                ).toLocaleString()}{" "}
+                VNĐ
               </p>
             </div>
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -108,7 +109,7 @@ const PaymentDetailContainer = () => {
                 Discount
               </div>
               <p className="flex-1 p-2">
-                {payment?.userMembership?.package?.discount * 100}
+                {(payment?.userMembership?.package?.discount ?? 0) * 100}
                 <span>%</span>
               </p>
             </div>
@@ -117,7 +118,10 @@ const PaymentDetailContainer = () => {
                 Price
               </div>
               <p className="flex-1 p-2">
-                {payment?.userMembership.package.price}
+                {Math.round(
+                  payment?.userMembership?.package?.price ?? 0
+                ).toLocaleString()}{" "}
+                VNĐ
               </p>
             </div>
 
