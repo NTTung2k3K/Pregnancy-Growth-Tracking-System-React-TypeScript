@@ -71,7 +71,7 @@ export const columns: ColumnDef<Child>[] = [
             <Link
               className="text-sky-800"
               to={`${ROUTES.DASHBOARD_CHILDREN_DETAIL.replace(
-                ":childId",
+                ":id",
                 String(id)
               )}`}
             >

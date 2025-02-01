@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import { Baby, CircleArrowLeft, Image, UserPen } from "lucide-react";
+import { CircleArrowLeft, Image, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
@@ -8,14 +8,13 @@ import { Link } from "react-router-dom";
 import { API_ROUTES } from "@/routes/api";
 import { useForm } from "react-hook-form";
 import { CookiesService } from "@/services/cookies.service";
-import { Child } from "../Dashboard/Children/components/IChild";
 import { User } from "../Dashboard/Users/components/IUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
-import { formatDate, formatDateSliceTime } from "@/lib/text";
+import { formatDateSliceTime } from "@/lib/text";
 
 interface UserFormValue {
   phoneNumber: string;
@@ -320,29 +319,6 @@ const UserProfileContainer = () => {
                     </div>
                   </div>
                 )}
-              </div>
-              <div>
-                <div className="flex items-center gap-x-2">
-                  <IconBadge icon={Baby} />
-                  <h2 className="text-xl text-sky-900 font-semibold">
-                    Children
-                  </h2>
-                </div>
-                <div className="flex flex-col  mt-4 border bg-slate-100 rounded-md p-4">
-                  {user?.childs.map((child: Child, index) => (
-                    <Link
-                      className="flex justify-between text-black font-normal bg-white rounded-md p-2 my-2 hover:text-black"
-                      to={`${ROUTES.CHILDREN_DETAIL.replace(
-                        ":childId",
-                        String(child.id)
-                      )}`}
-                      key={index}
-                    >
-                      <p>Baby: {child.name}</p>
-                      <p>Date Of Birth: {formatDate(child.dueDate)}</p>
-                    </Link>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
