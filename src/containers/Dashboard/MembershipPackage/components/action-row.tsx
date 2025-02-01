@@ -1,14 +1,3 @@
-import React, { useEffect, useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import toast from "react-hot-toast";
@@ -20,44 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil, Trash, UserPen } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
-import { AlertWarning } from "@/components/ui/alert-warning";
 export default function ActionRow({ id }: { id: number }) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (isDialogOpen) {
-      document.body.classList.add("pointer-events-none");
-    } else {
-      document.body.classList.remove("pointer-events-none");
-    }
-
-    return () => {
-      document.body.classList.remove("pointer-events-none");
-    };
-  }, [isDialogOpen]);
-  const handleDelete2 = async () => {
-    try {
-      setIsLoading(true);
-      await axios.delete(`${BASE_URL}/membershippackages`, {
-        params: { Id: id },
-        headers: configHeaders(),
-      });
-      toast.success("Deleted successfully");
-      window.location.href = `/dashboard/membership-packages`;
-    } catch (error) {
-      console.error("Failed to delete MembershipPackage:", error);
-      toast.error("Please login again to refresh token");
-    } finally {
-      setIsDialogOpen(false);
-      setIsLoading(false);
-    }
-  };
-
   const handleDelete = async (id: string) => {
-    event.preventDefault();
     const confirmLeave = window.confirm(" Do you really want to delete?");
     if (!confirmLeave) return;
 
@@ -66,10 +21,8 @@ export default function ActionRow({ id }: { id: number }) {
         params: { Id: id },
         headers: configHeaders(),
       });
-      // navigate("/dashboard/membership-packages");
-      console.log(res);
 
-      if (res.data.status === 200) {
+      if (res.data.statusCode === 200) {
         toast.success("Deleted successfully");
         setTimeout(() => {
           window.location.href = `/dashboard/membership-packages`;
@@ -106,7 +59,7 @@ export default function ActionRow({ id }: { id: number }) {
             className="text-sky-800"
             to={`${ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_UPDATE.replace(
               ":id",
-              id
+              id.toString()
             )}`}
           >
             <DropdownMenuItem className="cursor-pointer">
@@ -118,7 +71,7 @@ export default function ActionRow({ id }: { id: number }) {
             className="text-sky-800"
             to={`${ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_DETAIL.replace(
               ":id",
-              id
+              id.toString()
             )}`}
           >
             <DropdownMenuItem className="cursor-pointer">
@@ -128,7 +81,7 @@ export default function ActionRow({ id }: { id: number }) {
           </Link>
           <DropdownMenuItem
             className="cursor-pointer font-semibold"
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete(id.toString())}
           >
             <Trash className="h-4 w-4 mr-2" />
             <p>Delete</p>

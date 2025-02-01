@@ -7,20 +7,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { data, Link } from "react-router-dom";
 import {
   Baby,
-  Bookmark,
   BookmarkX,
   Calendar,
   Clock,
   DollarSign,
   Eye,
-  Pencil,
   Stethoscope,
   User,
 } from "lucide-react";
-import { ROUTES } from "@/routes";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { Appointment } from "@/containers/Dashboard/Appointment";
@@ -30,7 +26,6 @@ import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 import { CookiesService } from "@/services/cookies.service";
 import { getSlotString } from "@/lib/utils";
@@ -70,8 +65,12 @@ export function AppointmentActions({
       });
       setAppointment(response.data.resultObj);
     } catch (error) {
-      setError(error);
-      toast.error(error.message);
+      setError((error as Error).message);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unknown error occurred");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +106,8 @@ export function AppointmentActions({
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to cancel appointment"
+        (axios.isAxiosError(error) && error.response?.data?.message) ||
+          "Failed to cancel appointment"
       );
     } finally {
       setIsLoading(false);

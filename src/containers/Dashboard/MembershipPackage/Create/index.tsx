@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image, UserPen } from "lucide-react";
+import { CircleArrowLeft, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";

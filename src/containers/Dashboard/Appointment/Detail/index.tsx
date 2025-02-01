@@ -5,10 +5,7 @@ import {
   BriefcaseMedicalIcon,
   CircleArrowLeft,
   FileUser,
-  Image,
-  ShieldCheck,
   SquareMousePointer,
-  UserPen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -16,8 +13,7 @@ import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
-import { Appointment } from "@/containers/Dashboard/Appointment";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Appointment, Child, Doctor } from "@/containers/Dashboard/Appointment";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 import { getSlotString } from "@/lib/utils";
 
@@ -42,10 +38,7 @@ const AppointmentDetailContainer = () => {
   useEffect(() => {
     fetchAppointment();
   }, []);
-  const formatNumber = (value: string) => {
-    if (!value) return "";
-    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
+
   return (
     <div>
       <div className="mt-10">
@@ -106,9 +99,11 @@ const AppointmentDetailContainer = () => {
                 Appointment Date
               </div>
               <p className="flex-1 p-2">
-                {new Date(appointment?.appointmentDate).toLocaleDateString(
-                  "vi-VN"
-                )}
+                {appointment?.appointmentDate
+                  ? new Date(appointment.appointmentDate).toLocaleDateString(
+                      "vi-VN"
+                    )
+                  : "N/A"}
               </p>
             </div>
 
@@ -117,7 +112,7 @@ const AppointmentDetailContainer = () => {
                 Appointment Slot
               </div>
               <p className="flex-1 p-2">
-                {getSlotString(appointment?.appointmentSlot)}
+                {getSlotString(appointment?.appointmentSlot ?? 1)}
               </p>
             </div>
 
@@ -149,11 +144,11 @@ const AppointmentDetailContainer = () => {
                 Fee
               </div>
               <p className="flex-1 p-2">
-                {formatNumber(appointment?.fee.toString())} VNĐ
+                {Math.round(appointment?.fee ?? 0).toLocaleString()} VNĐ
               </p>
             </div>
 
-            {appointment?.doctors?.map((doctor: any) => (
+            {appointment?.doctors?.map((doctor: Doctor) => (
               <div key={doctor.id}>
                 <div className="flex items-center gap-x-2 my-5">
                   <IconBadge icon={BriefcaseMedicalIcon} />
@@ -216,7 +211,7 @@ const AppointmentDetailContainer = () => {
           </div>
         </div>
 
-        {appointment?.childs?.map((child: any) => (
+        {appointment?.childs?.map((child: Child) => (
           <div key={child.id} className="w-full">
             <div className="flex items-center gap-x-2 my-5">
               <IconBadge icon={Baby} />

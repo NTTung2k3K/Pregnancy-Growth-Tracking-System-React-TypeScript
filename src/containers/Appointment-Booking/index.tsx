@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,13 +26,10 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import type {
-  Child,
-  AppointmentTemplate,
-  CreateAppointmentRequest,
-} from "../types/appointment";
+
 import { getSlotString } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { AppointmentTemplate, Child } from "@/containers/Dashboard/Appointment";
 
 const timeSlots = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
@@ -147,7 +144,7 @@ export default function AppointmentBookingContainer() {
 
       setIsLoading(true);
 
-      const appointmentData: CreateAppointmentRequest = {
+      const appointmentData = {
         userId,
         name: name.trim(),
         childIds: selectedChildren,

@@ -1,24 +1,20 @@
-import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image, UserPen } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import {
-  Appointment,
   AppointmentTemplate,
   Child,
   User,
 } from "@/containers/Dashboard/Appointment";
-import { set } from "date-fns";
 import { getSlotString } from "@/lib/utils";
 export interface AppointmentCreateForm {
   userId: string;
@@ -44,12 +40,7 @@ const AppointmentCreateContainer = () => {
   const appointmentDate = watch("appointmentDate");
   const userId = watch("userId");
 
-  const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
-  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<string | undefined>(
-    undefined
-  );
 
   const [users, setUsers] = useState<User[]>([]);
   const [availableSlots, setAvailableSlots] = useState<number[]>([]);
@@ -58,14 +49,15 @@ const AppointmentCreateContainer = () => {
   const [appointmentTemplates, setAppointmentTemplates] = useState<
     AppointmentTemplate[]
   >([]);
-  const [selectedChildren, setSelectedChildren] = useState([]); // List of selected children
+  const [selectedChildren, setSelectedChildren] = useState<string[]>([]); // List of selected children
 
   const handleAddChild = () => {
     // Add a new child selection placeholder
-    setSelectedChildren((prev) => [...prev, null]);
+
+    setSelectedChildren((prev) => [...prev, ""]);
   };
 
-  const handleRemoveChild = (index) => {
+  const handleRemoveChild = (index: number) => {
     // Remove a child from the selected list
     setSelectedChildren((prev) => {
       const newSelection = [...prev];
@@ -74,9 +66,7 @@ const AppointmentCreateContainer = () => {
     });
   };
 
-  const handleSelectChild = (value, index) => {
-    console.log(value, index);
-
+  const handleSelectChild = (value: string, index: number) => {
     setSelectedChildren((prev) => {
       const newSelection = [...prev];
 
@@ -86,16 +76,12 @@ const AppointmentCreateContainer = () => {
       } else {
         toast.error("Child already selected");
       }
-      console.log(newSelection);
 
       return newSelection;
     });
   };
 
-  const getAvailableChildren = (index) => {
-    // Include currently selected value at index
-    console.log(index);
-
+  const getAvailableChildren = (index: number) => {
     const currentlySelected = selectedChildren[index];
     return childsOfUser.filter(
       (child) =>
@@ -141,7 +127,7 @@ const AppointmentCreateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        setAvailableSlots(response.data.resultObj);
+        setAvailableSlots(response.data.resultObj.slots);
       } else {
         toast.error(response.data.message);
       }
@@ -341,7 +327,7 @@ const AppointmentCreateContainer = () => {
                         ? "No slot available"
                         : "Select available slot"}
                     </option>
-                    {availableSlots?.slots?.map((slot: number) => (
+                    {availableSlots?.map((slot: number) => (
                       <option value={slot}>{getSlotString(slot)}</option>
                     ))}
                   </select>

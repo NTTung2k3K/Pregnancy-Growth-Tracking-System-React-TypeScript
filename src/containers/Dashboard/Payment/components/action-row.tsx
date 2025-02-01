@@ -1,17 +1,3 @@
-import React, { useEffect, useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import axios from "axios";
-import { BASE_URL, configHeaders } from "@/services/config";
-import toast from "react-hot-toast";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,27 +5,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pencil, Trash, UserPen } from "lucide-react";
+import { MoreHorizontal, UserPen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
 export default function ActionRow({ id }: { id: number }) {
-  const handleDelete = async (id: string) => {
-    const confirmLeave = window.confirm(" Do you really want to delete?");
-    if (!confirmLeave) return;
+  // const handleDelete = async (id: string) => {
+  //   const confirmLeave = window.confirm(" Do you really want to delete?");
+  //   if (!confirmLeave) return;
 
-    try {
-      await axios.delete(`${BASE_URL}/membershippackages/delete`, {
-        params: { Id: id },
-        headers: configHeaders(),
-      });
-      navigate("/dashboard/membership-packages");
-      window.location.href = `/dashboard/membership-packages`;
-      toast.success("Deleted successfully");
-    } catch (error) {
-      console.error("Failed to delete employee:", error);
-      toast.error("Please login again to refresh token");
-    }
-  };
+  //   try {
+  //     await axios.delete(`${BASE_URL}/membershippackages/delete`, {
+  //       params: { Id: id },
+  //       headers: configHeaders(),
+  //     });
+  //     navigate("/dashboard/membership-packages");
+  //     window.location.href = `/dashboard/membership-packages`;
+  //     toast.success("Deleted successfully");
+  //   } catch (error) {
+  //     console.error("Failed to delete employee:", error);
+  //     toast.error("Please login again to refresh token");
+  //   }
+  // };
 
   return (
     <>
@@ -62,7 +48,10 @@ export default function ActionRow({ id }: { id: number }) {
         >
           <Link
             className="text-sky-800"
-            to={`${ROUTES.DASHBOARD_PAYMENT_DETAIL.replace(":id", id)}`}
+            to={`${ROUTES.DASHBOARD_PAYMENT_DETAIL.replace(
+              ":id",
+              id.toString()
+            )}`}
           >
             <DropdownMenuItem className="cursor-pointer">
               <UserPen className="h-4 w-4 mr-2" />

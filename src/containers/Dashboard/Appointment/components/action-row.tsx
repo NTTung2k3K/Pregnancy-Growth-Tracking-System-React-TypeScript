@@ -31,7 +31,10 @@ export default function ActionRow({
           {(status == "Confirmed" || status == "InProgress") && (
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(":id", id)}`}
+              to={`${ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(
+                ":id",
+                id.toString()
+              )}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <Pencil className="h-4 w-4 mr-2" />
@@ -42,7 +45,10 @@ export default function ActionRow({
 
           <Link
             className="text-sky-800"
-            to={`${ROUTES.DASHBOARD_APPOINTMENT_DETAIL.replace(":id", id)}`}
+            to={`${ROUTES.DASHBOARD_APPOINTMENT_DETAIL.replace(
+              ":id",
+              id.toString()
+            )}`}
           >
             <DropdownMenuItem className="cursor-pointer">
               <UserPen className="h-4 w-4 mr-2" />

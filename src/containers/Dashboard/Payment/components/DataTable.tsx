@@ -23,10 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { ROUTES } from "@/routes";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
