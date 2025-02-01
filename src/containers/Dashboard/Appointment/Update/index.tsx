@@ -97,7 +97,7 @@ const AppointmentUpdateContainer = () => {
       )?.id;
 
       setValue("status", statusId || 0);
-      setDisplayValue(formatNumber(fetchedAppointment.fee.toString()));
+      setDisplayValue(formatNumber(fetchedAppointment?.fee?.toString() ?? 0));
       setAppointment(fetchedAppointment);
     } catch (error) {
       console.error("Failed to fetch Appointment:", error);
