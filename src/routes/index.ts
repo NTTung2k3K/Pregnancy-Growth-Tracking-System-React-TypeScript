@@ -20,7 +20,7 @@ export const ROUTES = {
   APPOINTMENT_HISTORY: "/appointment/history",
   APPOINTMENT_BOOKING: "/appointment/booking",
 
-  CHILDREN_DETAIL: "/child/:childId",
+  CHILDREN_DETAIL: "/child/:id",
 
   //Dashboard
   DASHBOARD_MAIN: "/dashboard/main",
@@ -28,8 +28,7 @@ export const ROUTES = {
 
   //------CHILDREN
   DASHBOARD_CHILDREN: "/dashboard/children",
-  DASHBOARD_CHILDREN_DETAIL: "/dashboard/child/:childId",
-
+  DASHBOARD_CHILDREN_DETAIL: "/dashboard/child/:id",
 
   //--------EMPLOYEES
   DASHBOARD_EMPLOYEES: "/dashboard/employees",
@@ -58,5 +57,4 @@ export const ROUTES = {
   DASHBOARD_APPOINTMENT_DETAIL: "/admin/appointment/detail/:id",
   DASHBOARD_APPOINTMENT_UPDATE: "/admin/appointment/:id",
   DASHBOARD_APPOINTMENT_CREATE: "/admin/appointment/create",
-
 };

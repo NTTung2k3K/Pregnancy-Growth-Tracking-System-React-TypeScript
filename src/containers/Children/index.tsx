@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { truncate } from "@/lib/text";
+import { formatDate, truncate } from "@/lib/text";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CookiesService } from "@/services/cookies.service";
@@ -82,10 +82,7 @@ const ChildrenGridContainer = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
         {children.slice(0, visibleCount).map((item, index) => (
           <Link
-            to={`${ROUTES.CHILDREN_DETAIL.replace(
-              ":childId",
-              String(item.id)
-            )}`}
+            to={`${ROUTES.CHILDREN_DETAIL.replace(":id", String(item.id))}`}
             className="p-1"
             key={index}
           >
@@ -97,11 +94,12 @@ const ChildrenGridContainer = () => {
                     src={item.photoUrl || ""}
                     alt=""
                   />
-                  <div className="p-4 leading-6">
-                    <p className="text-lg text-sky-900 font-semibold">
+                  <div className="p-4">
+                    <p className="text-2xl text-sky-900 font-bold text-center mb-4">
                       {truncate(item.name, 47)}
                     </p>
-                    <p>{truncate(item.dueDate!, 70)}</p>
+                    <p className="text-sm">{formatDate(item.dueDate!)}</p>
+                    <p className="text-sm">Blood Type: {item.bloodType}</p>
                   </div>
                 </div>
               </CardContent>

@@ -26,7 +26,7 @@ interface ChildFormValue {
 }
 
 const ChildDashboardDetailContainer = () => {
-  const { childId } = useParams();
+  const { id } = useParams();
   const [child, setChild] = useState<Child>();
   const {
     register,
@@ -38,7 +38,7 @@ const ChildDashboardDetailContainer = () => {
   const fetchChild = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL + API_ROUTES.CHILD_DETAIL}/${childId}`
+        `${BASE_URL + API_ROUTES.CHILD_DETAIL}/${id}`
       );
       const fetchedChild = response.data.resultObj;
       setChild(response.data.resultObj);

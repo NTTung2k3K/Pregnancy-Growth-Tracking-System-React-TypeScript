@@ -28,11 +28,6 @@ const adminRoutes = [
     href: ROUTES.DASHBOARD_USERS,
   },
   {
-    icon: Baby,
-    label: "Children",
-    href: ROUTES.DASHBOARD_CHILDREN,
-  },
-  {
     icon: Package,
     label: "Membership Packages",
     href: ROUTES.DASHBOARD_MEMBERSHIPPACKAGE,
@@ -59,6 +54,11 @@ const doctorRoutes = [
     icon: SquareMousePointer,
     label: "Appointments",
     href: ROUTES.DASHBOARD_APPOINTMENT,
+  },
+  {
+    icon: Baby,
+    label: "Children",
+    href: ROUTES.DASHBOARD_CHILDREN,
   },
   {
     icon: UserPen,
