@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
 import { CookiesEmployeeService } from "@/services/cookies.service";
 import { accessRules, canAccess } from "@/routes/rules";
 import { ROUTES } from "@/routes";
 import AuthWatcher from "@/containers/Dashboard/AutoWatcher";
 import { setupAxiosInterceptors } from "@/services/config";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -39,17 +39,27 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   setupAxiosInterceptors(); // Kích hoạt interceptor trước khi app chạy
 
   return (
-    <div className="h-full">
-      <div className="h-[80px] md:pl56 fixed inset-y-0 w-full z-50">
-        <Navbar />
-      </div>
-      <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
-        <Sidebar />
-      </div>
-      <main className="md:pl-56 pt-[80px] h-full">{children}</main>
+    <SidebarProvider>
+      <AppSidebar />
+      {/* <Sidebar /> */}
+      <main className="flex-grow">
+        <SidebarTrigger />
+        {children}
+      </main>
       <AuthWatcher />
-    </div>
+    </SidebarProvider>
   );
 };
 
 export default DashboardLayout;
+
+// <div className="h-full">
+//   <div className="h-[80px] md:pl56 fixed inset-y-0 w-full z-50">
+//     <Navbar />
+//   </div>
+//   <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
+//     <Sidebar />
+//   </div>
+//   <main className="md:pl-56 pt-[80px] h-full">{children}</main>
+//   <AuthWatcher />
+// </div>
