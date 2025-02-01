@@ -20,6 +20,9 @@ export const API_ROUTES = {
   CHILD_UPDATE: "/child/update",
   CHILD_DELETE: "/child/delete",
 
+  //RECORD
+  RECORD_CREATE: '/fetalgrowthrecord/create',
+
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",

@@ -21,6 +21,8 @@ import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
 import { formatDateSliceTime } from "@/lib/text";
 import { Child } from "@/containers/Dashboard/Children/components/IChild";
+import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
+import AddRecordForm from "./components/AddRecordForm";
 
 interface ChildFormValue {
   name: string;
@@ -37,7 +39,7 @@ interface ChildFormValue {
 }
 
 const ChildDetailContainer = () => {
-  const { childId } = useParams();
+  const { id } = useParams();
   const [child, setChild] = useState<Child>();
   const {
     register,
@@ -53,7 +55,7 @@ const ChildDetailContainer = () => {
   const fetchChild = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL + API_ROUTES.CHILD_DETAIL}/${childId}`
+        `${BASE_URL + API_ROUTES.CHILD_DETAIL}/${id}`
       );
       const fetchedChild = response.data.resultObj;
       setChild(response.data.resultObj);
@@ -79,7 +81,7 @@ const ChildDetailContainer = () => {
     try {
       handleLoading();
       const response = await axios.put(
-        `${BASE_URL + API_ROUTES.CHILD_UPDATE}/${childId}`,
+        `${BASE_URL + API_ROUTES.CHILD_UPDATE}/${id}`,
         {
           UserId: child?.userId,
           Name: data.name,
@@ -101,7 +103,7 @@ const ChildDetailContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.CHILDREN_DETAIL}/${childId}`;
+        window.location.href = `${ROUTES.CHILDREN_DETAIL}/${id}`;
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -153,6 +155,8 @@ const ChildDetailContainer = () => {
     }
   };
 
+  if (!child) return <p>Loading child data...</p>;
+
   return (
     <>
       <div className="px-32 my-10">
@@ -164,15 +168,16 @@ const ChildDetailContainer = () => {
             </Button>
           </Link>
           <Button
-            onClick={() => handleDelete(childId!)}
+            onClick={() => handleDelete(id!)}
             className="bg-sky-900 text-emerald-400"
           >
             <Trash />
           </Button>
         </div>
-        <div className="flex items-center justify-between mt-8">
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-2xl font-medium">Baby Detail</h1>
+
+        <div className="flex items-center justify-center mt-8">
+          <div className="flex gap-y-2">
+            <h1 className="text-2xl font-bold text-sky-800">Baby Detail</h1>
           </div>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -440,6 +445,17 @@ const ChildDetailContainer = () => {
             </Button>
           </div>
         </form>
+        <div className="flex items-center justify-center mt-8">
+          <div className="flex gap-y-2">
+            <h1 className="text-2xl font-bold text-sky-800">
+              Fetal Growth Record
+            </h1>
+          </div>
+        </div>
+        <div className="my-10">{child && <GrowthCharts child={child} />}</div>
+        <div className="flex items-center justify-center my-10">
+          <AddRecordForm child={child} />
+        </div>
       </div>
     </>
   );

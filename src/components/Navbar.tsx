@@ -20,7 +20,6 @@ const Navbar = () => {
     { name: "Baby Name", link: "/community" },
     { name: "Baby", link: "/community" },
     { name: "Toddler", link: "/community" },
-    { name: "Child", link: "/children" },
     { name: "Health", link: "/community" },
     { name: "Family", link: "/community" },
     { name: "Courses", link: "/community" },
