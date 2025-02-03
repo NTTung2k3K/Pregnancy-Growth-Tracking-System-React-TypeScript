@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash, UserPen } from "lucide-react";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  Trash,
+  UserPen,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -15,6 +21,7 @@ import { BASE_URL, configHeaders } from "@/services/config";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { API_ROUTES } from "@/routes/api";
 
 export interface Employee {
   id: string;
@@ -142,15 +149,15 @@ export const columns: ColumnDef<Employee>[] = [
 ];
 
 const handleDelete = async (id: string) => {
-  const confirmLeave = window.confirm(" Do you really want to delete?");
-  if (!confirmLeave) return;
+  const confirm = window.confirm(" Do you really want to delete?");
+  if (!confirm) return;
 
   try {
-    await axios.delete(`${BASE_URL}/employees/delete-employee`, {
+    await axios.delete(`${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_DELETE}`, {
       params: { Id: id },
       headers: configHeaders(),
     });
-    window.location.href = `/dashboard/employees`;
+    window.location.href = `${ROUTES.DASHBOARD_EMPLOYEES}`;
     toast.success("Deleted successfully");
   } catch (error) {
     console.error("Failed to delete employee:", error);

@@ -30,6 +30,22 @@ export const CookiesEmployeeService = {
   },
 };
 
+export const CookiesEmployee2Service = {
+  get: (): string | null => {
+    const employeeId = Cookies.get("EMPLOYEE");
+    return employeeId || null; // Return the raw string or null if not set
+  },
+  set: (data: string): void => {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 7); // Add 7 days
+    Cookies.set("EMPLOYEE", data, { expires: expirationDate }); // No need for JSON.stringify
+  },
+  remove: (): void => {
+    Cookies.remove("EMPLOYEE");
+  },
+};
+
+
 export const CookiesTokenService = {
   get: (): string | null => {
     const token = Cookies.get("TOKEN");
