@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash, UserPen } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Pencil, Trash } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -13,31 +13,29 @@ import { ROUTES } from "@/routes";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import toast from "react-hot-toast";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
-export interface Employee {
-  id: string;
-  fullName: string | null;
-  image: string | null;
-  address: string | null;
+export interface Blog {
+  id:  number;
+  title: string;
+  thumbnail: string | null;
+  blogTypeId: number;
   status: string;
-  role: string | null;
-  email: string | null;
-  gender: string | null;
+  week: number,
 }
 
-const columnFields: { key: keyof Employee; label: string }[] = [
-  { key: "fullName", label: "FullName" },
-  { key: "email", label: "Email" },
-  { key: "gender", label: "Gender" },
-  { key: "role", label: "Role" },
+
+
+const columnFields: { key: keyof Blog; label: string }[] = [
+  { key: "title", label: "Title" },
+  { key: "week", label: "Week" },
+  { key: "blogTypeId", label: "Blog Type ID" },
+  { key: "status", label: "Status" },
 ];
 
-export const columns: ColumnDef<Employee>[] = [
+export const columns: ColumnDef<Blog>[] = [
   ...columnFields.map(({ key, label }) => ({
     accessorKey: key,
-    header: ({ column }: { column: Column<Employee> }) => {
+    header: ({ column }: { column: Column<Blog> }) => {
       return (
         <Button
           variant="ghost"
@@ -49,50 +47,29 @@ export const columns: ColumnDef<Employee>[] = [
       );
     },
   })),
-  {
-    accessorKey: "image",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Image
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const isImageUrl = row.getValue("image") || false;
-      return isImageUrl ? (
-        <img width={120} src={row.getValue("image")} alt="Image" />
-      ) : (
-        <p>No image</p>
-      );
-    },
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const isActive = row.getValue("status") == "Active";
-      return (
-        <Badge className={cn("bg-slate-500", isActive && "bg-emerald-400")}>
-          {isActive ? "Active" : "Inactive"}
-        </Badge>
-      );
-    },
-  },
+   {
+     accessorKey: "thumbnail",
+     header: ({ column }) => {
+       return (
+         <Button
+           variant="ghost"
+           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+         >
+           Thumbnail
+           <ArrowUpDown className="ml-2 h-4 w-4" />
+         </Button>
+       );
+     },
+     cell: ({ row }) => {
+       const thumbnailUrl = row.getValue("thumbnail") || false;
+       return thumbnailUrl ? (
+         <img width={120} src={row.getValue("thumbnail")} alt="Thumbnail" />
+       ) : (
+         <p>No thumbnail</p>
+       );
+     },
+   },
+
   {
     id: "actions",
     cell: ({ row }) => {
@@ -109,7 +86,7 @@ export const columns: ColumnDef<Employee>[] = [
           <DropdownMenuContent align="end" className="text-sky-800">
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_EMPLOYEE_UPDATE.replace(":id", id)}`}
+              to={`${ROUTES.DASHBOARD_BLOG_UPDATE.replace(":id", id.toString())}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <Pencil className="h-4 w-4 mr-2" />
@@ -118,16 +95,15 @@ export const columns: ColumnDef<Employee>[] = [
             </Link>
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_EMPLOYEE_DETAIL.replace(":id", id)}`}
+              to={`${ROUTES.DASHBOARD_BLOG_DETAIL.replace(":id", id.toString())}`}
             >
               <DropdownMenuItem className="cursor-pointer">
-                <UserPen className="h-4 w-4 mr-2" />
                 Detail
               </DropdownMenuItem>
             </Link>
             <DropdownMenuItem className="cursor-pointer font-semibold">
               <div
-                onClick={() => handleDelete(id)}
+                onClick={() => handleDelete(id.toString())}
                 className="w-full flex items-center"
               >
                 <Trash className="h-4 w-4 mr-2" />
@@ -142,18 +118,18 @@ export const columns: ColumnDef<Employee>[] = [
 ];
 
 const handleDelete = async (id: string) => {
-  const confirmLeave = window.confirm(" Do you really want to delete?");
+  const confirmLeave = window.confirm("Do you really want to delete?");
   if (!confirmLeave) return;
 
   try {
-    await axios.delete(`${BASE_URL}/employees/delete-employee`, {
-      params: { Id: id },
+    await axios.delete(`${BASE_URL}/blog/delete/${id}`, {
       headers: configHeaders(),
     });
-    window.location.href = `/dashboard/employees`;
+    
+    window.location.href = `/dashboard/blogs`;
     toast.success("Deleted successfully");
   } catch (error) {
-    console.error("Failed to delete employee:", error);
+    console.error("Failed to delete blog:", error);
     toast.error("Please login again to refresh token");
   }
 };

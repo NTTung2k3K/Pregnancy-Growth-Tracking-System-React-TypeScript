@@ -10,6 +10,8 @@ export const API_ROUTES = {
   EMPLOYEE_FORGOT_PASSWORD: "/auth/employee-forgot-password",
   EMPLOYEE_RESET_PASSWORD: "/auth/employee-reset-password",
 
+  //Users
+
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
@@ -17,4 +19,13 @@ export const API_ROUTES = {
   //Dashboard
   DASHBOARD_EMPLOYEE_UPDATE: "/employees/update-employee-profile",
   DASHBOARD_EMPLOYEE_CREATE: "/employees/create-employee",
+
+  DASHBOARD_BLOG_UPDATE: "/blog/update",
+  DASHBOARD_BLOG_CREATE: "/blog/create",
+
+  DASHBOARD_BLOGTYPES: "/blogtype/all",
+  DASHBOARD_BLOGTYPE_UPDATE: "/blogtype/update",
+  DASHBOARD_BLOGTYPE_CREATE: "/blogtype/create",
+
+  
 };
