@@ -10,6 +10,8 @@ export const API_ROUTES = {
   EMPLOYEE_FORGOT_PASSWORD: "/auth/employee-forgot-password",
   EMPLOYEE_RESET_PASSWORD: "/auth/employee-reset-password",
 
+  //Users
+  
   //PROFILE
   USER_UPDATE_PROFILE: "/users/update-user-profile",
 
@@ -36,6 +38,17 @@ export const API_ROUTES = {
   DASHBOARD_EMPLOYEES_ALL: "/employees/get-all-doctor",
   DASHBOARD_EMPLOYEE_UPDATE_PROFILE: "/employees/update-employee-profile",
   DASHBOARD_EMPLOYEE_CREATE: "/employees/create-employee",
+
+  //-------BLOGS
+  DASHBOARD_BLOG_UPDATE: "/blog/update",
+  DASHBOARD_BLOG_CREATE: "/blog/create",
+
+  //-------BLOGTYPES
+  DASHBOARD_BLOGTYPES: "/blogtype/all",
+  DASHBOARD_BLOGTYPE_UPDATE: "/blogtype/update",
+  DASHBOARD_BLOGTYPE_CREATE: "/blogtype/create",
+
+  
   DASHBOARD_EMPLOYEE_DETAIL: "/employees/get-employee-by-id",
   DASHBOARD_EMPLOYEE_UPDATE_STATUS: "/employees/update-employee-status",
   DASHBOARD_EMPLOYEE_DELETE: "/employees/delete-employee",

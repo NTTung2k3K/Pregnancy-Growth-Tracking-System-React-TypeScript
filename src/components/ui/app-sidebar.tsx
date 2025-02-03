@@ -117,7 +117,16 @@ const adminNav = [
   {
     title: "Blog",
     icon: Baby,
-    url: "/dashboard/blog",
+    items: [
+      {
+        title: "Blogs",
+        url: ROUTES.DASHBOARD_BLOGS,
+      },
+      {
+        title: "BlogTypes",
+        url: ROUTES.DASHBOARD_BLOGTYPES,
+      },
+    ],
   },
   {
     title: "Growth Charts",
