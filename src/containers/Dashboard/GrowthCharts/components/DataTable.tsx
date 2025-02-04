@@ -22,9 +22,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
-import { ROUTES } from "@/routes";
-import { PlusCircle } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -59,19 +56,13 @@ export function DataTable<TData, TValue>({
     <div className="">
       <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Filter templates by name"
+          placeholder="Filter charts by name"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <Link to={ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_CREATE}>
-          <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
-            <PlusCircle className="h-4 w-4 mr-2" />
-            New appointment templates
-          </Button>
-        </Link>
       </div>
       <div className="rounded-md border">
         <Table>

@@ -97,30 +97,28 @@ const EmployeeUpdateContainer = lazy(
 const EmployeeDetailContainer = lazy(
   () => import("./containers/Dashboard/Employees/Detail")
 );
-const BlogsContainer = lazy(
-  () => import("./containers/Dashboard/Blogs")
-);
- const BlogCreateContainer = lazy(
+const BlogsContainer = lazy(() => import("./containers/Dashboard/Blogs"));
+const BlogCreateContainer = lazy(
   () => import("./containers/Dashboard/Blogs/Create")
- );
- const BlogUpdateContainer = lazy(
-   () => import("./containers/Dashboard/Blogs/Update")
- );
- const BlogsDetailContainer = lazy(
-   () => import("./containers/Dashboard/Blogs/Detail")
- );
- const BlogTypesContainer = lazy(
+);
+const BlogUpdateContainer = lazy(
+  () => import("./containers/Dashboard/Blogs/Update")
+);
+const BlogsDetailContainer = lazy(
+  () => import("./containers/Dashboard/Blogs/Detail")
+);
+const BlogTypesContainer = lazy(
   () => import("./containers/Dashboard/BlogTypes")
 );
-  const BlogTypeCreateContainer = lazy(
-   () => import("./containers/Dashboard/BlogTypes/Create")
-  );
-  const BlogTypeUpdateContainer = lazy(
-    () => import("./containers/Dashboard/BlogTypes/Update")
-  );
-  const BlogTypeDetailContainer = lazy(
-    () => import("./containers/Dashboard/BlogTypes/Detail")
-  );
+const BlogTypeCreateContainer = lazy(
+  () => import("./containers/Dashboard/BlogTypes/Create")
+);
+const BlogTypeUpdateContainer = lazy(
+  () => import("./containers/Dashboard/BlogTypes/Update")
+);
+const BlogTypeDetailContainer = lazy(
+  () => import("./containers/Dashboard/BlogTypes/Detail")
+);
 const EmployeeProfileContainer = lazy(
   () => import("./containers/Dashboard/Profile")
 );
@@ -148,6 +146,16 @@ const MembershipPackageDashboardUpdateContainer = lazy(
 
 const MembershipPackageDashboardDetailContainer = lazy(
   () => import("./containers/Dashboard/MembershipPackage/Detail")
+);
+
+//-------------------GROWTH CHARTS
+
+const GrowthChartsContainer = lazy(
+  () => import("./containers/Dashboard/GrowthCharts")
+);
+
+const GrowthChartUpdateContainer = lazy(
+  () => import("./containers/Dashboard/GrowthCharts/Update")
 );
 
 //------------------------------USERS
@@ -283,40 +291,38 @@ const router = createBrowserRouter([
     path: ROUTES.DASHBOARD_BLOGS,
     element: <DashboardLayout children={<BlogsContainer />} />,
   },
-   {
-     path: ROUTES.DASHBOARD_BLOG_CREATE,
-     element: <DashboardLayout children={<BlogCreateContainer />} />,
-   },
-   {
-     path: ROUTES.DASHBOARD_BLOG_UPDATE,
-     element: <DashboardLayout children={<BlogUpdateContainer />} />,
-   },
-   {
-     path: ROUTES.DASHBOARD_BLOG_DETAIL,
-     element: <DashboardLayout children={<BlogsDetailContainer />} />,
-   },
-   {
+  {
+    path: ROUTES.DASHBOARD_BLOG_CREATE,
+    element: <DashboardLayout children={<BlogCreateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_BLOG_UPDATE,
+    element: <DashboardLayout children={<BlogUpdateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_BLOG_DETAIL,
+    element: <DashboardLayout children={<BlogsDetailContainer />} />,
+  },
+  {
     path: ROUTES.DASHBOARD_BLOGTYPES,
     element: <DashboardLayout children={<BlogTypesContainer />} />,
   },
-    {
-      path: ROUTES.DASHBOARD_BLOGTYPE_CREATE,
-      element: <DashboardLayout children={<BlogTypeCreateContainer />} />,
-    },
-    {
-      path: ROUTES.DASHBOARD_BLOGTYPE_UPDATE,
-      element: <DashboardLayout children={<BlogTypeUpdateContainer />} />,
-    },
-    {
-      path: ROUTES.DASHBOARD_BLOGTYPE_DETAIL,
-      element: <DashboardLayout children={<BlogTypeDetailContainer />} />,
-    },
-    {
-      path: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
-      element: <DashboardLayout children={<EmployeeProfileContainer />} />,
-    }
-  ,
-
+  {
+    path: ROUTES.DASHBOARD_BLOGTYPE_CREATE,
+    element: <DashboardLayout children={<BlogTypeCreateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_BLOGTYPE_UPDATE,
+    element: <DashboardLayout children={<BlogTypeUpdateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_BLOGTYPE_DETAIL,
+    element: <DashboardLayout children={<BlogTypeDetailContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+    element: <DashboardLayout children={<EmployeeProfileContainer />} />,
+  },
   //-----------------------USERS
 
   {
@@ -420,10 +426,17 @@ const router = createBrowserRouter([
       <DashboardLayout children={<AppointmentTemplatesUpdateContainer />} />
     ),
   },
-  // {
-  //   path: ROUTES.DASHBOARD_APPOINTMENT_DETAIL,
-  //   element: <DashboardLayout children={<AppointmentDetailContainer />} />,
-  // },
+
+  //--------------GROWTH CHARTS
+
+  {
+    path: ROUTES.DASHBOARD_GROWTH_CHARTS,
+    element: <DashboardLayout children={<GrowthChartsContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE,
+    element: <DashboardLayout children={<GrowthChartUpdateContainer />} />,
+  },
 ]);
 
 function App() {

@@ -11,7 +11,7 @@ export const API_ROUTES = {
   EMPLOYEE_RESET_PASSWORD: "/auth/employee-reset-password",
 
   //Users
-  
+
   //PROFILE
   USER_UPDATE_PROFILE: "/users/update-user-profile",
 
@@ -48,7 +48,6 @@ export const API_ROUTES = {
   DASHBOARD_BLOGTYPE_UPDATE: "/blogtype/update",
   DASHBOARD_BLOGTYPE_CREATE: "/blogtype/create",
 
-  
   DASHBOARD_EMPLOYEE_DETAIL: "/employees/get-employee-by-id",
   DASHBOARD_EMPLOYEE_UPDATE_STATUS: "/employees/update-employee-status",
   DASHBOARD_EMPLOYEE_DELETE: "/employees/delete-employee",
@@ -72,14 +71,23 @@ export const API_ROUTES = {
   DASHBOARD_MEMBERSHIPPACKAGE_CREATE: "/membershippackages/create",
   DASHBOARD_MEMBERSHIPPACKAGE_DELETE: "/membershippackages/delete",
   DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/membershippackages/get-package",
+
   //-----------------APPOINTMENT
   DASHBOARD_APPOINTMENT_ALL: "/appointments/get-all",
   DASHBOARD_APPOINTMENT_UPDATE: "/appointments/update",
   DASHBOARD_APPOINTMENT_CREATE: "/appointments/create",
+
   //-----------------APPOINTMENT TEMPLATES
   DASHBOARD_APPOINTMENT_TEMPLATES_ALL: "/appointmenttemplates/get-all",
   DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE: "/appointmenttemplates/update",
   DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL: "/appointmenttemplates/get-by-id",
   DASHBOARD_APPOINTMENT_TEMPLATES_CREATE: "/appointmenttemplates/create",
   DASHBOARD_APPOINTMENT_TEMPLATES_DELETE: "/appointmenttemplates/delete",
+  
+  //---------------------GROWTH CHARTS
+  DASHBOARD_GROWTH_CHARTS_ALL: "/growthchart/get-all-growth-chart-by-admin",
+  DASHBOARD_GROWTH_CHARTS_STATUS_ALL: "/growthchart/get-status-handler",
+  DASHBOARD_GROWTH_CHARTS_UPDATE: "/growthchart/update-growth-chart-by-admin",
+  DASHBOARD_GROWTH_CHARTS_DETAIL: "/growthchart/get-by-id",
+  DASHBOARD_GROWTH_CHARTS_DELETE: "/growthchart/delete",
 };

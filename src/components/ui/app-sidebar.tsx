@@ -7,8 +7,8 @@ import {
   HomeIcon as House,
   UserCog,
   Users,
-  Baby,
   Package,
+  BookMarked,
 } from "lucide-react";
 
 import {
@@ -120,7 +120,7 @@ const adminNav = [
   // },
   {
     title: "Blog",
-    icon: Baby,
+    icon: BookMarked,
     items: [
       {
         title: "Blogs",
@@ -135,7 +135,7 @@ const adminNav = [
   {
     title: "Growth Charts",
     icon: Package,
-    url: "/dashboard/growth-charts",
+    url: ROUTES.DASHBOARD_GROWTH_CHARTS,
   },
 ];
 
