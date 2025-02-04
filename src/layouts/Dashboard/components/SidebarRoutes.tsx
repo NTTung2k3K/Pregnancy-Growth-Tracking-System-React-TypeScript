@@ -7,6 +7,8 @@ import {
   UserPen,
   Users,
   Baby,
+  BookHeart,
+  Newspaper,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { ROUTES } from "@/routes";
@@ -41,6 +43,16 @@ const adminRoutes = [
     icon: UserPen,
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
+  {
+    icon: Newspaper,
+    label: "Blogs",
+    href: ROUTES.DASHBOARD_BLOGS,
+  },
+  {
+    icon: BookHeart,
+    label: "BlogTypes",
+    href: ROUTES.DASHBOARD_BLOGTYPES
   },
 ];
 
