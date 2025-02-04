@@ -5,6 +5,9 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 // import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
+import GrowthChart from "@/containers/Growth-Chart";
+import GrowthChartDetail from "@/containers/Growth-Chart/Detail";
+import GrowthChartMe from "@/containers/Growth-Chart/Me";
 
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
@@ -196,6 +199,19 @@ const router = createBrowserRouter([
   {
     path: ROUTES.CHILDREN_DETAIL,
     element: <MainLayout children={<ChildDetailContainer />} />,
+  },
+  //---------- Growthchart
+  {
+    path: ROUTES.GROWTH_CHART,
+    element: <MainLayout children={<GrowthChart />} />,
+  },
+  {
+    path: ROUTES.GROWTH_CHART_DETAIL,
+    element: <MainLayout children={<GrowthChartDetail />} />,
+  },
+  {
+    path: ROUTES.MY_GROWTH_CHART,
+    element: <MainLayout children={<GrowthChartMe />} />,
   },
   //---------- DASHBOARD PAGES-------------
   {

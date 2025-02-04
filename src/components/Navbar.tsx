@@ -23,7 +23,7 @@ const Navbar = () => {
     { name: "Health", link: "/community" },
     { name: "Family", link: "/community" },
     { name: "Courses", link: "/community" },
-    { name: "Registry Builder", link: "/community" },
+    { name: "Community", link: ROUTES.GROWTH_CHART },
     { name: "Booking Appointment", link: ROUTES.APPOINTMENT_BOOKING },
   ];
 
