@@ -34,6 +34,14 @@ const ChildCreateContainer = lazy(() => import("./containers/Children/Create"));
 const UserProfileContainer = lazy(() => import("./containers/Profile"));
 const ChildDetailContainer = lazy(() => import("./containers/Children/Detail"));
 
+// ----------------------TOOLS
+const DueDateCalculatorContainer = lazy(
+  () => import("./containers/Tools/DueDateCalculator")
+);
+const NameGeneratorContainer = lazy(
+  () => import("./containers/Tools/NameGenerator")
+);
+
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
 const VerifyOTPContainer = lazy(() => import("./containers/VerifyOTP"));
@@ -62,6 +70,17 @@ const AppointmentDetailContainer = lazy(
 );
 const AppointmentAdminContainer = lazy(
   () => import("@/containers/Dashboard/Appointment")
+);
+//-----------DASHBOARD APPOINTMENT TEMPLATES
+
+const AppointmentTemplatesDashboardContainer = lazy(
+  () => import("./containers/Dashboard/AppoinmentTemplates")
+);
+const AppointmentTemplatesCreateContainer = lazy(
+  () => import("./containers/Dashboard/AppoinmentTemplates/Create")
+);
+const AppointmentTemplatesUpdateContainer = lazy(
+  () => import("./containers/Dashboard/AppoinmentTemplates/Update")
 );
 
 //------------------------------EMPLOYEES
@@ -197,6 +216,18 @@ const router = createBrowserRouter([
     path: ROUTES.CHILDREN_DETAIL,
     element: <MainLayout children={<ChildDetailContainer />} />,
   },
+
+  //-------- TOOLS
+
+  {
+    path: ROUTES.DUE_DATE_CALCULATOR,
+    element: <MainLayout children={<DueDateCalculatorContainer />} />,
+  },
+  {
+    path: ROUTES.NAME_GENERATOR,
+    element: <MainLayout children={<NameGeneratorContainer />} />,
+  },
+
   //---------- DASHBOARD PAGES-------------
   {
     path: ROUTES.DASHBOARD_MAIN,
@@ -313,6 +344,29 @@ const router = createBrowserRouter([
     path: ROUTES.DASHBOARD_APPOINTMENT_DETAIL,
     element: <DashboardLayout children={<AppointmentDetailContainer />} />,
   },
+  //-----------------------Admin APPOINTMENTS TEMPLATES----------------
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES,
+    element: (
+      <DashboardLayout children={<AppointmentTemplatesDashboardContainer />} />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_CREATE,
+    element: (
+      <DashboardLayout children={<AppointmentTemplatesCreateContainer />} />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE,
+    element: (
+      <DashboardLayout children={<AppointmentTemplatesUpdateContainer />} />
+    ),
+  },
+  // {
+  //   path: ROUTES.DASHBOARD_APPOINTMENT_DETAIL,
+  //   element: <DashboardLayout children={<AppointmentDetailContainer />} />,
+  // },
 ]);
 
 function App() {

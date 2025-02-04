@@ -83,27 +83,26 @@ const ChildDetailContainer = () => {
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.CHILD_UPDATE}/${id}`,
         {
-          UserId: child?.userId,
-          Name: data.name,
-          FetalGender: data.fetalGender,
-          PregnancyStage: data.pregnancyStage,
-          WeightEstimate: data.weightEstimate,
-          HeightEstimate: data.heightEstimate,
-          DueDate: data.dueDate,
-          DeliveryPlan: data.deliveryPlan,
-          Complications: data.complications,
-          PregnancyWeekAtBirth: data.pregnancyWeekAtBirth,
-          IsGenerateSampleAppointments: false,
-          Image: imageFile,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          userId: child?.userId,
+          name: data.name,
+          fetalGender: data.fetalGender === 1 ? "Male" : "Female",
+          pregnancyStage: data.pregnancyStage,
+          weightEstimate: data.weightEstimate,
+          heightEstimate: data.heightEstimate,
+          dueDate: data.dueDate,
+          deliveryPlan: data.deliveryPlan,
+          complications: data.complications,
+          pregnancyWeekAtBirth: data.pregnancyWeekAtBirth,
+          isGenerateSampleAppointments: false,
+          photoUrl: imageFile,
+          bloodType: data.bloodType,
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.CHILDREN_DETAIL}/${id}`;
+        window.location.href = `${ROUTES.CHILDREN_DETAIL.replace(
+          ":id",
+          String(id)
+        )}`;
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);

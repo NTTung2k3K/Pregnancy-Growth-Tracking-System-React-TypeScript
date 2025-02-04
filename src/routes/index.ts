@@ -20,6 +20,10 @@ export const ROUTES = {
   APPOINTMENT_HISTORY: "/appointment/history",
   APPOINTMENT_BOOKING: "/appointment/booking",
 
+  //--------TOOLS
+  DUE_DATE_CALCULATOR: "/due-date-calculator",
+  NAME_GENERATOR: "/name-generator",
+
   CHILDREN_DETAIL: "/child/:id",
 
   //Dashboard
@@ -57,4 +61,11 @@ export const ROUTES = {
   DASHBOARD_APPOINTMENT_DETAIL: "/admin/appointment/detail/:id",
   DASHBOARD_APPOINTMENT_UPDATE: "/admin/appointment/:id",
   DASHBOARD_APPOINTMENT_CREATE: "/admin/appointment/create",
+
+  //-----------------APPOINTMENT TEMPLATES
+  DASHBOARD_APPOINTMENT_TEMPLATES: "/dashboard/appointmenttemplates",
+  // DASHBOARD_APPOINTMENT_DETAIL: "/admin/appointment/detail/:id",
+  DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE: "/dashboard/appointmenttemplates/:id",
+  DASHBOARD_APPOINTMENT_TEMPLATES_CREATE:
+    "/dashboard/appointmenttemplates/create",
 };

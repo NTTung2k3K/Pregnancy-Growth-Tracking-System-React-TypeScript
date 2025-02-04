@@ -21,7 +21,7 @@ export const API_ROUTES = {
   CHILD_DELETE: "/child/delete",
 
   //RECORD
-  RECORD_CREATE: '/fetalgrowthrecord/create',
+  RECORD_CREATE: "/fetalgrowthrecord/create",
 
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
@@ -63,5 +63,10 @@ export const API_ROUTES = {
   DASHBOARD_APPOINTMENT_ALL: "/appointments/get-all",
   DASHBOARD_APPOINTMENT_UPDATE: "/appointments/update",
   DASHBOARD_APPOINTMENT_CREATE: "/appointments/create",
-
+  //-----------------APPOINTMENT TEMPLATES
+  DASHBOARD_APPOINTMENT_TEMPLATES_ALL: "/appointmenttemplates/get-all",
+  DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE: "/appointmenttemplates/update",
+  DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL: "/appointmenttemplates/get-by-id",
+  DASHBOARD_APPOINTMENT_TEMPLATES_CREATE: "/appointmenttemplates/create",
+  DASHBOARD_APPOINTMENT_TEMPLATES_DELETE: "/appointmenttemplates/delete",
 };

@@ -107,6 +107,10 @@ const adminNav = [
         title: "Payment",
         url: "/dashboard/payments",
       },
+      {
+        title: "Appointment Templates",
+        url: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES,
+      },
     ],
   },
   // {
