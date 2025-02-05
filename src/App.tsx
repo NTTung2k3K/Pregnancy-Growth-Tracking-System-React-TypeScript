@@ -15,6 +15,7 @@ const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
 const NotFoundContainer = lazy(() => import("./containers/NotFound"));
 const HomeContainer = lazy(() => import("./containers/Home"));
 const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
+const BlogContainer = lazy(() => import("./containers/Blog"))
 const BlogGridContainer = lazy(() => import("./containers/BlogGrid"));
 const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
@@ -175,6 +176,10 @@ const router = createBrowserRouter([
   },
   {
     path: ROUTES.BLOG,
+    element: <MainLayout children={<BlogContainer />} />,
+  },
+  {
+    path: ROUTES.BLOGTYPE,
     element: <MainLayout children={<BlogGridContainer />} />,
   },
   {
