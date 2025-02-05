@@ -21,6 +21,11 @@ export const ROUTES = {
   APPOINTMENT_HISTORY: "/appointment/history",
   APPOINTMENT_BOOKING: "/appointment/booking",
 
+  MY_GROWTH_CHART: "/growth-charts/me",
+  GROWTH_CHART: "/growth-charts",
+  GROWTH_CHART_DETAIL: "/growth-chart/:id",
+
+
   CHILDREN_DETAIL: "/child/:id",
 
   //Dashboard

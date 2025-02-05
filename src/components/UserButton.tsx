@@ -68,8 +68,19 @@ const UserButton = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link className="text-black font-normal w-full" to={ROUTES.CHILDREN}>
+            <Link
+              className="text-black font-normal w-full"
+              to={ROUTES.CHILDREN}
+            >
               Children
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link
+              className="text-black font-normal w-full"
+              to={ROUTES.MY_GROWTH_CHART}
+            >
+              Growth chart
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
