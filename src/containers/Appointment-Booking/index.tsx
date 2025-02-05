@@ -118,7 +118,7 @@ export default function AppointmentBookingContainer() {
     try {
       const userId = CookiesService.get();
       if (!userId) {
-        toast.error("User ID not found. Please login again.");
+        toast.error("Please login again to booking");
         return;
       }
 

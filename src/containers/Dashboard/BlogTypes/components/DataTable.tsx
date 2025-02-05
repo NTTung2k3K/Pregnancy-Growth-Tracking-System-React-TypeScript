@@ -62,9 +62,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter blogtypes by name"
-          value={
-            (table.getColumn("name")?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
@@ -73,7 +71,7 @@ export function DataTable<TData, TValue>({
         <Link to={ROUTES.DASHBOARD_BLOGTYPE_CREATE}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
             <PlusCircle className="h-4 w-4 mr-2" />
-            New blogtype
+            New Blog Type
           </Button>
         </Link>
       </div>

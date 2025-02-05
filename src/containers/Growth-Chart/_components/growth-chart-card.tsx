@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,22 @@ interface GrowthChartCardProps {
     question: string;
     viewCount: number;
     createdTime: string;
+    userViewModel: {
+      id: string;
+      email: string;
+      fullName: string;
+      image: string;
+      dateOfBirth: any;
+      address: any;
+      phoneNumber: any;
+      gender: any;
+      bloodGroup: any;
+      status: string;
+      createdBy: any;
+      isEmailConfirmed: any;
+      lastUpdatedBy: any;
+      childs: any;
+    };
     childModelView: {
       name: string;
       photoUrl: string;
@@ -28,10 +45,10 @@ export function GrowthChartCard({ chart }: GrowthChartCardProps) {
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="w-12 h-12">
             <AvatarImage
-              src={chart.childModelView.photoUrl}
-              alt={chart.childModelView.name}
+              src={chart.userViewModel.image}
+              alt={chart.userViewModel.fullName}
             />
-            <AvatarFallback>{chart.childModelView.name[0]}</AvatarFallback>
+            <AvatarFallback>{chart.userViewModel.fullName[0]}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center justify-between">
@@ -52,7 +69,10 @@ export function GrowthChartCard({ chart }: GrowthChartCardProps) {
               </div>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>{chart.childModelView.name}</span>
+              <span>
+                <strong>{chart.userViewModel.fullName}</strong> <br></br> Child:{" "}
+                {chart.childModelView.name}
+              </span>
               <span>•</span>
               <span>
                 {new Date(chart.childModelView.dueDate).toLocaleDateString(
