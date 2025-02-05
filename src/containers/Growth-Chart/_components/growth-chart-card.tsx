@@ -66,13 +66,15 @@ export function GrowthChartCard({ chart }: GrowthChartCardProps) {
                     addSuffix: true,
                   })}{" "}
                 </span>
+                <br />
+                <span className="text-xs">
+                  Posted by <strong> {chart.userViewModel.fullName}</strong>
+                </span>{" "}
+                <br></br>
               </div>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>
-                <strong>{chart.userViewModel.fullName}</strong> <br></br> Child:{" "}
-                {chart.childModelView.name}
-              </span>
+              <span>{chart.childModelView.name}</span>
               <span>•</span>
               <span>
                 {new Date(chart.childModelView.dueDate).toLocaleDateString(
