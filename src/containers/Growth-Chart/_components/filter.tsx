@@ -79,7 +79,7 @@ export function Filters({ statuses, onFilterChange }: FiltersProps) {
           <Label htmlFor="search">Search</Label>
           <Input
             id="search"
-            placeholder="Search topics or questions..."
+            placeholder="Search topics, questions, name and more..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

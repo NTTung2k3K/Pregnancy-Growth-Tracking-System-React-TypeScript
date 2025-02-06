@@ -18,6 +18,8 @@ export const ROUTES = {
   CHILDREN_CREATE: "/children/create",
   PROFILE: "/profile",
   APPOINTMENT_HISTORY: "/appointment/history",
+  APPOINTMENT_CALENDAR: "/appointment/my-calendar",
+
   APPOINTMENT_BOOKING: "/appointment/booking",
 
   MY_GROWTH_CHART: "/growth-charts/me",
@@ -28,25 +30,25 @@ export const ROUTES = {
   CHILDREN_DETAIL: "/child/:id",
 
   //Dashboard
-  DASHBOARD_MAIN:"/dashboard/main",
+  DASHBOARD_MAIN: "/dashboard/main",
   DASHBOARD_DOCTOR: "/dashboard/doctor",
-  DASHBOARD_EMPLOYEES:"/dashboard/employees",
-  DASHBOARD_EMPLOYEE_UPDATE:"/dashboard/employee/:id",
-  DASHBOARD_EMPLOYEE_CREATE:"/dashboard/employee/create",
-  DASHBOARD_EMPLOYEE_DETAIL:"/dashboard/employee/detail/:id",
+  DASHBOARD_EMPLOYEES: "/dashboard/employees",
+  DASHBOARD_EMPLOYEE_UPDATE: "/dashboard/employee/:id",
+  DASHBOARD_EMPLOYEE_CREATE: "/dashboard/employee/create",
+  DASHBOARD_EMPLOYEE_DETAIL: "/dashboard/employee/detail/:id",
   DASHBOARD_EMPLOYEE_PROFILE: "/dashboard/profile",
 
   //Blogs
-  DASHBOARD_BLOGS:"/dashboard/blogs",
-  DASHBOARD_BLOG_UPDATE:"/dashboard/blog/:id",
-  DASHBOARD_BLOG_CREATE:"/dashboard/blog/create",
-  DASHBOARD_BLOG_DETAIL:"/dashboard/blog/detail/:id",
+  DASHBOARD_BLOGS: "/dashboard/blogs",
+  DASHBOARD_BLOG_UPDATE: "/dashboard/blog/:id",
+  DASHBOARD_BLOG_CREATE: "/dashboard/blog/create",
+  DASHBOARD_BLOG_DETAIL: "/dashboard/blog/detail/:id",
 
   //BLogTypes
-  DASHBOARD_BLOGTYPES:"/dashboard/blogtypes",
-  DASHBOARD_BLOGTYPE_UPDATE:"/dashboard/blogtype/:id",
-  DASHBOARD_BLOGTYPE_CREATE:"/dashboard/blogtype/create",
-  DASHBOARD_BLOGTYPE_DETAIL:"/dashboard/blogtype/detail/:id",
+  DASHBOARD_BLOGTYPES: "/dashboard/blogtypes",
+  DASHBOARD_BLOGTYPE_UPDATE: "/dashboard/blogtype/:id",
+  DASHBOARD_BLOGTYPE_CREATE: "/dashboard/blogtype/create",
+  DASHBOARD_BLOGTYPE_DETAIL: "/dashboard/blogtype/detail/:id",
 
 
 

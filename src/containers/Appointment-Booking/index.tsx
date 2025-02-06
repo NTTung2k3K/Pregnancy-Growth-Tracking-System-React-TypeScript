@@ -31,7 +31,7 @@ import { getSlotString } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { AppointmentTemplate, Child } from "@/containers/Dashboard/Appointment";
 
-const timeSlots = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+export const timeSlots = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
 export default function AppointmentBookingContainer() {
   const [step, setStep] = useState(1);
@@ -118,7 +118,7 @@ export default function AppointmentBookingContainer() {
     try {
       const userId = CookiesService.get();
       if (!userId) {
-        toast.error("User ID not found. Please login again.");
+        toast.error("Please login again to booking");
         return;
       }
 

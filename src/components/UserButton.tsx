@@ -70,6 +70,14 @@ const UserButton = () => {
           <DropdownMenuItem>
             <Link
               className="text-black font-normal w-full"
+              to={ROUTES.APPOINTMENT_CALENDAR}
+            >
+              My calendar
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link
+              className="text-black font-normal w-full"
               to={ROUTES.CHILDREN}
             >
               Children
