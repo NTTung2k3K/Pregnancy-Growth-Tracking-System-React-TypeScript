@@ -22,6 +22,12 @@ export const ROUTES = {
 
   APPOINTMENT_BOOKING: "/appointment/booking",
 
+  //--------TOOLS
+  DUE_DATE_CALCULATOR: "/due-date-calculator",
+  NAME_GENERATOR: "/name-generator",
+  COST_CALCULATOR:"/cost-calculator",
+
+  //---------GROWTH CHARTS
   MY_GROWTH_CHART: "/growth-charts/me",
   GROWTH_CHART: "/growth-charts",
   GROWTH_CHART_DETAIL: "/growth-chart/:id",
@@ -76,4 +82,16 @@ export const ROUTES = {
   DASHBOARD_APPOINTMENT_DETAIL: "/admin/appointment/detail/:id",
   DASHBOARD_APPOINTMENT_UPDATE: "/admin/appointment/:id",
   DASHBOARD_APPOINTMENT_CREATE: "/admin/appointment/create",
+
+  //-----------------APPOINTMENT TEMPLATES
+  DASHBOARD_APPOINTMENT_TEMPLATES: "/dashboard/appointmenttemplates",
+  DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE: "/dashboard/appointmenttemplates/:id",
+  DASHBOARD_APPOINTMENT_TEMPLATES_CREATE:
+    "/dashboard/appointmenttemplates/create",
+
+  //----------------GROWTH CHARTS
+  DASHBOARD_GROWTH_CHARTS: "/dashboard/growth-charts",
+  DASHBOARD_GROWTH_CHARTS_UPDATE: "/dashboard/growth-charts/:id",
+  DASHBOARD_DOCTOR_GROWTH_CHARTS: "/dashboard/doctor/growth-charts",
+  DASHBOARD_DOCTOR_GROWTH_CHARTS_UPDATE: "/dashboard/doctor/growth-charts/:id",
 };

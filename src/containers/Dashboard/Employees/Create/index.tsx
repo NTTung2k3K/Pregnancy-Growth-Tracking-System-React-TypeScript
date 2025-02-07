@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import { Image, UserPen } from "lucide-react";
+import { CircleArrowLeft, Image, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -11,6 +11,7 @@ import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
+import { Link } from "react-router-dom";
 
 interface EmployeeFormValues {
   username: string;
@@ -125,7 +126,13 @@ const EmployeeCreateContainer = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-6">
+        <div className="p-6 mt-10">
+          <Link to={ROUTES.DASHBOARD_EMPLOYEES}>
+            <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700 mb-10">
+              <CircleArrowLeft />
+              Back
+            </Button>
+          </Link>
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-y-2">
               <h1 className="text-2xl font-medium">Create Employee</h1>
