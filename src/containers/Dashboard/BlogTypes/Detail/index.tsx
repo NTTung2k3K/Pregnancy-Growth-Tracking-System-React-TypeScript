@@ -6,6 +6,7 @@ import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export interface BlogType {
   id: string;
@@ -20,12 +21,11 @@ const BlogTypeDetailContainer = () => {
 
   const fetchBlogType = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}/blogtype/${id}`);
-
-      // Giả sử API trả về đối tượng blog trong response.data.resultObj
+      const response = await axios.get(`${BASE_URL}/blogtype/${id}`);
+      // Giả sử API trả về đối tượng blogType trong response.data.resultObj
       setBlogType(response.data.resultObj);
     } catch (error) {
-      console.error("Failed to fetch blog:", error);
+      console.error("Failed to fetch blogtype:", error);
     }
   };
 
@@ -69,20 +69,20 @@ const BlogTypeDetailContainer = () => {
           </div>
         </div>
 
-        {/* Cột hiển thị content và thumbnail */}
+        {/* Cột hiển thị thumbnail sử dụng Avatar */}
         <div className="space-y-6">
-
           <div>
             <div className="flex items-center gap-x-2">
               <IconBadge icon={Image} />
               <h2 className="text-xl text-sky-900 font-semibold">Thumbnail</h2>
             </div>
-            <div className="flex items-center justify-center mt-4 border bg-slate-100 rounded-md p-4">
-              {blogType?.thumbnail ? (
-                <img width={200} src={blogType.thumbnail} alt="Thumbnail" />
-              ) : (
-                <p>No Thumbnail</p>
-              )}
+            <div className="flex items-center justify-center mt-4">
+              <Avatar className="h-52 w-52 border text-center">
+                <AvatarImage src={blogType?.thumbnail || undefined} />
+                <AvatarFallback className="flex w-full h-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
+                  ?
+                </AvatarFallback>
+              </Avatar>
             </div>
           </div>
         </div>

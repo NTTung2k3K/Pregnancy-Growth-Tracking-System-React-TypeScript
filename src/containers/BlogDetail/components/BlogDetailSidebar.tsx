@@ -1,7 +1,6 @@
 import { FaSearch } from "react-icons/fa";
 import NewsLatterBox from "./NewsLatterBox";
 import RelatedPost from "./RelatedPost";
-import TagButton from "./TagButton";
 import { Link } from "react-router-dom";
 
 const BlogDetailSidebar = () => {
@@ -57,16 +56,6 @@ const BlogDetailSidebar = () => {
               </li>
             ))}
           </ul>
-        </div>
-        <div className="shadow-three dark:bg-gray-dark mb-10 rounded-sm bg-[#F3F2F2] dark:shadow-none">
-          <h3 className="border-b border-body-color border-opacity-10 px-8 py-4 text-lg font-semibold text-black dark:border-white dark:border-opacity-10 dark:text-white">
-            Popular Tags
-          </h3>
-          <div className="flex flex-wrap px-8 py-6">
-            {Array.from({ length: 5 }).map((_) => (
-              <TagButton text="Themes" />
-            ))}
-          </div>
         </div>
 
         <NewsLatterBox />

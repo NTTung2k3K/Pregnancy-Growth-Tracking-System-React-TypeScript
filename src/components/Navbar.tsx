@@ -22,8 +22,8 @@ const Navbar = () => {
     { name: "Toddler", link: "/community" },
     { name: "Health", link: "/community" },
     { name: "Family", link: "/community" },
-    { name: "Courses", link: "/community" },
-    { name: "Community", link: ROUTES.GROWTH_CHART },
+    { name: "Blogs", link: ROUTES.BLOG },
+    { name: "Growth Chart", link: ROUTES.GROWTH_CHART },
     { name: "Booking Appointment", link: ROUTES.APPOINTMENT_BOOKING },
   ];
 

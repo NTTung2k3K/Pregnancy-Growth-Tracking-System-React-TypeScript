@@ -6,13 +6,13 @@ import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { useState, useEffect } from "react";
-import React from 'react';
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { CookiesEmployeeService } from "@/services/cookies.service";
-import {Editor} from '@tinymce/tinymce-react';
+import { Editor } from "@tinymce/tinymce-react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
 
@@ -22,30 +22,31 @@ interface BlogFormValues {
   week: number | null;
   authorId: string;
   blogTypeId: number;
-  isFeatured: boolean;
-  thumbnail: File | null;
-  likesCount: number;
-  viewCount: number;
+  thumbnail: File;
   status: string;
   sources: string;
 }
 
 const BlogCreateContainer = () => {
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<BlogFormValues>({
-    mode: "onChange",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<BlogFormValues>({ mode: "onChange" });
 
   const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [blogTypes, setBlogTypes] = useState<any[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [statusOptions, setStatusOptions] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchedUserId = CookiesEmployeeService.get();
-    setUserId(fetchedUserId);
-
-    // Fetch available blog types
+    if (fetchedUserId !== null && fetchedUserId !== undefined) {
+      setValue("authorId", fetchedUserId);
+    }
+  
     const fetchBlogTypes = async () => {
       try {
         const response = await axios.get(`${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPES}`);
@@ -55,11 +56,22 @@ const BlogCreateContainer = () => {
       }
     };
 
+    const fetchStatus = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/blog/get-status-handler`);
+        setStatusOptions(response.data.resultObj || []);
+      } catch (error) {
+        console.error("Error fetching status:", error);
+        setStatusOptions([]);
+      }
+    };
+
     fetchBlogTypes();
-  }, []);
+    fetchStatus();
+  }, [setValue]);
 
   const onEditorChange = (content: string) => {
-    setValue("content", content); 
+    setValue("content", content);
   };
 
   const handleLoading = () => {
@@ -81,9 +93,6 @@ const BlogCreateContainer = () => {
           authorId: data.authorId,
           week: data.week,
           blogTypeId: data.blogTypeId,
-          isFeatured: data.isFeatured,
-          likeCount: data.likesCount,
-          viewCount: data.viewCount,
           status: data.status,
           sources: data.sources,
           thumbnail: imageFile,
@@ -148,25 +157,23 @@ const BlogCreateContainer = () => {
                   {...register("title", { required: "Title is required" })}
                 />
               </div>
-              {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+              {errors.title && <p className="text-red-500">{errors.title?.message}</p>}
 
-              {/* Author Field */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Author</div>
-                <input
-                  value={userId || ""}
-                  className="flex-1 p-2"
-                  readOnly
-                  {...register("authorId", { required: "Author is required" })}
-                />
-              </div>
+              {/* Author Field (ẩn hoàn toàn) */}
+              <input
+                type="hidden"
+                {...register("authorId", { required: "Author is required" })}
+              />
 
               {/* Blog Type Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Blog Type</div>
                 <select
                   className="flex-1 p-2"
-                  {...register("blogTypeId", { required: "Blog Type is required", valueAsNumber: true })}
+                  {...register("blogTypeId", {
+                    required: "Blog Type is required",
+                    valueAsNumber: true,
+                  })}
                 >
                   <option value="">Select Blog Type</option>
                   {blogTypes.length > 0 ? (
@@ -180,13 +187,7 @@ const BlogCreateContainer = () => {
                   )}
                 </select>
               </div>
-              {errors.blogTypeId && <p className="text-red-500">{errors.blogTypeId.message}</p>}
-
-              {/* Featured Field */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Featured</div>
-                <input type="checkbox" {...register("isFeatured")} />
-              </div>
+              {errors.blogTypeId && <p className="text-red-500">{errors.blogTypeId?.message}</p>}
 
               {/* Week Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -194,49 +195,42 @@ const BlogCreateContainer = () => {
                 <input
                   type="number"
                   className="flex-1 p-2"
-                  {...register("week", { 
-                    setValueAs: (value) => value === "" ? null : parseInt(value, 10)
+                  {...register("week", {
+                    setValueAs: (value) => (value === "" ? null : parseInt(value, 10)),
                   })}
-                />
-              </div>
-
-              {/* Like and View Count Fields */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Likes</div>
-                <input
-                  type="number"
-                  className="flex-1 p-2"
-                  {...register("likesCount", { valueAsNumber: true })}
-                />
-              </div>
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Views</div>
-                <input
-                  type="number"
-                  className="flex-1 p-2"
-                  {...register("viewCount", { valueAsNumber: true })}
                 />
               </div>
 
               {/* Status Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Status</div>
-                <input
+                <select
                   className="flex-1 p-2"
                   {...register("status", { required: "Status is required" })}
-                />
+                >
+                  <option value="">Select status</option>
+                  {statusOptions && statusOptions.length > 0 ? (
+                    statusOptions.map((s: any) => (
+                      <option key={s.id} value={s.id}>
+                        {s.status}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>Loading status...</option>
+                  )}
+                </select>
               </div>
-              {errors.status && <p className="text-red-500">{errors.status.message}</p>}
+              {errors.status && <p className="text-red-500">{errors.status?.message}</p>}
 
               {/* Sources Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Sources</div>
-                <input
+                <textarea
                   className="flex-1 p-2"
                   {...register("sources", { required: "Sources are required" })}
                 />
               </div>
-              {errors.sources && <p className="text-red-500">{errors.sources.message}</p>}
+              {errors.sources && <p className="text-red-500">{errors.sources?.message}</p>}
             </div>
 
             {/* Thumbnail Upload */}
@@ -249,7 +243,9 @@ const BlogCreateContainer = () => {
                 <div className="flex justify-center">
                   <Avatar className="h-32 w-32 border text-center">
                     <AvatarImage src={imagePreview} />
-                    <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">?</AvatarFallback>
+                    <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
+                      ?
+                    </AvatarFallback>
                     <AvatarOverlay onFileChange={handleFileChange} />
                   </Avatar>
                 </div>
@@ -257,32 +253,96 @@ const BlogCreateContainer = () => {
             </div>
           </div>
         </div>
-        <div className="p-6">
+
         {/* Content Field */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Content</div>
-                <div>
-                <Editor
-                  apiKey='rcdz0k6v268ooj7bboucuugdnfclrmjyhwihtuxuf7vz8ugk'
-                  init={{
-                    plugins: [
-                      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-                      'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
-                    ],
-                    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-                    tinycomments_mode: 'embedded',
-                    tinycomments_author: 'Author name',
-                    ai_request: (_request: any, respondWith: any) =>
-                      respondWith.string(() =>
-                        Promise.reject('See docs to implement AI Assistant')
-                      ),
-                  }}
-                  initialValue="Welcome to TinyMCE!"
-                  onEditorChange={onEditorChange}
-                />
-                </div>
-              </div>
-              {errors.content && <p className="text-red-500">{errors.content.message}</p>}  
+        <div className="p-6">
+          <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center mr-10">Content</div>
+            <div>
+              <Editor
+                apiKey="rcdz0k6v268ooj7bboucuugdnfclrmjyhwihtuxuf7vz8ugk"
+                init={{
+                  plugins: [
+                    "anchor",
+                    "autolink",
+                    "charmap",
+                    "codesample",
+                    "emoticons",
+                    "image",
+                    "link",
+                    "lists",
+                    "media",
+                    "searchreplace",
+                    "table",
+                    "visualblocks",
+                    "wordcount",
+                    "checklist",
+                    "mediaembed",
+                    "casechange",
+                    "export",
+                    "formatpainter",
+                    "pageembed",
+                    "a11ychecker",
+                    "tinymcespellchecker",
+                    "permanentpen",
+                    "powerpaste",
+                    "advtable",
+                    "advcode",
+                    "editimage",
+                    "advtemplate",
+                    "ai",
+                    "mentions",
+                    "tinycomments",
+                    "tableofcontents",
+                    "footnotes",
+                    "mergetags",
+                    "autocorrect",
+                    "typography",
+                    "inlinecss",
+                    "markdown",
+                    "importword",
+                    "exportword",
+                    "exportpdf",
+                  ],
+                  toolbar:
+                    "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+                  tinycomments_mode: "embedded",
+                  tinycomments_author: "Author name",
+                  ai_request: (_request: any, respondWith: any) =>
+                    respondWith.string(() =>
+                      Promise.reject("See docs to implement AI Assistant")
+                    ),
+                  images_upload_handler: async (blobInfo) => {
+                    const file = blobInfo.blob();
+                    const formData = new FormData();
+                    formData.append("Image", file, blobInfo.filename());
+                    try {
+                      const response = await axios.post(`${BASE_URL}/users/upload-image`, formData, {
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
+                      });
+                      if (
+                        response.data &&
+                        response.data.resultObj &&
+                        response.data.resultObj.imageUrl
+                      ) {
+                        return response.data.resultObj.imageUrl;
+                      } else {
+                        throw new Error("Upload failed: Invalid response");
+                      }
+                    } catch (error: any) {
+                      console.error("Image upload error:", error);
+                      throw error;
+                    }
+                  },
+                }}
+                initialValue="Welcome to TinyMCE!"
+                onEditorChange={onEditorChange}
+              />
+            </div>
+          </div>
+          {errors.content && <p className="text-red-500">{errors.content?.message}</p>}
         </div>
 
         <div className="flex items-center justify-center mt-10 mr-10">

@@ -9,7 +9,6 @@ export const ROUTES = {
   HOME: "/",
   ABOUT: "/about",
   BLOG: "/blog",
-  BLOGTYPE: "/blog/:type",
   BLOG_DETAIL: "/blog-detail/:id",
   APPOINTMENT: "/appointment",
   MEMBERSHIP: "/membership",

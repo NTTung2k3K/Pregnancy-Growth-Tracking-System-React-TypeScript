@@ -113,7 +113,7 @@ const BlogTypeCreateContainer = () => {
               {/* Description Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Description</div>
-                <input
+                <textarea
                   className="flex-1 p-2"
                   {...register("description", { required: "Description is required" })}
                 />
