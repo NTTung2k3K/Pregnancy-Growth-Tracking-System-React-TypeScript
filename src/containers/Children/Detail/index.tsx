@@ -23,6 +23,7 @@ import { formatDateSliceTime } from "@/lib/text";
 import { Child } from "@/containers/Dashboard/Children/components/IChild";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 import AddRecordForm from "./components/AddRecordForm";
+import ShareGrowthChart from "@/containers/Children/Detail/components/share-growth-chart";
 
 interface ChildFormValue {
   name: string;
@@ -454,6 +455,8 @@ const ChildDetailContainer = () => {
         <div className="my-10">{child && <GrowthCharts child={child} />}</div>
         <div className="flex items-center justify-center my-10">
           <AddRecordForm child={child} />
+          <div className="mx-3"></div>
+          <ShareGrowthChart key={child.id} child={child} />
         </div>
       </div>
     </>

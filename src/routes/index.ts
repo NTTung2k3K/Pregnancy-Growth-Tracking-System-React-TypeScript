@@ -23,6 +23,10 @@ export const ROUTES = {
   //--------TOOLS
   DUE_DATE_CALCULATOR: "/due-date-calculator",
   NAME_GENERATOR: "/name-generator",
+  MY_GROWTH_CHART: "/growth-charts/me",
+  GROWTH_CHART: "/growth-charts",
+  GROWTH_CHART_DETAIL: "/growth-chart/:id",
+
 
   CHILDREN_DETAIL: "/child/:id",
 
