@@ -86,7 +86,7 @@ const ChildDetailContainer = () => {
         {
           userId: child?.userId,
           name: data.name,
-          fetalGender: data.fetalGender === 1 ? "Male" : "Female",
+          fetalGender: data.fetalGender,
           pregnancyStage: data.pregnancyStage,
           weightEstimate: data.weightEstimate,
           heightEstimate: data.heightEstimate,
@@ -97,6 +97,11 @@ const ChildDetailContainer = () => {
           isGenerateSampleAppointments: false,
           photoUrl: imageFile,
           bloodType: data.bloodType,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       if (response.data.statusCode === 200) {
