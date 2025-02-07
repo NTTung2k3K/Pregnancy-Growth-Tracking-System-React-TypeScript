@@ -518,16 +518,27 @@ const AppointmentUpdateContainer = () => {
                         {...register(`childsUpdated.${index}.height`, {
                           required: "Height is required",
                           validate: {
+                            isNumber: (value) =>
+                              (!isNaN(value) &&
+                                !isNaN(parseFloat(value.toString()))) ||
+                              "Height must be a valid number",
                             positiveValue: (value) =>
-                              value > 0 || "Height must be greater than 0", // Kiểm tra điều kiện > 0
+                              parseFloat(value.toString()) > 0 ||
+                              "Height must be greater than 0", // Check if value is greater than 0
                           },
                           onChange: (e) => {
-                            if (Number(e.target.value) <= 0) {
+                            const value = e.target.value;
+
+                            if (!Number.parseFloat(value)) {
+                              return;
+                            }
+
+                            if (parseFloat(value) <= 0) {
                               setValue(`childsUpdated.${index}.height`, 1);
                             }
                           },
                         })}
-                        type="number"
+                        type="text"
                         placeholder="Enter height"
                       />
                       {errors?.childsUpdated?.[index]?.height && (
@@ -553,15 +564,17 @@ const AppointmentUpdateContainer = () => {
                           required: "Weight is required",
                           validate: {
                             positiveValue: (value) =>
-                              value > 0 || "Weight must be greater than 0", // Kiểm tra điều kiện > 0
+                              parseFloat(value.toString()) > 0 ||
+                              "Weight must be greater than 0", // Check if value is greater than 0
                           },
                           onChange: (e) => {
-                            if (Number(e.target.value) <= 0) {
+                            const value = e.target.value;
+                            if (parseFloat(value) <= 0) {
                               setValue(`childsUpdated.${index}.weight`, 1);
                             }
                           },
                         })}
-                        type="number"
+                        type="text"
                         placeholder="Enter weight estimate"
                       />
                       {errors?.childsUpdated?.[index]?.weight && (
@@ -589,11 +602,12 @@ const AppointmentUpdateContainer = () => {
                             required: "Head circumference is required",
                             validate: {
                               positiveValue: (value) =>
-                                value > 0 ||
-                                "Head circumference must be greater than 0", // Kiểm tra điều kiện > 0
+                                parseFloat(value.toString()) > 0 ||
+                                "Head circumference must be greater than 0", // Check if value is greater than 0
                             },
                             onChange: (e) => {
-                              if (Number(e.target.value) <= 0) {
+                              const value = e.target.value;
+                              if (parseFloat(value) <= 0) {
                                 setValue(
                                   `childsUpdated.${index}.headCircumference`,
                                   1
@@ -602,7 +616,7 @@ const AppointmentUpdateContainer = () => {
                             },
                           }
                         )}
-                        type="number"
+                        type="text"
                         placeholder="Enter head circumference"
                       />
                       {errors?.childsUpdated?.[index]?.headCircumference && (
@@ -630,11 +644,12 @@ const AppointmentUpdateContainer = () => {
                             required: "Abdominal circumference is required",
                             validate: {
                               positiveValue: (value) =>
-                                value > 0 ||
+                                parseFloat(value.toString()) > 0 ||
                                 "Abdominal circumference must be greater than 0", // Kiểm tra điều kiện > 0
                             },
                             onChange: (e) => {
-                              if (Number(e.target.value) <= 0) {
+                              const value = e.target.value;
+                              if (parseFloat(value) <= 0) {
                                 setValue(
                                   `childsUpdated.${index}.abdominalCircumference`,
                                   1
@@ -643,7 +658,7 @@ const AppointmentUpdateContainer = () => {
                             },
                           }
                         )}
-                        type="number"
+                        type="text"
                         placeholder="Enter abdominal circumference"
                       />
                       {errors?.childsUpdated?.[index]
