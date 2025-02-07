@@ -132,7 +132,7 @@ const adminNav = [
         url: ROUTES.DASHBOARD_BLOGS,
       },
       {
-        title: "BlogTypes",
+        title: "Blog Types",
         url: ROUTES.DASHBOARD_BLOGTYPES,
       },
     ],

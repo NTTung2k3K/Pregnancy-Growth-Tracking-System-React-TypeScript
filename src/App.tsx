@@ -8,6 +8,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import GrowthChart from "@/containers/Growth-Chart";
 import GrowthChartDetail from "@/containers/Growth-Chart/Detail";
 import GrowthChartMe from "@/containers/Growth-Chart/Me";
+import AppointmentCalendarContainer from "@/containers/AppointmentCalendar";
 
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
@@ -221,6 +222,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.APPOINTMENT_HISTORY,
     element: <MainLayout children={<AppoinmentHistoryContainer />} />,
+  },
+  {
+    path: ROUTES.APPOINTMENT_CALENDAR,
+    element: <MainLayout children={<AppointmentCalendarContainer />} />,
   },
   {
     path: ROUTES.APPOINTMENT_BOOKING,

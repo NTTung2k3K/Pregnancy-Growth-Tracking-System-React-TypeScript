@@ -18,6 +18,8 @@ export const ROUTES = {
   CHILDREN_CREATE: "/children/create",
   PROFILE: "/profile",
   APPOINTMENT_HISTORY: "/appointment/history",
+  APPOINTMENT_CALENDAR: "/appointment/my-calendar",
+
   APPOINTMENT_BOOKING: "/appointment/booking",
 
   //--------TOOLS
@@ -53,6 +55,8 @@ export const ROUTES = {
   DASHBOARD_BLOGTYPE_UPDATE: "/dashboard/blogtype/:id",
   DASHBOARD_BLOGTYPE_CREATE: "/dashboard/blogtype/create",
   DASHBOARD_BLOGTYPE_DETAIL: "/dashboard/blogtype/detail/:id",
+
+
 
   //------CHILDREN
   DASHBOARD_CHILDREN: "/dashboard/children",
