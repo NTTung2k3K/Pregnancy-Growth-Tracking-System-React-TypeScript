@@ -239,13 +239,24 @@ export default function AppointmentManagement() {
   };
 
   const getStatusColor = (statusName: string) => {
-    switch (statusName.toLowerCase()) {
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
+    switch (statusName) {
+      case "Completed":
+        return "text-green-500";
+      case "Pending":
+        return "text-yellow-500";
+      case "NoShow":
+      case "Failed":
+      case "CancelledByUser":
+      case "CancelledByDoctor":
+        return "text-red-500";
+      case "InProgress":
+        return "text-blue-500";
+      case "Confirmed":
+        return "text-violet-500";
+      case "Rescheduled":
+        return "text-pink-500";
       default:
-        return "bg-blue-100 text-blue-800";
+        return "text-blue-800";
     }
   };
   const [isFromDateOpen, setIsFromDateOpen] = useState(false);

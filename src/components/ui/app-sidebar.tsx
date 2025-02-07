@@ -7,8 +7,9 @@ import {
   HomeIcon as House,
   UserCog,
   Users,
-  Baby,
   Package,
+  BookMarked,
+  UserPen,
 } from "lucide-react";
 
 import {
@@ -64,13 +65,17 @@ const doctorNav = [
         title: "Children",
         url: ROUTES.DASHBOARD_CHILDREN,
       },
+      {
+        title: "Growth Charts",
+        url: ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS,
+      },
     ],
   },
-  // {
-  //   title: "Profile",
-  //   icon: UserPen,
-  //   url: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
-  // },
+  {
+    title: "Profile",
+    icon: UserPen,
+    url: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
 ];
 
 // Define navigation items for Admin role
@@ -107,6 +112,10 @@ const adminNav = [
         title: "Payment",
         url: "/dashboard/payments",
       },
+      {
+        title: "Appointment Templates",
+        url: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES,
+      },
     ],
   },
   // {
@@ -116,14 +125,14 @@ const adminNav = [
   // },
   {
     title: "Blog",
-    icon: Baby,
+    icon: BookMarked,
     items: [
       {
         title: "Blogs",
         url: ROUTES.DASHBOARD_BLOGS,
       },
       {
-        title: "BlogTypes",
+        title: "Blog Types",
         url: ROUTES.DASHBOARD_BLOGTYPES,
       },
     ],
@@ -131,7 +140,7 @@ const adminNav = [
   {
     title: "Growth Charts",
     icon: Package,
-    url: "/dashboard/growth-charts",
+    url: ROUTES.DASHBOARD_GROWTH_CHARTS,
   },
 ];
 
