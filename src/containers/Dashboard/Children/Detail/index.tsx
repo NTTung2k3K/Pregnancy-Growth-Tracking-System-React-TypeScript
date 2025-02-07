@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { ROUTES } from "@/routes";
 import { formatDateSliceTime } from "@/lib/text";
 import { Child } from "@/containers/Dashboard/Children/components/IChild";
+import { GrowthCharts } from "../../Appointment/components/chart-record";
 
 interface ChildFormValue {
   name: string;
@@ -242,6 +243,7 @@ const ChildDashboardDetailContainer = () => {
             </div>
           </div>
         </form>
+        <div className="my-10">{child && <GrowthCharts child={child} />}</div>
       </div>
     </>
   );

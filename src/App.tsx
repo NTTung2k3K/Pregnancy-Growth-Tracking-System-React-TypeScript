@@ -44,6 +44,9 @@ const DueDateCalculatorContainer = lazy(
 const NameGeneratorContainer = lazy(
   () => import("./containers/Tools/NameGenerator")
 );
+const CostCalculatorContainer = lazy(
+  () => import("./containers/Tools/CostCalculator")
+);
 
 //------------Auth PAGES----------------
 const ResetPasswordContainer = lazy(() => import("./containers/ResetPassword"));
@@ -262,6 +265,10 @@ const router = createBrowserRouter([
     path: ROUTES.NAME_GENERATOR,
     element: <MainLayout children={<NameGeneratorContainer />} />,
   },
+  {
+    path: ROUTES.COST_CALCULATOR,
+    element: <MainLayout children={<CostCalculatorContainer />} />,
+  },
 
   //---------- Growthchart
   {
@@ -451,6 +458,14 @@ const router = createBrowserRouter([
   },
   {
     path: ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE,
+    element: <DashboardLayout children={<GrowthChartUpdateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS,
+    element: <DashboardLayout children={<GrowthChartsContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS_UPDATE,
     element: <DashboardLayout children={<GrowthChartUpdateContainer />} />,
   },
 ]);

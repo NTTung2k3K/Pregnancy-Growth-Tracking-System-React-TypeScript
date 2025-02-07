@@ -16,7 +16,13 @@ import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
 import { formatDate } from "@/lib/text";
 import { API_ROUTES } from "@/routes/api";
-import { GrowthCharts } from "../components/IGrowthCharts";
+import { GrowthChart } from "../components/IGrowthCharts";
+import { GrowthCharts } from "../../Appointment/components/chart-record";
+import { CommentsSection } from "../../components/CommentSection";
+import {
+  CookiesEmployeeService,
+} from "@/services/cookies.service";
+import { MdFamilyRestroom } from "react-icons/md";
 
 interface GrowthChartsFormValues {
   status: number;
@@ -26,9 +32,10 @@ const GrowthChartUpdateContainer = () => {
   const { register, handleSubmit, setValue } =
     useForm<GrowthChartsFormValues>();
   const { id } = useParams();
-  const [chart, setChart] = useState<GrowthCharts>();
+  const [chart, setChart] = useState<GrowthChart>();
   const [status, setStatus] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const currentUserId = CookiesEmployeeService.get();
 
   const fetchStatus = async () => {
     try {
@@ -55,7 +62,7 @@ const GrowthChartUpdateContainer = () => {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_CHARTS_DETAIL}`,
         {
-          params: { Id: id },
+          params: { Id: Number(id) },
         }
       );
       const fetchedChart = response.data.resultObj;
@@ -169,6 +176,18 @@ const GrowthChartUpdateContainer = () => {
                   </select>
                 </div>
               </div>
+              <div>
+                <div className="flex items-center gap-x-2 mt-6">
+                  <IconBadge icon={MdFamilyRestroom} />
+                  <h2 className="text-xl text-sky-900 font-semibold">Parent</h2>
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10">
+                    Name
+                  </div>
+                  <p>{chart?.userViewModel.fullName}</p>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -222,8 +241,20 @@ const GrowthChartUpdateContainer = () => {
               Save
             </Button>
           </div>
+          <div className="my-10">
+            {chart?.childModelView && (
+              <GrowthCharts child={chart?.childModelView} />
+            )}
+          </div>
         </div>
       </form>
+      <div className="p-6">
+        <CommentsSection
+          growthChartId={Number(id)}
+          currentUserId={currentUserId ?? ""}
+          status={chart?.status ?? "unknown"}
+        />
+      </div>
     </div>
   );
 };

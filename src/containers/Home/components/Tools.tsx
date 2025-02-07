@@ -9,14 +9,19 @@ const Tools = () => {
       link: ROUTES.DUE_DATE_CALCULATOR,
     },
     {
-      imageUrl: "/assets/images/Home/Tools/gender.png",
-      title: "Gender Predictor",
-      link: ROUTES.DUE_DATE_CALCULATOR,
-    },
-    {
       imageUrl: "/assets/images/Home/Tools/baby-names-finder.jpg",
       title: "Baby Names Finder",
       link: ROUTES.NAME_GENERATOR,
+    },
+    {
+      imageUrl: "/assets/images/Home/Tools/BabyCostCalculator-nov-2023.svg",
+      title: "Baby Cost Calculator",
+      link: ROUTES.COST_CALCULATOR,
+    },
+    {
+      imageUrl: "/assets/images/Home/Tools/gender.png",
+      title: "Gender Predictor",
+      link: ROUTES.DUE_DATE_CALCULATOR,
     },
     {
       imageUrl:
@@ -40,7 +45,7 @@ const Tools = () => {
           className="flex flex-col items-center justify-center"
         >
           <img className="w-32 mb-2" src={item.imageUrl} alt="" />
-          <p className="h-12 text-center">{item.title}</p>
+          <p className="h-12 text-center text-sky-900">{item.title}</p>
         </Link>
       ))}
     </div>

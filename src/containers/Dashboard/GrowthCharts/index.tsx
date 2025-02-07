@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GrowthCharts } from "./components/IGrowthCharts";
+import { GrowthChart } from "./components/IGrowthCharts";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import axios from "axios";
@@ -7,7 +7,7 @@ import { DataTable } from "./components/DataTable";
 import { columns } from "./components/Columns";
 
 const GrowthChartsContainer = () => {
-  const [charts, setCharts] = useState<GrowthCharts[]>([]);
+  const [charts, setCharts] = useState<GrowthChart[]>([]);
 
   const fetchCharts = async () => {
     const response = await axios.get(

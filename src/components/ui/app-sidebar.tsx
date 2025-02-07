@@ -9,6 +9,7 @@ import {
   Users,
   Package,
   BookMarked,
+  UserPen,
 } from "lucide-react";
 
 import {
@@ -64,13 +65,17 @@ const doctorNav = [
         title: "Children",
         url: ROUTES.DASHBOARD_CHILDREN,
       },
+      {
+        title: "Growth Charts",
+        url: ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS,
+      },
     ],
   },
-  // {
-  //   title: "Profile",
-  //   icon: UserPen,
-  //   url: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
-  // },
+  {
+    title: "Profile",
+    icon: UserPen,
+    url: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
 ];
 
 // Define navigation items for Admin role

@@ -1,6 +1,7 @@
 import { Child } from "../../Children/components/IChild";
+import { User } from "../../Users/components/IUser";
 
-export interface GrowthCharts {
+export interface GrowthChart {
   id: number;
   topic: string | null;
   question: string | null;
@@ -8,4 +9,5 @@ export interface GrowthCharts {
   viewCount: number | null;
   childModelView: Child;
   feedbackModelViews: any[];
+  userViewModel: User,
 }

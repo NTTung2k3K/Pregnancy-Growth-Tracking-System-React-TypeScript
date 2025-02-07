@@ -22,6 +22,9 @@ export const API_ROUTES = {
   CHILD_UPDATE: "/child/update",
   CHILD_DELETE: "/child/delete",
 
+  //USER FEEDBACK
+  USER_FEEDBACK:"/feedback/get-feedback-pagination",
+
   //RECORD
   RECORD_CREATE: "/fetalgrowthrecord/create",
 
@@ -29,7 +32,7 @@ export const API_ROUTES = {
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
 
-  //Dashboard
+  //-------------------------------DASHBOARD-------------------------------------------
 
   //---------CHILDREN
   DASHBOARD_CHILDREN_ALL: "/child/all",
@@ -90,4 +93,11 @@ export const API_ROUTES = {
   DASHBOARD_GROWTH_CHARTS_UPDATE: "/growthchart/update-growth-chart-by-admin",
   DASHBOARD_GROWTH_CHARTS_DETAIL: "/growthchart/get-by-id",
   DASHBOARD_GROWTH_CHARTS_DELETE: "/growthchart/delete",
+
+  //----------------------FEEDBACK
+  DASHBOARD_FEEDBACKS_ALL: "/feedback/get-feedback-pagination-admin",
+  DASHBOARD_FEEDBACKS_BAN: "/feedback/ban-feedback",
+  DASHBOARD_FEEDBACKS_DELETE: "/feedback/delete",
+  // DASHBOARD_GROWTH_CHARTS_DETAIL: "/growthchart/get-by-id",
+  // DASHBOARD_GROWTH_CHARTS_DELETE: "/growthchart/delete",
 };

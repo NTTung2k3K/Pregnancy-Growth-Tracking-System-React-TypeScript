@@ -23,6 +23,9 @@ export const ROUTES = {
   //--------TOOLS
   DUE_DATE_CALCULATOR: "/due-date-calculator",
   NAME_GENERATOR: "/name-generator",
+  COST_CALCULATOR:"/cost-calculator",
+
+  //---------GROWTH CHARTS
   MY_GROWTH_CHART: "/growth-charts/me",
   GROWTH_CHART: "/growth-charts",
   GROWTH_CHART_DETAIL: "/growth-chart/:id",
@@ -85,4 +88,6 @@ export const ROUTES = {
   //----------------GROWTH CHARTS
   DASHBOARD_GROWTH_CHARTS: "/dashboard/growth-charts",
   DASHBOARD_GROWTH_CHARTS_UPDATE: "/dashboard/growth-charts/:id",
+  DASHBOARD_DOCTOR_GROWTH_CHARTS: "/dashboard/doctor/growth-charts",
+  DASHBOARD_DOCTOR_GROWTH_CHARTS_UPDATE: "/dashboard/doctor/growth-charts/:id",
 };

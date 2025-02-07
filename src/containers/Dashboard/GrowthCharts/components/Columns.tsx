@@ -16,18 +16,18 @@ import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import toast from "react-hot-toast";
-import { GrowthCharts } from "./IGrowthCharts";
+import { GrowthChart } from "./IGrowthCharts";
 
-const columnFields: { key: keyof GrowthCharts; label: string }[] = [
+const columnFields: { key: keyof GrowthChart; label: string }[] = [
   { key: "topic", label: "Topic" },
   { key: "question", label: "Question" },
   { key: "viewCount", label: "View Count" },
 ];
 
-export const columns: ColumnDef<GrowthCharts>[] = [
+export const columns: ColumnDef<GrowthChart>[] = [
   ...columnFields.map(({ key, label }) => ({
     accessorKey: key,
-    header: ({ column }: { column: Column<GrowthCharts> }) => {
+    header: ({ column }: { column: Column<GrowthChart> }) => {
       return (
         <Button
           variant="ghost"
@@ -39,6 +39,40 @@ export const columns: ColumnDef<GrowthCharts>[] = [
       );
     },
   })),
+  {
+    accessorKey: "childName",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Child Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    accessorFn: (row) => row.childModelView?.name || "", // Extracts name for filtering
+    cell: ({ row }) => {
+      return <p>{row.original.childModelView?.name}</p>;
+    },
+  },
+
+  {
+    accessorKey: "image",
+    header: () => {
+      return <Button variant="ghost">Image</Button>;
+    },
+    cell: ({ row }) => {
+      const imageUrl = row.original.childModelView.photoUrl;
+
+      return imageUrl ? (
+        <img width={120} src={imageUrl} alt="Image" />
+      ) : (
+        <p>No image</p>
+      );
+    },
+  },
   {
     accessorKey: "status",
     header: ({ column }) => {
@@ -56,16 +90,16 @@ export const columns: ColumnDef<GrowthCharts>[] = [
       return (
         <Badge
           className={cn(
-            row.getValue("status") === "1"
+            row.getValue("status") === "Shared"
               ? "bg-emerald-400"
-              : row.getValue("status") === "3"
+              : row.getValue("status") === "Answered"
               ? "bg-sky-400"
               : "bg-slate-500"
           )}
         >
-          {row.getValue("status") === "1"
+          {row.getValue("status") === "Shared"
             ? "Shared"
-            : row.getValue("status") === "3"
+            : row.getValue("status") === "Answered"
             ? "Answered"
             : "Blocked"}
         </Badge>
@@ -76,6 +110,12 @@ export const columns: ColumnDef<GrowthCharts>[] = [
     id: "actions",
     cell: ({ row }) => {
       const { id } = row.original;
+
+      const role = localStorage.getItem("role");
+      const link =
+        role === "Admin"
+          ? ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE
+          : ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS_UPDATE;
 
       return (
         <DropdownMenu>
@@ -88,10 +128,7 @@ export const columns: ColumnDef<GrowthCharts>[] = [
           <DropdownMenuContent align="end" className="text-sky-800">
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE.replace(
-                ":id",
-                String(id)
-              )}`}
+              to={`${link.replace(":id", String(id))}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <UserPen className="h-4 w-4 mr-2" />
