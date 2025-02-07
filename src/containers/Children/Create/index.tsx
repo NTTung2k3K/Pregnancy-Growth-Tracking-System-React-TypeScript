@@ -254,19 +254,32 @@ const ChildCreateContainer = () => {
               {errors.complications && (
                 <p className="text-red-500">{errors.complications.message}</p>
               )}
+
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   Blood Type
                 </div>
-                <input
+                <select
                   className="flex-1 p-2"
                   {...register("bloodType", {
                     required: "Blood Type is required",
                   })}
-                />
+                >
+                  <option value="">Select Group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
               </div>
               {errors.bloodType && (
-                <p className="text-red-500">{errors.bloodType.message}</p>
+                <span className="text-red-500 text-sm">
+                  {errors.bloodType.message}
+                </span>
               )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">

@@ -11,10 +11,12 @@ import {
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import { Child } from "./IChild";
+import { formatDate } from "@/lib/text";
 
 const columnFields: { key: keyof Child; label: string }[] = [
   { key: "name", label: "FullName" },
-  { key: "dueDate", label: "Due Date" },
+  { key: "fetalGender", label: "Gender" },
+  { key: "bloodType", label: "Blood Type" },
 ];
 
 export const columns: ColumnDef<Child>[] = [
@@ -32,6 +34,23 @@ export const columns: ColumnDef<Child>[] = [
       );
     },
   })),
+  {
+    accessorKey: "dueDate",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Due Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{formatDate(row.getValue("dueDate"))}</p>;
+    },
+  },
   {
     accessorKey: "photoUrl",
     header: ({ column }) => {
