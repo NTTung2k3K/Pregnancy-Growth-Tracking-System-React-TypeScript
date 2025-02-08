@@ -199,9 +199,12 @@ const ChildCreateContainer = () => {
                 </div>
                 <input
                   type="number"
+                  step="any"
                   className="flex-1 p-2"
                   {...register("weightEstimate", {
                     required: "Weight Estimate is required",
+                    setValueAs: (value) =>
+                      value ? parseFloat(value) : undefined,
                   })}
                 />
               </div>
@@ -214,9 +217,12 @@ const ChildCreateContainer = () => {
                 </div>
                 <input
                   type="number"
+                  step="any"
                   className="flex-1 p-2"
                   {...register("heightEstimate", {
                     required: "Height Estimate is required",
+                    setValueAs: (value) =>
+                      value ? parseFloat(value) : undefined,
                   })}
                 />
               </div>
