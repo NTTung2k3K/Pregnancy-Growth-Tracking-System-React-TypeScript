@@ -102,4 +102,8 @@ export const API_ROUTES = {
   //-------------------DOCTOR CALENDAR
   DOCTOR_CALENDAR:"/appointments/get-doctor-in-range-by-user-id",
 
+  //--------------------MAIN ADMIN
+  NEW_DATA_USER:"/users/get-new-user-statistic",
+  MONTHLY_BLOG:"/blog/count-by-month",
+
 };
