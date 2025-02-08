@@ -284,16 +284,21 @@ export function AppointmentActions({
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-4">
-                      {appointment.doctors.map((doctor) => (
-                        <div key={doctor.id} className="flex items-start gap-4">
+                      {appointment.appoinmentUsers.map((item) => (
+                        <div
+                          key={item.doctor.id}
+                          className="flex items-start gap-4"
+                        >
                           <Stethoscope className="h-4 w-4 text-muted-foreground mt-1" />
                           <div>
-                            <h4 className="font-medium">{doctor.fullName}</h4>
+                            <h4 className="font-medium">
+                              {item.doctor.fullName}
+                            </h4>
                             <p className="text-sm text-muted-foreground">
-                              {doctor.email}
+                              {item.doctor.email}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              Phone: {doctor.phoneNumber}
+                              Phone: {item.doctor.phoneNumber}
                             </p>
                           </div>
                         </div>
