@@ -98,6 +98,8 @@ export const API_ROUTES = {
   DASHBOARD_FEEDBACKS_ALL: "/feedback/get-feedback-pagination-admin",
   DASHBOARD_FEEDBACKS_BAN: "/feedback/ban-feedback",
   DASHBOARD_FEEDBACKS_DELETE: "/feedback/delete",
-  // DASHBOARD_GROWTH_CHARTS_DETAIL: "/growthchart/get-by-id",
-  // DASHBOARD_GROWTH_CHARTS_DELETE: "/growthchart/delete",
+
+  //-------------------DOCTOR CALENDAR
+  DOCTOR_CALENDAR:"/appointments/get-doctor-in-range-by-user-id",
+
 };

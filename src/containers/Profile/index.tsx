@@ -23,6 +23,7 @@ interface UserFormValue {
   gender: number;
   email: string;
   bloodGroup: string;
+  fullName: string;
 }
 
 const UserProfileContainer = () => {
@@ -78,6 +79,7 @@ const UserProfileContainer = () => {
         {
           Id: id,
           Image: imageFile,
+          FullName: data.fullName,
           DateOfBirth: data.dateOfBirth,
           Address: data.address,
           Gender: Number(data.gender),
@@ -154,12 +156,28 @@ const UserProfileContainer = () => {
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
+                  Full Name
+                </div>
+                <input
+                  className="flex-1 p-2"
+                  {...register("fullName", {
+                    required: "Full Name is required",
+                  })}
+                />
+              </div>
+              {errors.fullName && (
+                <span className="text-red-500 text-sm">
+                  {errors.fullName.message}
+                </span>
+              )}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
                   Phone Number
                 </div>
                 <input
                   className="flex-1 p-2"
                   {...register("phoneNumber", {
-                    required: "Full Name is required",
+                    required: "Phone number is required",
                   })}
                 />
               </div>

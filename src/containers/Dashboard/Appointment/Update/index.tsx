@@ -560,12 +560,15 @@ const AppointmentUpdateContainer = () => {
                             ? "border-red-500"
                             : ""
                         }`}
+                        step="any"
+
                         {...register(`childsUpdated.${index}.weight`, {
                           required: "Weight is required",
                           validate: {
                             positiveValue: (value) =>
                               parseFloat(value.toString()) > 0 ||
-                              "Weight must be greater than 0", // Check if value is greater than 0
+                              "Weight must be greater than 0",
+                              
                           },
                           onChange: (e) => {
                             const value = e.target.value;

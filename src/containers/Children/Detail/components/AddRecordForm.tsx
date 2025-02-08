@@ -118,8 +118,10 @@ const AddRecordForm = ({ child }: { child: Child }) => {
             </Label>
             <Input
               type="number"
+              step="any"
               {...register("height", {
                 required: "Height is required",
+                setValueAs: (value) => (value ? parseFloat(value) : undefined),
               })}
               className="col-span-3"
             />
@@ -137,8 +139,10 @@ const AddRecordForm = ({ child }: { child: Child }) => {
             </Label>
             <Input
               type="number"
+              step="any"
               {...register("weight", {
                 required: "Weight is required",
+                setValueAs: (value) => (value ? parseFloat(value) : undefined),
               })}
               className="col-span-3"
             />
@@ -156,8 +160,10 @@ const AddRecordForm = ({ child }: { child: Child }) => {
             </Label>
             <Input
               type="number"
+              step="any"
               {...register("headCircumference", {
                 required: "Head circumference is required",
+                setValueAs: (value) => (value ? parseFloat(value) : undefined),
               })}
               className="col-span-3"
             />
@@ -175,8 +181,10 @@ const AddRecordForm = ({ child }: { child: Child }) => {
             </Label>
             <Input
               type="number"
+              step="any"
               {...register("abdominalCircumference", {
                 required: "Abdominal circumference is required",
+                setValueAs: (value) => (value ? parseFloat(value) : undefined),
               })}
               className="col-span-3"
             />

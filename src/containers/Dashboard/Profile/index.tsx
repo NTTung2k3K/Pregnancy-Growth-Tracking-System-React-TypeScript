@@ -24,6 +24,7 @@ export interface Employee {
   gender: number;
   role: string | null;
   phoneNumber: string | null;
+  fullName: string | null;
 }
 
 const EmployeeProfileContainer = () => {
@@ -55,6 +56,7 @@ const EmployeeProfileContainer = () => {
         ...response.data.resultObj,
         role: response.data.resultObj.role?.name || "",
       };
+
       Object.keys(fetchedEmployee).forEach((key) => {
         setValue(key as keyof Employee, fetchedEmployee[key]);
       });
@@ -78,6 +80,7 @@ const EmployeeProfileContainer = () => {
         {
           Id: id,
           PhoneNumber: data.phoneNumber,
+          FullName: data.fullName,
           Image: imageFile,
           DateOfBirth: data.dateOfBirth,
           Address: data.address,
@@ -147,6 +150,18 @@ const EmployeeProfileContainer = () => {
             </div>
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
               <div className="font-medium flex items-center mr-10">
+                FullName
+              </div>
+              <input
+                className="flex-1 p-2"
+                {...register("fullName", { required: true })}
+              />
+            </div>
+            {errors.fullName && (
+              <span className="text-red-500">Full name is required</span>
+            )}
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10">
                 Phone Number
               </div>
               <input
@@ -155,7 +170,7 @@ const EmployeeProfileContainer = () => {
               />
             </div>
             {errors.phoneNumber && (
-              <span className="text-red-500">Full name is required</span>
+              <span className="text-red-500">Phone is required</span>
             )}
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
               <div className="font-medium flex items-center mr-10">
