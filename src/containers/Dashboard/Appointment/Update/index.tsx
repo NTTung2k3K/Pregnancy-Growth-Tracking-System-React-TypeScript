@@ -355,7 +355,7 @@ const AppointmentUpdateContainer = () => {
               {errors.fee && (
                 <p className="text-red-500">{errors.fee.message}</p>
               )}
-              {appointment?.doctors.map((doctor) => (
+              {appointment?.appoinmentUsers.map((item) => (
                 <>
                   <div className="flex items-center gap-x-2 my-5">
                     <IconBadge icon={BriefcaseMedicalIcon} />
@@ -369,7 +369,7 @@ const AppointmentUpdateContainer = () => {
                     </div>
                     <input
                       className="flex-1 p-2 bg-gray-100"
-                      value={doctor.fullName}
+                      value={item.doctor.fullName}
                       disabled
                     />
                   </div>
@@ -379,7 +379,7 @@ const AppointmentUpdateContainer = () => {
                     </div>
                     <input
                       className="flex-1 p-2 bg-gray-100"
-                      value={doctor.phoneNumber}
+                      value={item.doctor.phoneNumber}
                       disabled
                     />
                   </div>
@@ -561,14 +561,12 @@ const AppointmentUpdateContainer = () => {
                             : ""
                         }`}
                         step="any"
-
                         {...register(`childsUpdated.${index}.weight`, {
                           required: "Weight is required",
                           validate: {
                             positiveValue: (value) =>
                               parseFloat(value.toString()) > 0 ||
                               "Weight must be greater than 0",
-                              
                           },
                           onChange: (e) => {
                             const value = e.target.value;
