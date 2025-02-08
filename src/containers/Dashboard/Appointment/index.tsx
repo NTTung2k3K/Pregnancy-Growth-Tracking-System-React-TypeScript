@@ -4,6 +4,7 @@ import { BASE_URL } from "@/services/config";
 import { DataTable } from "@/containers/Dashboard/Appointment/components/DataTable";
 import { columns } from "@/containers/Dashboard/Appointment/components/Columns";
 import { FetalGrowthRecord } from "@/containers/Dashboard/Appointment/components/chart-record";
+import { CookiesEmployeeService } from "@/services/cookies.service";
 
 export interface Appointment {
   id: number;
@@ -16,9 +17,13 @@ export interface Appointment {
   notes: string;
   result: string;
   user: User;
-  doctors: Doctor[];
+  appoinmentUsers: AppoinmentUser[];
   appointmentTemplate: AppointmentTemplate;
   childs: Child[];
+}
+
+interface AppoinmentUser {
+  doctor: Doctor;
 }
 
 export interface User {
@@ -85,8 +90,12 @@ export interface Child {
 const AppointmentAdminContainer = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
+  const dotorId = CookiesEmployeeService.get();
+
   const fetchAppointment = async () => {
-    const response = await axios.get(`${BASE_URL}/appointments/get-all`);
+    const response = await axios.get(`${BASE_URL}/appointments/get-all`, {
+      params: { doctorId: dotorId },
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedResult = response.data.resultObj.map((item: any) => ({
       ...item,

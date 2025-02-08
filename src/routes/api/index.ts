@@ -23,7 +23,7 @@ export const API_ROUTES = {
   CHILD_DELETE: "/child/delete",
 
   //USER FEEDBACK
-  USER_FEEDBACK:"/feedback/get-feedback-pagination",
+  USER_FEEDBACK: "/feedback/get-feedback-pagination",
 
   //RECORD
   RECORD_CREATE: "/fetalgrowthrecord/create",
@@ -86,7 +86,7 @@ export const API_ROUTES = {
   DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL: "/appointmenttemplates/get-by-id",
   DASHBOARD_APPOINTMENT_TEMPLATES_CREATE: "/appointmenttemplates/create",
   DASHBOARD_APPOINTMENT_TEMPLATES_DELETE: "/appointmenttemplates/delete",
-  
+
   //---------------------GROWTH CHARTS
   DASHBOARD_GROWTH_CHARTS_ALL: "/growthchart/get-all-growth-chart-by-admin",
   DASHBOARD_GROWTH_CHARTS_STATUS_ALL: "/growthchart/get-status-handler",
@@ -100,10 +100,12 @@ export const API_ROUTES = {
   DASHBOARD_FEEDBACKS_DELETE: "/feedback/delete",
 
   //-------------------DOCTOR CALENDAR
-  DOCTOR_CALENDAR:"/appointments/get-doctor-in-range-by-user-id",
+  DOCTOR_CALENDAR: "/appointments/get-doctor-in-range-by-user-id",
 
   //--------------------MAIN ADMIN
-  NEW_DATA_USER:"/users/get-new-user-statistic",
-  MONTHLY_BLOG:"/blog/count-by-month",
-
+  NEW_DATA_USER: "/users/get-new-user-statistic",
+  MONTHLY_BLOG: "/blog/count-by-month",
+  MONTHLY_PAYMENTS: "/payments/get-monthly-payment-statistics",
+  GET_REVENUE: "/payments/get-total-revenue-for-current-year",
+  GET_RECENT_TRANSACTION: "/payments/get-recent-transactions",
 };

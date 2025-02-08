@@ -5,9 +5,13 @@ import { API_ROUTES } from "@/routes/api";
 import { BASE_URL } from "@/services/config";
 import MonthlyBlogChart from "./components/MonthlyBlogChart";
 import { DataTable } from "./components/DataTable";
-import { columns } from "./components/Columns";
+import { columnsView } from "./components/Blog/View/Columns";
 import { BlogMainDashboard } from "./components/IBlog";
 import { CookiesEmployee2Service } from "@/services/cookies.service";
+import MonthlyPaymentChart from "./components/MothlyPaymentChart";
+import { columnsLike } from "./components/Blog/Like/Columns";
+import { columnsPayment } from "./components/Payment/Columns";
+import { PaymentMainDashboard } from "./components/IPayment";
 
 interface NewUserData {
   inMonth: number;
@@ -136,14 +140,33 @@ const dummyBlogs: BlogMainDashboard[] = [
 const DashboardMainContainer = () => {
   const [data, setData] = useState<NewUserData>();
   const admin = JSON.parse(CookiesEmployee2Service.get() || "");
+  const [revenue, setRevenue] = useState();
+  const [transactions, setTransactions] = useState<PaymentMainDashboard[]>([]);
 
   const fetchNewUserData = async () => {
     const response = await axios.get(`${BASE_URL + API_ROUTES.NEW_DATA_USER}`);
     setData(response.data.resultObj);
   };
+  const fetchRevenue = async () => {
+    const response = await axios.get(`${BASE_URL + API_ROUTES.GET_REVENUE}`);
+    setRevenue(response.data.resultObj);
+  };
+  const fetchRecentTransactions = async () => {
+    const response = await axios.get(
+      `${BASE_URL + API_ROUTES.GET_RECENT_TRANSACTION}`,
+      {
+        params: {
+          quantity: 5,
+        },
+      }
+    );
+    setTransactions(response.data.resultObj);
+  };
 
   useEffect(() => {
     fetchNewUserData();
+    fetchRevenue();
+    fetchRecentTransactions();
   }, []);
 
   return (
@@ -152,21 +175,48 @@ const DashboardMainContainer = () => {
         Welcome, {admin.fullName} 🙌
       </h1>
       <div className="flex items-center justify-around">
-        <CardData data={data?.inDay} description={"In Day"} />
-        <CardData data={data?.inMonth} description={"In Month"} />
-        <CardData data={data?.inYear} description={"In Year"} />
+        <CardData data={revenue} description={"Revenue"} currency={"$"} />
+        <CardData
+          data={data?.inDay}
+          description={"In Day"}
+          currency={"Users"}
+        />
+        <CardData
+          data={data?.inMonth}
+          description={"In Month"}
+          currency={"Users"}
+        />
+        <CardData
+          data={data?.inYear}
+          description={"In Year"}
+          currency={"Users"}
+        />
       </div>
       <div className="my-10">
+        <p className="text-center font-bold text-sky-900 text-3xl my-10">
+          Payments
+        </p>
+        <MonthlyPaymentChart />
+      </div>
+      <div className="my-10 flex justify-around">
+        <div className="">
+          <DataTable columns={columnsPayment} data={transactions} />
+        </div>
+      </div>
+      <div className="my-10">
+        <p className="text-center font-bold text-sky-900 text-3xl my-10">
+          Blog
+        </p>
         <MonthlyBlogChart />
       </div>
       <div className="my-10 flex justify-around">
         <div className="">
           <p className="mb-2">Most likes</p>
-          <DataTable columns={columns} data={dummyBlogs} />
+          <DataTable columns={columnsLike} data={dummyBlogs} />
         </div>
         <div className="">
           <p className="mb-2">Most views</p>
-          <DataTable columns={columns} data={dummyBlogs} />
+          <DataTable columns={columnsView} data={dummyBlogs} />
         </div>
       </div>
     </div>
