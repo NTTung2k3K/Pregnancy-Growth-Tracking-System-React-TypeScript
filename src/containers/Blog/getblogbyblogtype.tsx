@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-// Import các component BlogCard và BlogFilters (đường dẫn tùy chỉnh theo dự án của bạn)
+// Import các component BlogCard và BlogFilters
 import { BlogCard } from "@/containers/Blog/components/blog-card";
+// Giả sử phiên bản BlogFilters đã được cập nhật để hỗ trợ filter week
 import { BlogFilters } from "@/containers/Blog/components/filter";
-import { getBlogsPaginated } from "@/containers/Blog/components/api-handler";
+import { getBlogsByType } from "@/containers/Blog/components/api-handler";
 
 // --- Thành phần hiển thị phần hero (tiêu đề Blog) ---
 const BlogHero = () => {
@@ -43,13 +42,13 @@ export interface BlogType {
   thumbnail: string | null;
 }
 
-// =====================
-// Thành phần chính BlogContainer
-// =====================
-
 const PAGE_SIZE = 10;
 
-const BlogContainer = () => {
+const BlogByBlogTypeContainer = () => {
+  // Lấy giá trị id từ URL (ví dụ: /blog/5)
+  // useParams() trả về các giá trị dưới dạng chuỗi
+  const { id: blogTypeIdFromUrl } = useParams();
+
   // --- Phần load blog type để làm filter ---
   const [blogTypes, setBlogTypes] = useState<BlogType[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(true);
@@ -57,9 +56,7 @@ const BlogContainer = () => {
   useEffect(() => {
     const fetchBlogTypes = async () => {
       try {
-        // Gọi API lấy tất cả Blog Types
         const response = await axios.get(`${BASE_URL}/blogtype/all`);
-        // Giả sử API trả về kết quả ở resultObj.items
         const items = response.data.resultObj.items;
         setBlogTypes(items);
       } catch (error) {
@@ -74,57 +71,77 @@ const BlogContainer = () => {
 
   // --- Phần hiển thị danh sách Blog ---
   const [blogs, setBlogs] = useState<any[]>([]);
-  // Ban đầu filter có blogTypeId undefined, thay vì trạng thái active/InActive
+  // Khởi tạo filters, nếu có giá trị từ URL thì set ngay blogTypeId (lưu dưới dạng chuỗi)
+  // Lưu ý: ban đầu chúng ta không filter theo week (week: undefined) để hiển thị tất cả.
   const [filters, setFilters] = useState({
     pageIndex: 1,
     pageSize: PAGE_SIZE,
     isDescending: true,
-    blogTypeId: undefined,
+    blogTypeId: blogTypeIdFromUrl || undefined,
+    // Thêm week vào filter; nếu không chọn thì để undefined (All Week)
+    week: undefined,
   });
   const [loadingBlogs, setLoadingBlogs] = useState(false);
   const [hasMoreBlogs, setHasMoreBlogs] = useState(false);
 
+  // Khi giá trị blogTypeId trên URL thay đổi, cập nhật lại filters
+  useEffect(() => {
+    if (blogTypeIdFromUrl && blogTypeIdFromUrl !== filters.blogTypeId) {
+      setFilters((prev) => ({
+        ...prev,
+        blogTypeId: blogTypeIdFromUrl,
+        pageIndex: 1,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blogTypeIdFromUrl]);
+
   // Load danh sách Blog theo bộ lọc (filters)
   useEffect(() => {
     const loadBlogs = async () => {
-        setLoadingBlogs(true);
-        try {
-            const result = await getBlogsPaginated(filters);
-            if (result.isSuccessed) {
-                if (filters.pageIndex === 1) {
-                    setBlogs(result.resultObj.items);
-                } else {
-                    setBlogs((prev) => [...prev, ...result.resultObj.items]);
-                }
-                setHasMoreBlogs(result.resultObj.hasNextPage);
-            }
-        } catch (error) {
-            console.error("Error fetching blogs:", error);
-        } finally {
-            setLoadingBlogs(false);
+      setLoadingBlogs(true);
+      try {
+        const result = await getBlogsByType(filters);
+        if (result.isSuccessed) {
+          if (filters.pageIndex === 1) {
+            setBlogs(result.resultObj.items);
+          } else {
+            setBlogs((prev) => [...prev, ...result.resultObj.items]);
+          }
+          setHasMoreBlogs(result.resultObj.hasNextPage);
         }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoadingBlogs(false);
+      }
     };
     loadBlogs();
-}, [filters]);
+  }, [filters]);
 
-
-  // Hàm xử lý thay đổi filter khi người dùng chọn blog type
-  const handleFilterChange = (newFilters: any) => {
-    const updatedFilters = {
-      ...filters,
-      ...newFilters,
-      blogTypeId: newFilters.blogTypeId === "all" ? undefined : newFilters.blogTypeId,
-      pageIndex: 1,
-      pageSize: PAGE_SIZE,
-    };
-
-    // Loại bỏ các giá trị undefined để query được gọn gàng
-    Object.keys(updatedFilters).forEach(
-      (key) => updatedFilters[key] === undefined && delete updatedFilters[key]
-    );
-
-    setFilters(updatedFilters);
+// Hàm xử lý thay đổi filter khi người dùng chọn blog type hoặc week từ BlogFilters
+const handleFilterChange = (newFilters: any) => {
+  const updatedFilters = {
+    ...filters,
+    ...newFilters,
+    // Nếu newFilters.blogTypeId là "all" thì loại bỏ (set undefined), còn lại giữ nguyên giá trị
+    blogTypeId: newFilters.blogTypeId === "all" ? undefined : newFilters.blogTypeId,
+    // Nếu newFilters.week có giá trị "all" thì bỏ qua (set undefined) để không gửi param week,
+    // còn nếu có giá trị khác (ví dụ "1", "2", …) thì chuyển sang số; nếu không có thì để undefined.
+    week: newFilters.week === "all" ? undefined : newFilters.week ? Number(newFilters.week) : undefined,
+    pageIndex: 1,
+    pageSize: PAGE_SIZE,
   };
+
+  // Loại bỏ các key có giá trị undefined để query được gọn gàng
+  Object.keys(updatedFilters).forEach(
+    (key) => updatedFilters[key] === undefined && delete updatedFilters[key]
+  );
+
+  setFilters(updatedFilters);
+};
+
+
 
   // Hàm tải thêm dữ liệu (pagination)
   const loadMoreBlogs = () => {
@@ -139,7 +156,7 @@ const BlogContainer = () => {
       {/* Phần Hero */}
       <BlogHero />
 
-      {/* Phần filter: sử dụng danh sách blog type để lọc thay cho trạng thái */}
+      {/* Phần filter: sử dụng danh sách blog type và week để lọc */}
       <div className="container mx-auto py-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
@@ -153,8 +170,12 @@ const BlogContainer = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          // Giả sử BlogFilters đã được update để nhận prop blogTypes
-          <BlogFilters blogTypes={blogTypes} onFilterChange={handleFilterChange} />
+          // Giả sử phiên bản BlogFilters đã được cập nhật để hỗ trợ cả blog type và week
+          <BlogFilters
+            blogTypes={blogTypes}
+            onFilterChange={handleFilterChange}
+            initialBlogType={blogTypeIdFromUrl} // Pass initial blog type nếu có từ URL
+          />
         )}
 
         {/* Danh sách blog */}
@@ -188,4 +209,4 @@ const BlogContainer = () => {
   );
 };
 
-export default BlogContainer;
+export default BlogByBlogTypeContainer;

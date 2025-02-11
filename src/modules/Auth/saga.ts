@@ -19,7 +19,6 @@ function* login(action: any): Generator<any, void, any> {
   if (response.data.statusCode === 200) {
     CookiesService.set(response.data.resultObj.id);
     window.location.href = `/`;
-    action.onClose();
   } else {
     toast.error(response.data.message);
   }
@@ -50,12 +49,9 @@ function* loginWithGoogle(action: any): Generator<any, void, any> {
 
   if (response.data.statusCode === 200) {
     CookiesService.set(response.data.resultObj.id);
-    console.log(response.data.resultObj.id);
     window.location.href = `/`;
-    action.onClose();
   } else {
     toast.error(response.data.message);
-    console.log("thang");
   }
 }
 

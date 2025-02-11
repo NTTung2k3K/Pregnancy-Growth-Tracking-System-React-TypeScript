@@ -1,6 +1,6 @@
 import { FaRegCalendarAlt, FaRegEye, FaCalendarWeek } from "react-icons/fa";
-import { IoHeartCircle } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { IoThumbsUp } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
@@ -34,15 +34,18 @@ const BlogDetailContent = () => {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [liked, setLiked] = useState(false);
+  const [hasUpdatedViewCount, setHasUpdatedViewCount] = useState(false);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     }).format(date);
   };
 
@@ -60,6 +63,61 @@ const BlogDetailContent = () => {
 
     fetchBlog();
   }, [id]);
+
+  // Cập nhật viewCount (chỉ 1 lần) ngay khi blog được load
+  useEffect(() => {
+    if (blog && !hasUpdatedViewCount) {
+      const updateViewCount = async () => {
+        try {
+          await axios.post(`${BASE_URL}/blog/update-quantity`, {
+            id: blog.id,
+            isUpdateLiked: false,
+          });
+          // Tăng viewCount hiển thị thêm 1
+          setBlog((prev) => (prev ? { ...prev, viewCount: prev.viewCount + 1 } : prev));
+          setHasUpdatedViewCount(true);
+        } catch (error) {
+          console.error("Error updating view count", error);
+        }
+      };
+      updateViewCount();
+    }
+  }, [blog, hasUpdatedViewCount]);
+
+  const handleLike = () => {
+    if (!blog) return;
+    if (liked) {
+      setBlog((prev) => (prev ? { ...prev, likesCount: prev.likesCount - 1 } : prev));
+      setLiked(false);
+    } else {
+      setBlog((prev) => (prev ? { ...prev, likesCount: prev.likesCount + 1 } : prev));
+      setLiked(true);
+    }
+  };
+
+  const likedRef = useRef(liked);
+  useEffect(() => {
+    likedRef.current = liked;
+  }, [liked]);
+  const blogRef = useRef(blog);
+  useEffect(() => {
+    blogRef.current = blog;
+  }, [blog]);
+
+  useEffect(() => {
+    return () => {
+      if (likedRef.current && blogRef.current) {
+        axios
+          .post(`${BASE_URL}/blog/update-quantity`, {
+            id: blogRef.current.id,
+            isUpdateLiked: true,
+          })
+          .catch((error) => {
+            console.error("Error updating likes count on unmount", error);
+          });
+      }
+    };
+  }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -84,25 +142,28 @@ const BlogDetailContent = () => {
               <div className="mb-5 flex items-center">
                 <p className="mr-5 flex items-center text-base font-medium text-body-color">
                   <span className="mr-3">
-                  <FaRegCalendarAlt />
+                    <FaRegCalendarAlt />
                   </span>
                   {formatDate(blog.createdTime)}
                 </p>
                 <p className="mr-5 flex items-center text-base font-medium text-body-color">
                   <span className="mr-3">
-                  <FaCalendarWeek />
+                    <FaCalendarWeek />
                   </span>
                   Week: {blog.week}
                 </p>
-                <p className="mr-5 flex items-center text-base font-medium text-body-color">
+                <p
+                  className="mr-5 flex items-center text-base font-medium text-body-color cursor-pointer"
+                  onClick={handleLike}
+                >
                   <span className="mr-3">
-                  <IoHeartCircle />
+                    <IoThumbsUp className={liked ? "text-blue-500" : "text-gray-500"} />
                   </span>
                   {blog.likesCount}
                 </p>
                 <p className="flex items-center text-base font-medium text-body-color">
                   <span className="mr-3">
-                  <FaRegEye />
+                    <FaRegEye />
                   </span>
                   {blog.viewCount}
                 </p>
@@ -110,13 +171,13 @@ const BlogDetailContent = () => {
             </div>
           </div>
           <div>
-          <p className="mb-10 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed"
-             dangerouslySetInnerHTML={{ __html: blog.content }} />
-
-
+            <p
+              className="mb-10 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            />
             <div className="relative z-10 mb-10 overflow-hidden rounded-md bg-gradient-to-r from-emerald-400 to-emerald-600 text-sky-900 bg-opacity-10 p-8 md:p-9 lg:p-8 xl:p-9">
               <p className="text-center text-base font-medium italic text-body-color">
-              {blog.sources}
+                {blog.sources}
               </p>
             </div>
           </div>

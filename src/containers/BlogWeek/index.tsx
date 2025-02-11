@@ -3,14 +3,16 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom"; // Import useParams để lấy tham số từ URL
 import { BASE_URL } from "@/services/config";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 // Import các component BlogCard và BlogFilters (đường dẫn tùy chỉnh theo dự án của bạn)
-import { BlogCard } from "@/containers/Blog/components/blog-card";
-import { BlogFilters } from "@/containers/Blog/components/filter";
-import { getBlogsPaginated } from "@/containers/Blog/components/api-handler";
+import { BlogCard } from "@/containers/BlogWeek/components/blog-card";
+import { BlogFilters } from "@/containers/BlogWeek/components/filter";
+// Sử dụng getBlogByWeek thay vì getBlogsPaginated
+import { getBlogByWeek } from "@/containers/BlogWeek/components/api-handler";
 
 // --- Thành phần hiển thị phần hero (tiêu đề Blog) ---
 const BlogHero = () => {
@@ -49,7 +51,12 @@ export interface BlogType {
 
 const PAGE_SIZE = 10;
 
-const BlogContainer = () => {
+const BlogByWeekContainer = () => {
+  // Lấy tham số từ URL, ví dụ: /blogweek/1 => week = "1"
+  const { week: urlWeek } = useParams();
+  // Nếu không có tham số, mặc định là "0" (đại diện cho All Week)
+  const initialWeek = urlWeek || "0";
+
   // --- Phần load blog type để làm filter ---
   const [blogTypes, setBlogTypes] = useState<BlogType[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(true);
@@ -74,12 +81,13 @@ const BlogContainer = () => {
 
   // --- Phần hiển thị danh sách Blog ---
   const [blogs, setBlogs] = useState<any[]>([]);
-  // Ban đầu filter có blogTypeId undefined, thay vì trạng thái active/InActive
+  // Khởi tạo filter với các tham số cơ bản, bao gồm week lấy từ URL (nếu không là "0" thì chuyển thành số)
   const [filters, setFilters] = useState({
     pageIndex: 1,
     pageSize: PAGE_SIZE,
     isDescending: true,
     blogTypeId: undefined,
+    week: initialWeek !== "0" ? Number(initialWeek) : undefined,
   });
   const [loadingBlogs, setLoadingBlogs] = useState(false);
   const [hasMoreBlogs, setHasMoreBlogs] = useState(false);
@@ -87,42 +95,46 @@ const BlogContainer = () => {
   // Load danh sách Blog theo bộ lọc (filters)
   useEffect(() => {
     const loadBlogs = async () => {
-        setLoadingBlogs(true);
-        try {
-            const result = await getBlogsPaginated(filters);
-            if (result.isSuccessed) {
-                if (filters.pageIndex === 1) {
-                    setBlogs(result.resultObj.items);
-                } else {
-                    setBlogs((prev) => [...prev, ...result.resultObj.items]);
-                }
-                setHasMoreBlogs(result.resultObj.hasNextPage);
-            }
-        } catch (error) {
-            console.error("Error fetching blogs:", error);
-        } finally {
-            setLoadingBlogs(false);
+      setLoadingBlogs(true);
+      try {
+        const result = await getBlogByWeek(filters);
+        console.log(result);
+        if (result.isSuccessed) {
+          if (filters.pageIndex === 1) {
+            setBlogs(result.resultObj.items);
+          } else {
+            setBlogs((prev) => [...prev, ...result.resultObj.items]);
+          }
+          setHasMoreBlogs(result.resultObj.hasNextPage);
         }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoadingBlogs(false);
+      }
     };
     loadBlogs();
-}, [filters]);
+  }, [filters]);
 
-
-  // Hàm xử lý thay đổi filter khi người dùng chọn blog type
+  // Hàm xử lý thay đổi filter khi người dùng chọn blog type hoặc week
   const handleFilterChange = (newFilters: any) => {
     const updatedFilters = {
       ...filters,
       ...newFilters,
+      // Nếu newFilters.blogTypeId là "all" thì loại bỏ (set undefined), còn lại giữ nguyên giá trị
       blogTypeId: newFilters.blogTypeId === "all" ? undefined : newFilters.blogTypeId,
+      // Nếu newFilters.week có giá trị "all" thì bỏ qua (set undefined) để không gửi param week,
+      // còn nếu có giá trị khác (ví dụ "1", "2", …) thì chuyển sang số; nếu không có thì để undefined.
+      week: newFilters.week === "all" ? undefined : newFilters.week ? Number(newFilters.week) : undefined,
       pageIndex: 1,
       pageSize: PAGE_SIZE,
     };
-
-    // Loại bỏ các giá trị undefined để query được gọn gàng
+  
+    // Loại bỏ các key có giá trị undefined để query được gọn gàng
     Object.keys(updatedFilters).forEach(
       (key) => updatedFilters[key] === undefined && delete updatedFilters[key]
     );
-
+  
     setFilters(updatedFilters);
   };
 
@@ -139,7 +151,7 @@ const BlogContainer = () => {
       {/* Phần Hero */}
       <BlogHero />
 
-      {/* Phần filter: sử dụng danh sách blog type để lọc thay cho trạng thái */}
+      {/* Phần filter: sử dụng danh sách blog type để lọc */}
       <div className="container mx-auto py-6 space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
@@ -153,8 +165,13 @@ const BlogContainer = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : (
-          // Giả sử BlogFilters đã được update để nhận prop blogTypes
-          <BlogFilters blogTypes={blogTypes} onFilterChange={handleFilterChange} />
+          // Truyền initialWeek từ URL cho BlogFilters (sử dụng key để đảm bảo re-mount khi URL thay đổi)
+          <BlogFilters
+            key={initialWeek}
+            initialWeek={initialWeek}
+            onFilterChange={handleFilterChange}
+            blogTypes={blogTypes}
+          />
         )}
 
         {/* Danh sách blog */}
@@ -188,4 +205,4 @@ const BlogContainer = () => {
   );
 };
 
-export default BlogContainer;
+export default BlogByWeekContainer;

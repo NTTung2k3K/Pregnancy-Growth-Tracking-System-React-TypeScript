@@ -21,7 +21,8 @@ import { format } from "date-fns";
 import { CalendarIcon, SortAsc, SortDesc } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface BlogType {
+// Nếu chưa có, định nghĩa interface cho BlogType
+export interface BlogType {
   id: number;
   name: string;
   description: string;
@@ -29,32 +30,32 @@ interface BlogType {
 }
 
 interface FiltersProps {
-  blogTypes: BlogType[];
   onFilterChange: (filters: any) => void;
-  initialBlogType?: string; // Nếu có giá trị từ URL (ví dụ "5")
+  initialWeek?: string; // Nếu có giá trị từ URL (ví dụ "5")
+  blogTypes: BlogType[];
 }
 
-export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: FiltersProps) {
+export function BlogFilters({ onFilterChange, initialWeek, blogTypes }: FiltersProps) {
   const [search, setSearch] = useState("");
-  // State cho blog type (giá trị "0" đại diện cho All)
-  const [blogType, setBlogType] = useState<string | undefined>(initialBlogType);
-  // State cho week (giá trị "0" đại diện cho All Week)
-  const [week, setWeek] = useState<string>("0");
+  // State cho week: "0" đại diện cho All Week, các giá trị khác từ "1" tới "52"
+  const [week, setWeek] = useState<string | undefined>(initialWeek || "0");
+  // State cho blog type: "0" đại diện cho All Blog Type, hoặc giá trị id (dạng string) của blog type
+  const [blogType, setBlogType] = useState<string | undefined>("0");
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
   const [isDescending, setIsDescending] = useState(true);
   const searchTimeout = useRef<NodeJS.Timeout>();
   const [sortBy, setSortBy] = useState("CreatedTime");
 
-  // Khi prop initialBlogType thay đổi, cập nhật state blogType
+  // Khi prop initialWeek thay đổi, cập nhật state week
   useEffect(() => {
-    setBlogType(initialBlogType);
-  }, [initialBlogType]);
+    setWeek(initialWeek || "0");
+  }, [initialWeek]);
 
-  // Gọi filter mỗi khi các giá trị thay đổi (bao gồm blogType, week, date, sort, …)
+  // Gọi filter mỗi khi các giá trị thay đổi (bao gồm week và blogType)
   useEffect(() => {
     handleFilterChange();
-  }, [blogType, week, fromDate, toDate, isDescending, sortBy]);
+  }, [week, blogType, fromDate, toDate, isDescending, sortBy]);
 
   // Debounce cho search input
   useEffect(() => {
@@ -68,10 +69,10 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
   const handleFilterChange = () => {
     const updatedFilters: any = {
       searchValue: search,
-      // Nếu blogType khác "0" (All) thì chuyển về số, ngược lại không gửi blogTypeId
+      // Nếu week có giá trị và khác "0" (All Week) thì chuyển về số, ngược lại không gửi param week
+      week: week && week !== "0" ? Number(week) : undefined,
+      // Nếu blogType có giá trị và khác "0" (All) thì chuyển về số, ngược lại không gửi param blogTypeId
       blogTypeId: blogType && blogType !== "0" ? Number(blogType) : undefined,
-      // Nếu week khác "0" (All Week) thì chuyển về số, ngược lại không gửi param week
-      week: week !== "0" ? Number(week) : undefined,
       fromDate: fromDate ? format(fromDate, "yyyy-MM-dd") : undefined,
       toDate: toDate ? format(toDate, "yyyy-MM-dd") : undefined,
       isDescending,
@@ -88,7 +89,7 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
 
   return (
     <div className="space-y-4">
-      {/* Sử dụng grid với 5 cột cho các filter */}
+      {/* Sử dụng grid với 5 cột cho các filter: Search, Blog Type, Week, Date Range, Sort Order */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         {/* 🔍 Search */}
         <div>
@@ -101,7 +102,7 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
           />
         </div>
 
-        {/* 🏷 Blog Type */}
+        {/* 🏷 Blog Type Filter */}
         <div>
           <Label>Blog Type</Label>
           <Select value={blogType} onValueChange={setBlogType}>
@@ -109,7 +110,7 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
               <SelectValue placeholder="Select blog type" />
             </SelectTrigger>
             <SelectContent>
-              {/* "0" đại diện cho All Blog Types */}
+              {/* "0" đại diện cho All Blog Type */}
               <SelectItem value="0">All</SelectItem>
               {blogTypes.map((bt) => (
                 <SelectItem key={bt.id} value={bt.id.toString()}>
@@ -128,8 +129,6 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
               <SelectValue placeholder="Select week" />
             </SelectTrigger>
             <SelectContent>
-              {/* "0" đại diện cho All Week (các blog có week hoặc week là null) */}
-              <SelectItem value="0">All Week</SelectItem>
               {Array.from({ length: 52 }, (_, i) => (
                 <SelectItem key={i + 1} value={(i + 1).toString()}>
                   Week {i + 1}
@@ -147,24 +146,35 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className={cn("justify-start text-left font-normal", !fromDate && "text-muted-foreground")}
+                  className={cn(
+                    "justify-start text-left font-normal",
+                    !fromDate && "text-muted-foreground"
+                  )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {fromDate ? new Date(fromDate).toLocaleDateString("vi-VN") : "From date"}
+                  {fromDate
+                    ? new Date(fromDate).toLocaleDateString("vi-VN")
+                    : "From date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
                 <Calendar mode="single" selected={fromDate} onSelect={setFromDate} />
               </PopoverContent>
             </Popover>
+
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className={cn("justify-start text-left font-normal", !toDate && "text-muted-foreground")}
+                  className={cn(
+                    "justify-start text-left font-normal",
+                    !toDate && "text-muted-foreground"
+                  )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {toDate ? new Date(toDate).toLocaleDateString("vi-VN") : "To date"}
+                  {toDate
+                    ? new Date(toDate).toLocaleDateString("vi-VN")
+                    : "To date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -202,7 +212,11 @@ export function BlogFilters({ blogTypes, onFilterChange, initialBlogType }: Filt
                 handleFilterChange();
               }}
             >
-              {isDescending ? <SortDesc className="h-4 w-4" /> : <SortAsc className="h-4 w-4" />}
+              {isDescending ? (
+                <SortDesc className="h-4 w-4" />
+              ) : (
+                <SortAsc className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>

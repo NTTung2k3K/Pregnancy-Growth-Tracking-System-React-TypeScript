@@ -20,6 +20,8 @@ const NotFoundContainer = lazy(() => import("./containers/NotFound"));
 const HomeContainer = lazy(() => import("./containers/Home"));
 const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
 const BlogContainer = lazy(() => import("./containers/Blog"))
+const BlogByWeekContainer = lazy(() => import("./containers/BlogWeek"))
+const BlogByBlogTypeContainer = lazy(() => import("./containers/Blog/getblogbyblogtype"))
 const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 const AppoinmentHistoryContainer = lazy(
@@ -210,6 +212,13 @@ const router = createBrowserRouter([
   {
     path: ROUTES.BLOG,
     element: <MainLayout children={<BlogContainer />} />,
+  },
+  {
+    path: ROUTES.BLOGTYPE,
+    element: <MainLayout children={<BlogByBlogTypeContainer />} />,
+  },{
+    path: ROUTES.BLOGWEEK,
+    element: <MainLayout children={<BlogByWeekContainer />} />
   },
   {
     path: ROUTES.BLOG_DETAIL,
