@@ -31,6 +31,141 @@ const PregnancyTimeline = () => {
     {
       imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
     },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lemon-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/lime-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/pomelo-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/strawberry-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/apple-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/orange-icon.png",
+    },
+    {
+      imageUrl: "/assets/images/Home/PregnancyTimeline/grapefruit-icon.png",
+    },
   ];
 
   return (
@@ -38,12 +173,12 @@ const PregnancyTimeline = () => {
       <CarouselContent className="-ml-1">
         {items.map((item, index) => (
           <CarouselItem key={index} className="pl-1 md:basis-1/3 lg:basis-1/5">
-            <Link to={"/"} className="p-1">
+            <Link to={`/blogweek/${index + 1}`} className="p-1">
               <Card>
                 <CardContent className=" w-full h-10 flex aspect-square items-center justify-between p-6 py-12 border-2 border-sky-700 rounded-md">
                   <div className="flex flex-col">
                     <p className="text-sky-900 text-2xl font-bold">
-                      {index + 2}
+                      {index + 1}
                     </p>
                     <p>weeks pregnant</p>
                   </div>

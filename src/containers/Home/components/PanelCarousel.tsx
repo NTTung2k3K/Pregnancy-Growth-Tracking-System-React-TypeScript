@@ -1,104 +1,97 @@
+// PanelCarousel.tsx
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
+  CarouselItem as CarouselItemComponent,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { truncate } from "@/lib/text";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "@/services/config";
 
 interface PanelCarouselProps {
-  keyword: string;
+  category: number; // blogtypeid dưới dạng số
 }
 
-interface CarouselItem {
+interface BlogItem {
+  id: number;
   title: string;
   description: string;
-  imgUrl: string;
-  keyword?: string;
+  thumbnail: string;
+  blogTypeId: number;
 }
 
-const PanelCarousel = ({ keyword }: PanelCarouselProps) => {
-  const data: CarouselItem[] = [
-    {
-      title: "How to cope with the emotional toll of infertility",
-      description: "Reviewed By Sipra Laddha, perinatal psychiatrist",
-      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
-      keyword: "Fertility",
-    },
-    {
-      title: "How to cope with the emotional toll of infertility",
-      description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
-      keyword: "Fertility",
-    },
-    {
-      title: "How to cope with the emotional toll of infertility",
-      description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
-    },
-    {
-      title: "How to cope with the emotional toll of infertility",
-      description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
-    },
-    {
-      title: "How to cope with the emotional toll of infertility",
-      description: "Reviewed By Sipra Laddha, perinatal psychiatrist ",
-      imgUrl: "/assets/images/Home/PanelCarousel/carousel-1.jpg",
-    },
-  ];
-
-  const [items, setItems] = useState<CarouselItem[]>([]);
+const PanelCarousel = ({ category }: PanelCarouselProps) => {
+  const [items, setItems] = useState<BlogItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (keyword === "All") {
-      setItems(data); // Set all items if keyword is "All"
-    } else {
-      setItems(data.filter((item) => item.keyword === keyword)); // Filter items by keyword
-    }
-  }, [keyword]);
+    const fetchBlogs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const queryParams = new URLSearchParams();
+        if (category) {
+          queryParams.append("blogtypeid", category.toString());
+        }
+        const response = await fetch(
+          `${BASE_URL}/blog/all-user-pagination?${queryParams.toString()}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch blogs");
+        }
+        const json = await response.json();
+        const data: BlogItem[] = json.resultObj.items;
+        setItems(data);
+      } catch (err: any) {
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, [category]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (items.length === 0) return <div>No blogs found.</div>;
 
   return (
-    <>
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full px-10 mb-10"
-      >
-        <CarouselContent>
-          {items.map((item, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4">
-              <Link to={"/blog-detail/123"} className="p-1">
-                <Card>
-                  <CardContent className="w-full h-80 flex aspect-square p-0 border-r-4 border-b-4 border-r-emerald-300 border-b-emerald-300 rounded-xl">
-                    <div className="flex flex-col">
-                      <img
-                        className="rounded-t-lg h-44 object-cover"
-                        src={item.imgUrl}
-                        alt=""
-                      />
-                      <div className="p-4 leading-6">
-                        <p className="text-lg text-sky-900 font-semibold">
-                          {truncate(item.title, 47)}
-                        </p>
-                        <p>{truncate(item.description, 70)}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="ml-10" />
-        <CarouselNext className="mr-10" />
-      </Carousel>
-    </>
+    <Carousel opts={{ align: "start" }} className="w-full px-10 mb-10 mt-10">
+      <CarouselContent className="space-x-4">
+        {items.map((item) => (
+          <CarouselItemComponent key={item.id} className="md:basis-1/2 lg:basis-1/4">
+            <Link
+              to={`/blog-detail/${item.id}`}
+              className="block transform transition-all hover:scale-105"
+            >
+              <Card className="shadow-lg hover:shadow-2xl transition-shadow rounded-xl overflow-hidden">
+                <img
+                  className="w-full h-48 object-cover"
+                  src={item.thumbnail}
+                  alt={item.title}
+                />
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-semibold text-sky-900 mb-2">
+                    {truncate(item.title || "", 47)}
+                  </h3>
+                  <p className="text-gray-600">
+                    {truncate(item.description || "", 70)}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          </CarouselItemComponent>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="ml-10" />
+      <CarouselNext className="mr-10" />
+    </Carousel>
   );
 };
 

@@ -1,37 +1,27 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Editor } from "@tinymce/tinymce-react";
+import { IconBadge } from "@/components/IconBadge";
+import { Image, FileText, CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CircleArrowLeft } from "lucide-react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 import { BASE_URL } from "@/services/config";
+import { API_ROUTES } from "@/routes/api";
+import { useState, useEffect } from "react";
+import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AvatarOverlay } from "./components/AvatarOverlay";
+import { AiOutlineLoading } from "react-icons/ai";
+import toast from "react-hot-toast";
+import { Editor } from "@tinymce/tinymce-react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes";
 
-export interface BlogFormValues {
+interface BlogFormValues {
   title: string;
   content: string;
   week: number | null;
   authorId: string;
   blogTypeId: number;
-  isFeatured: boolean;
-  thumbnail: string | File | null; 
-  likesCount: number;
-  viewCount: number;
-  status: string;
-  sources: string;
-}
-
-export interface Blog {
-  id: string;
-  title: string;
-  content: string;
-  week: number | null;
-  authorId: string;
-  blogTypeId: number;
-  isFeatured: boolean;
-  thumbnail: string | null;
-  likesCount: number;
-  viewCount: number;
+  thumbnail: File | string;
   status: string;
   sources: string;
 }
@@ -39,295 +29,383 @@ export interface Blog {
 const BlogUpdateContainer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [, setBlog] = useState<Blog | undefined>(undefined);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, dirtyFields },
+    reset,
+    setValue,
+  } = useForm<BlogFormValues>({ mode: "onChange" });
+
   const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [blogTypes, setBlogTypes] = useState<any[]>([]);
+  const [statusOptions, setStatusOptions] = useState<any[]>([]);
+  const [editorContent, setEditorContent] = useState(""); // State cho nội dung Editor
 
-  const [formValues, setFormValues] = useState<BlogFormValues>({
-    title: "",
-    content: "",
-    week: null,
-    authorId: "",
-    blogTypeId: 0,
-    isFeatured: false,
-    thumbnail: null,
-    likesCount: 0,
-    viewCount: 0,
-    status: "",
-    sources: "",
-  });
-
+  // Khi component mount, load dữ liệu blog, danh sách blog types và status options
   useEffect(() => {
     if (id) {
       fetchBlog();
     }
+    fetchBlogTypes();
+    fetchStatus();
   }, [id]);
 
+  // Lấy dữ liệu blog theo id và điền vào form bằng reset()
   const fetchBlog = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/blog/${id}`);
-      const fetchedBlog: Blog = response.data.resultObj;
-      setBlog(fetchedBlog);
-      setFormValues({
-        ...fetchedBlog,
-        thumbnail: fetchedBlog.thumbnail || null,
+      const blogData = response.data.resultObj;
+      // Lấy id của blog type từ blogTypeModelView
+      const blogTypeId = blogData.blogTypeModelView?.id || 0;
+      const authorId = blogData.authorResponseModel?.id;
+      reset({
+        title: blogData.title,
+        content: blogData.content,
+        week: blogData.week,
+        authorId: authorId,
+        blogTypeId: blogTypeId,
+        status: blogData.status,
+        sources: blogData.sources,
+        thumbnail: blogData.thumbnail || "",
       });
-      setImagePreview(fetchedBlog.thumbnail || undefined);
+      // Cập nhật giá trị cho Editor
+      setEditorContent(blogData.content);
+      if (blogData.thumbnail) {
+        setImagePreview(blogData.thumbnail);
+      }
     } catch (error) {
-      console.error("Failed to fetch blog:", error);
+      console.error("Error fetching blog data:", error);
     }
   };
 
-  // Hàm chuyển File sang chuỗi Base64
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
-  };
-
-  // Xử lý khi thay đổi input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement;
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
-
-  // Xử lý thay đổi nội dung Editor
-  const handleEditorChange = (content: string) => {
-    setFormValues((prev) => ({ ...prev, content }));
-  };
-
-  // Xử lý chọn file ảnh
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-  
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
-      setFormValues((prev) => ({ ...prev, thumbnail: file }));
-    } else {
-      setImagePreview(undefined);
-      setImageFile(null);
-      setFormValues((prev) => ({ ...prev, thumbnail: null }));
-    }
-  };
-  
-
-  // Xử lý submit form
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Lấy danh sách blog types từ API
+  const fetchBlogTypes = async () => {
     try {
+      const response = await axios.get(`${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPES}`);
+      setBlogTypes(response.data.resultObj.items);
+    } catch (error) {
+      console.error("Error fetching blog types:", error);
+    }
+  };
+
+  // Lấy danh sách status từ API
+  const fetchStatus = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/blog/get-status-handler`);
+      setStatusOptions(response.data.resultObj || []);
+    } catch (error) {
+      console.error("Error fetching status:", error);
+      setStatusOptions([]);
+    }
+  };
+
+  const onEditorChange = (content: string) => {
+    setEditorContent(content);
+    setValue("content", content);
+  };
+
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
+  };
+
+  const onSubmit = async (data: BlogFormValues) => {
+    try {
+      handleLoading();
+  
       const formData = new FormData();
-      formData.append("title", formValues.title);
-      formData.append("content", formValues.content);
-      formData.append("week", formValues.week?.toString() || "");
-      formData.append("authorId", formValues.authorId);
-      formData.append("blogTypeId", formValues.blogTypeId.toString());
-      formData.append("isFeatured", formValues.isFeatured.toString());
-      formData.append("likesCount", formValues.likesCount.toString());
-      formData.append("viewCount", formValues.viewCount.toString());
-      formData.append("status", formValues.status);
-      formData.append("sources", formValues.sources);
-      
-      // Nếu có ảnh mới, chuyển thành base64
-      if (imageFile) {
-        const base64String = await convertFileToBase64(imageFile);
-        formData.append("thumbnail", base64String);
-      } else if (formValues.thumbnail) {
-        // Nếu thumbnail không phải null, append ảnh gốc
-        formData.append("thumbnail", formValues.thumbnail);
+      formData.append("title", data.title);
+      formData.append("content", editorContent); // dùng giá trị của Editor
+      formData.append("authorId", data.authorId);
+  
+      // Nếu người dùng đã thay đổi week (dirty), mới append trường này
+      if (dirtyFields.week) {
+        formData.append("week", data.week !== null ? data.week.toString() : "");
       }
       
-      await axios.put(`${BASE_URL}/blog/update/${id}`, formData);
-      navigate(ROUTES.DASHBOARD_BLOG_DETAIL.replace(":id", id!));
+      formData.append("blogTypeId", data.blogTypeId.toString());
+      formData.append("status", data.status);
+      formData.append("sources", data.sources);
+  
+      // Nếu có file mới, gửi file, nếu không thì gửi URL cũ (nếu có)
+      if (imageFile) {
+        formData.append("thumbnail", imageFile);
+      } else if (data.thumbnail) {
+        formData.append("thumbnail", data.thumbnail);
+      }
+  
+      const response = await axios.put(
+        `${BASE_URL + API_ROUTES.DASHBOARD_BLOG_UPDATE}/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+  
+      if (response.data.isSuccessed || response.data.message === "Blog updated successfully.") {
+        toast.success(response.data.message);
+        navigate(ROUTES.DASHBOARD_BLOGS);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-      console.error("Failed to update blog:", error);
+      console.error("Error updating blog:", error);
+      toast.error("An error occurred while updating the blog");
+    } finally {
+      setIsLoading(false);
     }
   };
   
+  
+  // Xử lý thay đổi file ảnh (thumbnail)
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      const newImageUrl = URL.createObjectURL(file);
+      setImagePreview(newImageUrl);
+      setImageFile(file);
+    }
+  };
 
   return (
-    <div className="p-6">
-      <Link to={ROUTES.DASHBOARD_BLOGS}>
-        <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
-          <CircleArrowLeft />
-          Back
-        </Button>
-      </Link>
-      <h1 className="text-2xl font-medium mt-8">Update Blog</h1>
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        {/* Title */}
-        <div>
-          <label className="block font-medium">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formValues.title}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        {/* Content với TinyMCE Editor */}
-        <div>
-          <label className="block font-medium">Content</label>
-          <Editor
-            apiKey="rcdz0k6v268ooj7bboucuugdnfclrmjyhwihtuxuf7vz8ugk"
-            init={{
-              plugins: ['image', 'link', 'lists', 'media', 'table', 'visualblocks'],
-              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | link image | numlist bullist',
-            }}
-            initialValue={formValues.content}
-            onEditorChange={handleEditorChange}
-          />
-        </div>
-        {/* Week */}
-        <div>
-          <label className="block font-medium">Week</label>
-          <input
-            type="number"
-            name="week"
-            value={formValues.week === null ? "" : formValues.week}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-          />
-          <p className="text-sm text-gray-500">Week can null.</p>
-        </div>
-        {/* Author ID */}
-        <div>
-          <label className="block font-medium">Author ID</label>
-          <input
-            readOnly
-            type="text"
-            name="authorId"
-            value={formValues.authorId}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        {/* Blog Type ID */}
-        <div>
-          <label className="block font-medium">Blog Type ID</label>
-          <input
-            type="number"
-            name="blogTypeId"
-            value={formValues.blogTypeId}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        {/* Featured */}
-        <div className="flex items-center gap-x-2">
-          <label className="block font-medium">Featured</label>
-          <input
-            type="checkbox"
-            name="isFeatured"
-            checked={formValues.isFeatured}
-            onChange={handleChange}
-            className="p-2"
-          />
-        </div>
-    {/* Thumbnail */}
-    <div>
-        <label className="block font-medium">Thumbnail</label>
-        <div className="flex items-center gap-4">
-            {/* Display image preview if there's one */}
-            {imagePreview ? (
-            <div className="relative">
-                <img
-                src={imagePreview}
-                alt="Thumbnail Preview"
-                className="w-32 h-32 object-cover rounded shadow"
-                />
-                <button
-                type="button"
-                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
-                onClick={() => {
-                    setImagePreview(undefined);
-                    setImageFile(null);
-                    setFormValues((prev) => ({ ...prev, thumbnail: null }));
-                }}
-                >
-                ✕
-                </button>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="p-6">
+          <Link to={ROUTES.DASHBOARD_BLOGS}>
+            <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
+              <CircleArrowLeft />
+              Back
+            </Button>
+          </Link>
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-y-2">
+              <h1 className="text-2xl font-medium">Update Blog</h1>
             </div>
-            ) : formValues.thumbnail === null ? (
-            <span>No Thumbnail</span>
-            ) : null}
-            {/* Input file to choose a new image */}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailChange}
-                className="border border-gray-300 p-2 rounded cursor-pointer"
-            />
-            <p className="text-sm text-gray-500">Choose a new image (JPG, PNG, etc.).</p>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={FileText} />
+                <h2 className="text-xl text-sky-900 font-semibold">Blog Details</h2>
+              </div>
+
+              {/* Title Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Title</div>
+                <input
+                  className="flex-1 p-2"
+                  {...register("title", { required: "Title is required" })}
+                />
+              </div>
+              {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+
+              {/* Author Field (ẩn hoàn toàn) */}
+              <input
+                type="hidden"
+                {...register("authorId", { required: "Author is required" })}
+              />
+
+              {/* Blog Type Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Blog Type</div>
+                <select
+                  className="flex-1 p-2"
+                  {...register("blogTypeId", {
+                    required: "Blog Type is required",
+                    valueAsNumber: true,
+                  })}
+                >
+                  <option value="">Select Blog Type</option>
+                  {blogTypes.length > 0 ? (
+                    blogTypes.map((blogType) => (
+                      <option key={blogType.id} value={blogType.id}>
+                        {blogType.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>No blog types available</option>
+                  )}
+                </select>
+              </div>
+              {errors.blogTypeId && <p className="text-red-500">{errors.blogTypeId.message}</p>}
+
+              {/* Week Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Week</div>
+                <input
+                  type="number"
+                  className="flex-1 p-2"
+                  {...register("week", {
+                    setValueAs: (value) => (value === "" ? null : parseInt(value, 10)),
+                  })}
+                />
+              </div>
+
+              {/* Status Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Status</div>
+                <select
+                  className="flex-1 p-2"
+                  {...register("status", { required: "Status is required" })}
+                >
+                  <option value="">Select status</option>
+                  {statusOptions && statusOptions.length > 0 ? (
+                    statusOptions.map((s: any) => (
+                      <option key={s.id} value={s.id}>
+                        {s.status}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>Loading status...</option>
+                  )}
+                </select>
+              </div>
+              {errors.status && <p className="text-red-500">{errors.status.message}</p>}
+
+              {/* Sources Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Sources</div>
+                <textarea
+                  className="flex-1 p-2"
+                  {...register("sources", { required: "Sources are required" })}
+                />
+              </div>
+              {errors.sources && <p className="text-red-500">{errors.sources.message}</p>}
             </div>
-        </div>
-    </div>
 
+            {/* Thumbnail Upload */}
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center gap-x-2">
+                  <IconBadge icon={Image} />
+                  <h2 className="text-xl text-sky-900 font-semibold">Thumbnail</h2>
+                </div>
+                <div className="flex justify-center">
+                  <Avatar className="h-32 w-32 border text-center">
+                    <AvatarImage src={imagePreview} />
+                    <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
+                      ?
+                    </AvatarFallback>
+                    <AvatarOverlay onFileChange={handleFileChange} />
+                  </Avatar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* Like Count */}
-        <div>
-          <label className="block font-medium">Like Count</label>
-          <input
-            type="number"
-            name="likesCount"
-            value={formValues.likesCount}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
+        {/* Content Field */}
+        <div className="p-6">
+          <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center mr-10">Content</div>
+            <div>
+              <Editor
+                apiKey="rcdz0k6v268ooj7bboucuugdnfclrmjyhwihtuxuf7vz8ugk"
+                value={editorContent}
+                init={{
+                  plugins: [
+                    "anchor",
+                    "autolink",
+                    "charmap",
+                    "codesample",
+                    "emoticons",
+                    "image",
+                    "link",
+                    "lists",
+                    "media",
+                    "searchreplace",
+                    "table",
+                    "visualblocks",
+                    "wordcount",
+                    "checklist",
+                    "mediaembed",
+                    "casechange",
+                    "export",
+                    "formatpainter",
+                    "pageembed",
+                    "a11ychecker",
+                    "tinymcespellchecker",
+                    "permanentpen",
+                    "powerpaste",
+                    "advtable",
+                    "advcode",
+                    "editimage",
+                    "advtemplate",
+                    "ai",
+                    "mentions",
+                    "tinycomments",
+                    "tableofcontents",
+                    "footnotes",
+                    "mergetags",
+                    "autocorrect",
+                    "typography",
+                    "inlinecss",
+                    "markdown",
+                    "importword",
+                    "exportword",
+                    "exportpdf",
+                  ],
+                  toolbar:
+                    "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+                  tinycomments_mode: "embedded",
+                  tinycomments_author: "Author name",
+                  ai_request: (_request: any, respondWith: any) =>
+                    respondWith.string(() =>
+                      Promise.reject("See docs to implement AI Assistant")
+                    ),
+                    images_upload_handler: async (blobInfo) => {
+                      const file = blobInfo.blob();
+                      const formData = new FormData();
+                      formData.append("Image", file, blobInfo.filename());
+                      try {
+                        const response = await axios.post(`${BASE_URL}/users/upload-image`, formData, {
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
+                        });
+                        if (
+                          response.data &&
+                          response.data.resultObj &&
+                          response.data.resultObj.imageUrl
+                        ) {
+                          return response.data.resultObj.imageUrl;
+                        } else {
+                          throw new Error("Upload failed: Invalid response");
+                        }
+                      } catch (error: any) {
+                        console.error("Image upload error:", error);
+                        throw error;
+                      }
+                    },
+                }}
+                onEditorChange={onEditorChange}
+              />
+            </div>
+          </div>
+          {errors.content && <p className="text-red-500">{errors.content.message}</p>}
         </div>
-        {/* View Count */}
-        <div>
-          <label className="block font-medium">View Count</label>
-          <input
-            type="number"
-            name="viewCount"
-            value={formValues.viewCount}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
+
+        <div className="flex items-center justify-center mt-10 mr-10">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
+          >
+            {isLoading ? <AiOutlineLoading className="animate-spin" /> : "Submit"}
+          </Button>
         </div>
-        {/* Status */}
-        <div>
-          <label className="block font-medium">Status</label>
-          <input
-            type="text"
-            name="status"
-            value={formValues.status}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        {/* Sources */}
-        <div>
-          <label className="block font-medium">Sources</label>
-          <input
-            type="text"
-            name="sources"
-            value={formValues.sources}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        <Button type="submit" className="w-full bg-blue-600 text-white">
-          Update Blog
-        </Button>
       </form>
-    </div>
+    </>
   );
 };
 

@@ -22,12 +22,10 @@ interface BlogFormValues {
   week: number | null;
   authorId: string;
   blogTypeId: number;
-  isFeatured: boolean;
-  thumbnail: File | null;
-  likesCount: number;
-  viewCount: number;
+  thumbnail: File;
   status: string;
   sources: string;
+  isFeatured: boolean;
 }
 
 const BlogCreateContainer = () => {
@@ -46,13 +44,14 @@ const BlogCreateContainer = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [blogTypes, setBlogTypes] = useState<any[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [statusOptions, setStatusOptions] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchedUserId = CookiesEmployeeService.get();
-    setUserId(fetchedUserId);
-
-    // Fetch available blog types
+    if (fetchedUserId !== null && fetchedUserId !== undefined) {
+      setValue("authorId", fetchedUserId);
+    }
+  
     const fetchBlogTypes = async () => {
       try {
         const response = await axios.get(
@@ -64,8 +63,19 @@ const BlogCreateContainer = () => {
       }
     };
 
+    const fetchStatus = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/blog/get-status-handler`);
+        setStatusOptions(response.data.resultObj || []);
+      } catch (error) {
+        console.error("Error fetching status:", error);
+        setStatusOptions([]);
+      }
+    };
+
     fetchBlogTypes();
-  }, []);
+    fetchStatus();
+  }, [setValue]);
 
   const onEditorChange = (content: string) => {
     setValue("content", content);
@@ -83,9 +93,6 @@ const BlogCreateContainer = () => {
           authorId: data.authorId,
           week: data.week,
           blogTypeId: data.blogTypeId,
-          isFeatured: data.isFeatured,
-          likeCount: data.likesCount,
-          viewCount: data.viewCount,
           status: data.status,
           sources: data.sources,
           thumbnail: imageFile,
@@ -159,12 +166,11 @@ const BlogCreateContainer = () => {
               )}
 
               {/* Author Field */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="hidden mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   Author
                 </div>
                 <input
-                  value={userId || ""}
                   className="flex-1 p-2"
                   readOnly
                   {...register("authorId", { required: "Author is required" })}
@@ -220,33 +226,27 @@ const BlogCreateContainer = () => {
                 />
               </div>
 
-              {/* Like and View Count Fields */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Likes</div>
-                <input
-                  type="number"
-                  className="flex-1 p-2"
-                  {...register("likesCount", { valueAsNumber: true })}
-                />
-              </div>
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Views</div>
-                <input
-                  type="number"
-                  className="flex-1 p-2"
-                  {...register("viewCount", { valueAsNumber: true })}
-                />
-              </div>
-
               {/* Status Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   Status
                 </div>
-                <input
+                <select
                   className="flex-1 p-2"
                   {...register("status", { required: "Status is required" })}
-                />
+                >
+                  <option value="">Select status</option>
+                  {statusOptions && statusOptions.length > 0 ? (
+                    statusOptions.map((s: any) => (
+            
+                      <option key={s.id} value={s.id}>
+                        {s.status}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>Loading status...</option>
+                  )}
+                </select>
               </div>
               {errors.status && (
                 <p className="text-red-500">{errors.status.message}</p>

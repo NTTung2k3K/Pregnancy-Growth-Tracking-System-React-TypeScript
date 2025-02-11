@@ -1,189 +1,150 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { IconBadge } from "@/components/IconBadge";
+import { Image, FileText, CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CircleArrowLeft } from "lucide-react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 import { BASE_URL } from "@/services/config";
+import { API_ROUTES } from "@/routes/api";
+import { useEffect, useState } from "react";
+import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AvatarOverlay } from "./components/AvatarOverlay";
+import { AiOutlineLoading } from "react-icons/ai";
+import toast from "react-hot-toast";
+import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
 
-export interface BlogTypeFormValues {
+interface BlogTypeFormValues {
   name: string;
   description: string;
-  thumbnail: string | File | null;
-}
-
-export interface BlogType {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail: string | null;
+  thumbnail: File | null;
 }
 
 const BlogTypeUpdateContainer = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-    const [, setBlogType] = useState<BlogType | undefined>(undefined);
-
-  // Quản lý state cho các trường form
-  const [formValues, setFormValues] = useState<BlogTypeFormValues>({
-    name: "",
-    description: "",
-    thumbnail: null,
+  const { id } = useParams<{ id: string }>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<BlogTypeFormValues>({
+    mode: "onChange",
   });
 
-  // Quản lý preview ảnh và file ảnh mới nếu có thay đổi
   const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Fetch dữ liệu blogtype ban đầu khi component mount
   useEffect(() => {
-    if (id) {
-      fetchBlogType();
-    }
-  }, [id]);
-
-  const fetchBlogType = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/blogtype/${id}`);
-      const fetchedBlogType: BlogType = response.data.resultObj;
-      setBlogType(fetchedBlogType);
-      setFormValues({
-        ...fetchedBlogType,
-        thumbnail: fetchedBlogType.thumbnail || null,
-      });
-      setImagePreview(fetchedBlogType.thumbnail || undefined);
-    } catch (error) {
-      console.error("Failed to fetch blogtype:", error);
-    }
-  };
-
-  // Xử lý thay đổi cho các input (name, description)
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Xử lý chọn file ảnh mới
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
-      setFormValues((prev) => ({ ...prev, thumbnail: file }));
-    } else {
-      setImagePreview(undefined);
-      setImageFile(null);
-      setFormValues((prev) => ({ ...prev, thumbnail: null }));
-    }
-  };
-
-  // Xử lý submit form
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("name", formValues.name);
-      formData.append("description", formValues.description);
-
-      if (imageFile) {
-        formData.append("thumbnail", imageFile); // Gửi file thực tế
-      } else if (formValues.thumbnail == null) {
-        formData.append("thumbnail", "null");
-      } else {
-        formData.append("thumbnail", formValues.thumbnail); // Gửi URL nếu cần
+    const fetchBlogType = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/blogtype/${id}`);
+        console.log(response.data)
+        if (response.data.resultObj) {
+          setValue("name", response.data.resultObj.name);
+          setValue("description", response.data.resultObj.description);
+          setImagePreview(response.data.resultObj.thumbnail);
+        }
+      } catch (error) {
+        console.error("Error fetching blog type:", error);
       }
+    };
+    fetchBlogType();
+  }, [id, setValue]);
 
-      console.log(formValues)
-      await axios.put(
-        `${BASE_URL}/blogtype/update/${id}`,formData);
-        navigate(ROUTES.DASHBOARD_BLOGTYPE_DETAIL.replace(":id", id!));
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      const newImageUrl = URL.createObjectURL(file);
+      setImagePreview(newImageUrl);
+      setImageFile(file);
+    }
+  };
+
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
+  };
+
+  const onSubmit = async (data: BlogTypeFormValues) => {
+    try {
+      handleLoading();
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      if (imageFile) formData.append("thumbnail", imageFile);
+
+      const response = await axios.put(
+        `${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPE_UPDATE}/${id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      if (response.data.statusCode === 200) {
+        toast.success(response.data.message);
+        window.location.href = `/dashboard/blogtypes`;
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-      console.error("Failed to update blogtype:", error);
+      console.error("Error updating blog type:", error);
     }
   };
 
   return (
-    <div className="p-6">
-      <Link to={ROUTES.DASHBOARD_BLOGTYPES}>
-        <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
-          <CircleArrowLeft />
-          Back
-        </Button>
-      </Link>
-      <h1 className="text-2xl font-medium mt-8">Update BlogType</h1>
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        {/* Field: Name */}
-        <div>
-          <label className="block font-medium">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formValues.name}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-            required
-          />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="p-6">
+        <Link to={ROUTES.DASHBOARD_BLOGTYPES}>
+          <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700 mt-10 mb-10">
+            <CircleArrowLeft />
+            Back
+          </Button>
+        </Link>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-medium">Update BlogType</h1>
         </div>
-        {/* Field: Description */}
-        <div>
-          <label className="block font-medium">Description</label>
-          <textarea
-            name="description"
-            value={formValues.description}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-            required
-          ></textarea>
-        </div>
-        {/* Field: Thumbnail */}
-        <div>
-          <label className="block font-medium">Thumbnail</label>
-          <div className="flex items-center gap-4">
-            {/* Hiển thị preview nếu có */}
-            {imagePreview ? (
-              <div className="relative">
-                <img
-                  src={imagePreview}
-                  alt="Thumbnail Preview"
-                  className="w-32 h-32 object-cover rounded shadow"
-                />
-                <button
-                  type="button"
-                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
-                  onClick={() => {
-                    setImagePreview(undefined);
-                    setImageFile(null);
-                    setFormValues((prev) => ({ ...prev, thumbnail: null }));
-                  }}
-                >
-                  ✕
-                </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={FileText} />
+              <h2 className="text-xl text-sky-900 font-semibold">BlogType Details</h2>
+            </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10">Name</div>
+              <input className="flex-1 p-2" {...register("name", { required: "Name is required" })} />
+            </div>
+            {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10">Description</div>
+              <textarea className="flex-1 p-2" {...register("description", { required: "Description is required" })} />
+            </div>
+            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+
+            <div className="space-y-6 mt-10">
+              <div>
+                <div className="flex items-center gap-x-2">
+                  <IconBadge icon={Image} />
+                  <h2 className="text-xl text-sky-900 font-semibold">Thumbnail</h2>
+                </div>
+                <div className="flex justify-center">
+                  <Avatar className="h-32 w-32 border text-center">
+                    <AvatarImage src={imagePreview} />
+                    <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">?</AvatarFallback>
+                    <AvatarOverlay onFileChange={handleFileChange} />
+                  </Avatar>
+                </div>
               </div>
-            ) : formValues.thumbnail === null ? (
-              <span>No Thumbnail</span>
-            ) : null}
-            {/* Input file chọn ảnh mới */}
-            <div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailChange}
-                className="border border-gray-300 p-2 rounded cursor-pointer"
-              />
-              <p className="text-sm text-gray-500">
-                Choose a new image (JPG, PNG, etc.).
-              </p>
             </div>
           </div>
         </div>
-        <Button type="submit" className="w-full bg-blue-600 text-white">
-          Update BlogType
+      </div>
+      <div className="flex items-center justify-center mt-10 mr-10">
+        <Button type="submit" disabled={isLoading} className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl">
+          {isLoading ? <AiOutlineLoading className="animate-spin" /> : "Update"}
         </Button>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 

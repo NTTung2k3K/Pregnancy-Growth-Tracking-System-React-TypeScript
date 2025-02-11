@@ -23,7 +23,6 @@ export interface BlogType {
 
 
 const columnFields: { key: keyof BlogType; label: string }[] = [
-  { key: "id", label: "ID" },
   { key: "name", label: "Name" },
 ];
 
