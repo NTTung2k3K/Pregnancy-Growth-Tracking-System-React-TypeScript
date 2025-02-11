@@ -50,6 +50,8 @@ export function LargeCalendar() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  const today = new Date();
+
   // Fetch appointments for the current month
   const fetchAppointments = React.useCallback(async (date: Date) => {
     try {
@@ -176,6 +178,7 @@ export function LargeCalendar() {
         {days.map((day) => {
           const dayAppointments = getAppointmentsForDate(day);
           const isCurrentMonth = isSameMonth(day, currentMonth);
+          const isToday = isSameDay(day, today);
 
           return (
             <HoverCard key={day.toString()} openDelay={200}>
@@ -183,7 +186,11 @@ export function LargeCalendar() {
                 <Card
                   className={`aspect-square p-0.5 cursor-pointer transition-colors hover:bg-accent ${
                     isCurrentMonth ? "bg-background" : "bg-muted/20"
-                  } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}`}
+                  } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}
+                  ${
+                    isToday ? "border-2 border-emerald-400" : "" // Highlight today
+                  }
+                  `}
                   onClick={() => {
                     setSelectedDate(day);
                     setIsCreateDialogOpen(true);
@@ -198,6 +205,11 @@ export function LargeCalendar() {
                       >
                         {format(day, "d")}
                       </span>
+                      {isToday && (
+                        <span className="absolute text-xs font-bold text-emerald-400 ml-8">
+                          Today
+                        </span>
+                      )}
                       {dayAppointments.length > 0 && (
                         <Badge
                           variant="secondary"

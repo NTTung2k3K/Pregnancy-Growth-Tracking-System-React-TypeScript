@@ -15,11 +15,11 @@ function* login(action: any): Generator<any, void, any> {
   const { email, password } = action.payload;
 
   const response = yield call(UserService.login, { email, password });
+  console.log(response)
 
   if (response.data.statusCode === 200) {
     CookiesService.set(response.data.resultObj.id);
     window.location.href = `/`;
-    action.onClose();
   } else {
     toast.error(response.data.message);
   }
@@ -50,12 +50,10 @@ function* loginWithGoogle(action: any): Generator<any, void, any> {
 
   if (response.data.statusCode === 200) {
     CookiesService.set(response.data.resultObj.id);
-    console.log(response.data.resultObj.id);
     window.location.href = `/`;
-    action.onClose();
   } else {
     toast.error(response.data.message);
-    console.log("thang");
+    console.log(response.data.message)
   }
 }
 

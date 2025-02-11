@@ -45,17 +45,10 @@ const ChildCreateContainer = () => {
 
   const id = CookiesService.get();
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: ChildFormValues) => {
     if (id) {
       try {
-        handleLoading();
+        setIsLoading(true);
         const response = await axios.post(
           `${BASE_URL + API_ROUTES.CHILD_CREATE}`,
           {
@@ -87,6 +80,8 @@ const ChildCreateContainer = () => {
         }
       } catch (error) {
         console.error("Failed to create employee:", error);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       toast.error("Please login to create child");

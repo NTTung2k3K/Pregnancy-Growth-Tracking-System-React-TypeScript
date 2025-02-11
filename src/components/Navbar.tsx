@@ -1,31 +1,35 @@
 import { FaRegMoon, FaRegSun } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchContainter from "./SearchContainter";
 import AuthForm from "./AuthForm";
 import { useTheme } from "./theme-provider";
 import UserButton from "./UserButton";
 import { CookiesService } from "@/services/cookies.service";
 import { ROUTES } from "@/routes";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
 
   const userId = CookiesService.get();
 
   const categories = [
-    { name: "Community", link: "/community" },
-    { name: "Getting Pregnant", link: "/community" },
-    { name: "Pregnancy", link: "/community" },
-    { name: "Baby Name", link: "/community" },
-    { name: "Baby", link: "/community" },
-    { name: "Toddler", link: "/community" },
-    { name: "Health", link: "/community" },
-    { name: "Family", link: "/community" },
-    { name: "Courses", link: "/community" },
-    { name: "Community", link: ROUTES.GROWTH_CHART },
+    { name: "Appointments", link: ROUTES.APPOINTMENT_HISTORY },
+    { name: " My calendar", link: ROUTES.APPOINTMENT_CALENDAR },
+    { name: "Children", link: ROUTES.CHILDREN },
+    { name: "Growth chart", link: ROUTES.MY_GROWTH_CHART },
     { name: "Booking Appointment", link: ROUTES.APPOINTMENT_BOOKING },
   ];
+
+  const handleNavigate = (link: string) => {
+    if (userId) {
+      navigate(link);
+    } else {
+      toast.error("Please login to access this function");
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -54,14 +58,20 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex justify-between h-10 mt-40 px-32 bg-white">
+        <div
+          className="text-sky-900 hover:border-b-2 font-semibold hover:border-emerald-400 hover:text-sky-900 cursor-pointer"
+          onClick={() => navigate(ROUTES.BLOG)}
+        >
+          Blogs
+        </div>
         {categories.map((category, index) => (
-          <Link
+          <div
             key={index}
-            to={category.link}
-            className="text-sky-900 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
+            className="text-sky-900 hover:border-b-2 font-semibold hover:border-emerald-400 hover:text-sky-900 cursor-pointer"
+            onClick={() => handleNavigate(category.link)}
           >
             {category.name}
-          </Link>
+          </div>
         ))}
       </div>
     </div>

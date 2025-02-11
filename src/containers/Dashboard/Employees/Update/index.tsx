@@ -76,16 +76,10 @@ const EmployeeUpdateContainer = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
+
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_UPDATE_STATUS}`,
         {
@@ -101,6 +95,8 @@ const EmployeeUpdateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to update employee:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

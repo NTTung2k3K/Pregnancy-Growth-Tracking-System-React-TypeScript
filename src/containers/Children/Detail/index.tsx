@@ -80,7 +80,7 @@ const ChildDetailContainer = () => {
 
   const onSubmit = async (data: ChildFormValue) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.CHILD_UPDATE}/${id}`,
         {
@@ -115,6 +115,8 @@ const ChildDetailContainer = () => {
       }
     } catch (error) {
       console.error("Failed to update child:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -128,13 +130,6 @@ const ChildDetailContainer = () => {
       setImageTemp(newImageUrl);
       setImageFile(file);
     }
-  };
-
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
   };
 
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {

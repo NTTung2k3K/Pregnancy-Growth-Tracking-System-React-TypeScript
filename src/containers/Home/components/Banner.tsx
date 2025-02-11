@@ -6,26 +6,50 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Link } from "react-router-dom";
+import { ROUTES } from "@/routes";
+import { CookiesService } from "@/services/cookies.service";
+import toast from "react-hot-toast";
+import {  useNavigate } from "react-router-dom";
 
 const Banner = () => {
   const items = [
     {
+      title: " Booking to receive medical advice",
+      buttonTitle: "Making an appointment",
+      link: ROUTES.APPOINTMENT_BOOKING,
+      imageUrl: "/assets/images/Home/Banner/carousel-1.webp",
+      isAuth: false,
+    },
+    {
       title: "What does your baby look like now ?",
       buttonTitle: "Show my baby",
-      imageUrl: "/assets/images/Home/Banner/carousel-1.webp",
-    },
-    {
-      title: "Baby Center Registry Builder",
-      buttonTitle: "Get started",
       imageUrl: "/assets/images/Home/Banner/carousel-2.webp",
+      link: ROUTES.CHILDREN,
+      isAuth: true,
     },
     {
-      title: "BabyCenter Course",
-      buttonTitle: "Sign me up",
+      title: "Look at how the babies have grown",
+      buttonTitle: "Growth Charts",
       imageUrl: "/assets/images/Home/Banner/carousel-3.jpeg",
+      link: ROUTES.GROWTH_CHART,
+      isAuth: true,
     },
   ];
+
+  const navigate = useNavigate();
+  const userId = CookiesService.get();
+
+  const handleNavigate = (isAuth: boolean, link: string) => {
+    if (isAuth) {
+      if (userId) {
+        navigate(link);
+      } else {
+        toast.error("Please login to access this function");
+      }
+    } else {
+      navigate(link);
+    }
+  };
 
   return (
     <>
@@ -41,12 +65,12 @@ const Banner = () => {
                       <p className="text-4xl bg-slate-100/70 font-semibold mb-10 text-center w-96">
                         {item.title}
                       </p>
-                      <Link
-                        to={"/huan"}
+                      <div
+                        onClick={() => handleNavigate(item.isAuth, item.link)}
                         className="bg-sky-800 hover:bg-sky-900 text-emerald-400 p-4 rounded-full font-bold"
                       >
                         {item.buttonTitle}
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

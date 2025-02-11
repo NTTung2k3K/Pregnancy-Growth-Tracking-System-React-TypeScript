@@ -32,16 +32,9 @@ const AppointmentTemplatesCreateContainer = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: AppointmentTemplatesFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_CREATE}`,
         {
@@ -64,6 +57,8 @@ const AppointmentTemplatesCreateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to create employee:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

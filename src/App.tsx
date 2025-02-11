@@ -208,7 +208,7 @@ const router = createBrowserRouter([
     element: <MainLayout children={<HomeContainer />} />,
   },
   {
-    path: ROUTES.ABOUT,
+    path: ROUTES.COMMING_SOON,
     element: <ComingSoonContainer />,
   },
   {

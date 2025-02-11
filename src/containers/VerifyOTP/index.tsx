@@ -13,8 +13,6 @@ interface VerifyFormValues {
 }
 
 const VerifyOTPContainer = () => {
-  //   const location = useLocation();
-  //   const from = location.state?.from;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -41,23 +39,6 @@ const VerifyOTPContainer = () => {
     }
   }, [isCounting, time]);
 
-  //   const handleResend = async () => {
-  //     try {
-  //       UserService.postSendOTP({ email: username }).then((res) => {
-  //         if (res.statusCode === 201) {
-  //           toast.success("OTP resent successfully!");
-  //           setTime(300);
-  //           setIsCounting(true);
-  //         } else {
-  //           toast.error(res.message || "Failed to resend OTP.");
-  //         }
-  //       });
-  //     } catch (error) {
-  //       toast.error("An error occurred while resending OTP.");
-  //       console.error(error);
-  //     }
-  //   };
-
   const { control, register, handleSubmit, setValue } =
     useForm<VerifyFormValues>();
 
@@ -79,24 +60,6 @@ const VerifyOTPContainer = () => {
       navigate,
     });
   };
-
-  //   const onSubmit: SubmitHandler<VerifyFormValues> = (data) => {
-  //     const otpCode = Object.values(data.otp).join("");
-
-  //     UserService.postVerifyOTP({ ...data, code: otpCode })
-  //       .then((res) => {
-  //         if (res.statusCode === 201) {
-  //           toast.success("Verify successfully");
-  //           handleNavigate(from);
-  //         } else {
-  //           toast.error(res.message);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         toast.error("An error occurred while verifying OTP.");
-  //         console.error(error);
-  //       });
-  //   };
 
   return (
     <div className="flex items-center justify-center my-10">

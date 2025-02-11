@@ -177,16 +177,9 @@ const MembershipPackageUpdateContainer = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: MembershipPackageFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
 
       const response = await axios.put(
         `${BASE_URL}/membershippackages/update`,
@@ -216,6 +209,8 @@ const MembershipPackageUpdateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to update MembershipPackage:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
