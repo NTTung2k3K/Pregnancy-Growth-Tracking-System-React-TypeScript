@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
+"use client";
+
+import { Check, Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { API_ROUTES } from "@/routes/api";
-import { https } from '@/services/config';
-import { useNavigate } from 'react-router-dom';
+import { https } from "@/services/config";
 
 interface MembershipPackage {
   id: string;
@@ -9,14 +16,47 @@ interface MembershipPackage {
   description?: string;
   originalPrice: number;
   duration: number;
-  status?: number;
+  status?: string;
   packageLevel?: string;
   imageUrl?: string;
   discount?: number;
   price?: number;
+  maxRecordAdded: number;
+  maxGrowthChartShares: number;
+  hasGenerateAppointments: boolean;
+  hasStandardDeviationAlerts: boolean;
+  hasViewGrowthChart: boolean;
 }
 
-const MembershipContainer: React.FC = () => {
+const PACKAGE_STYLES = {
+  Bronze: {
+    gradient: "from-amber-700 to-amber-900",
+    border: "border-amber-500",
+    shadow: "shadow-amber-100",
+    hover: "hover:border-amber-400",
+  },
+  Silver: {
+    gradient: "from-gray-400 to-gray-600",
+    border: "border-gray-300",
+    shadow: "shadow-gray-100",
+    hover: "hover:border-gray-200",
+  },
+  Gold: {
+    gradient: "from-yellow-400 to-yellow-600",
+    border: "border-yellow-300",
+    shadow: "shadow-yellow-100",
+    hover: "hover:border-yellow-200",
+  },
+};
+
+const BRONZE_FEATURES = [
+  "Thêm trẻ em",
+  "Tạo lịch hẹn",
+  "Xem blog",
+  "Xem và bình luận các biểu đồ tăng trưởng",
+];
+
+export default function MembershipContainer() {
   const [packages, setPackages] = useState<MembershipPackage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,13 +67,11 @@ const MembershipContainer: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-
         const response = await https.get(API_ROUTES.MEMBERSHIP);
-
         setPackages(response.data.resultObj.items || []);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("Failed to fetch membership packages");
+        setError("Không thể tải thông tin gói dịch vụ");
       } finally {
         setLoading(false);
       }
@@ -43,83 +81,165 @@ const MembershipContainer: React.FC = () => {
   }, []);
 
   const handleSelect = (pkgId: string) => {
-    const selectedPackage = packages.find(pkg => pkg.id === pkgId);
+    const selectedPackage = packages.find((pkg) => pkg.id === pkgId);
     if (selectedPackage) {
       navigate(`/payment/${pkgId}`, { state: { pkg: selectedPackage, pkgId } });
     }
   };
 
-  if (loading) return <div>Loading membership packages...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading)
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="text-lg">Đang tải thông tin gói dịch vụ...</div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="text-lg text-red-500">Lỗi: {error}</div>
+      </div>
+    );
 
   return (
-    <div className="bg-gray-50 py-12 px-6">
-      <div className="max-w-7xl mx-auto text-center">
-        <h1 className="text-4xl font-bold text-gray-800">
-          Choose Your Membership Plan
+    <div className="bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl text-center">
+        <h1 className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
+          Chọn Gói Dịch Vụ Phù Hợp
         </h1>
-        <p className="text-gray-600 mt-4">
-          Find the plan that fits your needs. Flexible and affordable options
-          for everyone.
+        <p className="mt-4 text-lg text-gray-600">
+          Khám phá các gói dịch vụ đa dạng, được thiết kế để đồng hành cùng thai
+          kỳ của bạn
         </p>
-        <div className="grid gap-8 mt-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+        <div className="mt-16 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {packages.map((pkg) => {
+            const styles =
+              PACKAGE_STYLES[pkg.packageLevel as keyof typeof PACKAGE_STYLES];
+            const isPopular = pkg.packageLevel === "Silver";
+            const savings = pkg.originalPrice - (pkg.price || 0);
             const formattedPrice = pkg.price
-              ? `${Math.round(pkg.price).toLocaleString()} VND`
-              : `${Math.round(pkg.originalPrice).toLocaleString()} VND`;
+              ? `${Math.round(pkg.price).toLocaleString()}`
+              : `${Math.round(pkg.originalPrice).toLocaleString()}`;
+            const isBronze = pkg.packageLevel === "Bronze";
 
             return (
-              <div
+              <Card
                 key={pkg.id}
-                className="rounded-2xl border border-gray-200 shadow-sm bg-white"
+                className={`relative flex flex-col transform transition-all duration-300 hover:scale-105 ${styles.border} ${styles.shadow} ${styles.hover}`}
               >
-                <div className="p-6 sm:px-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-t-2xl text-white">
-                  <h2 className="text-xl font-bold">
-                    {pkg.packageName}
-                  </h2>
-                  <div className="mt-2 text-3xl font-bold">
-                    {formattedPrice} <span className="text-sm">for {pkg.duration} days</span>
+                {isPopular && (
+                  <div className="absolute -top-5 left-0 right-0 mx-auto w-32">
+                    <Badge
+                      variant="default"
+                      className={`w-full bg-gradient-to-r ${styles.gradient} py-1 text-center text-white`}
+                    >
+                      Phổ biến nhất
+                    </Badge>
                   </div>
+                )}
+
+                <div
+                  className={`rounded-t-xl bg-gradient-to-br h-60  ${styles.gradient} p-6 text-white`}
+                >
+                  <h2 className="flex items-center justify-center gap-2 text-2xl font-bold">
+                    {pkg.packageName}
+                    {isPopular && <Star className="h-5 w-5 fill-current" />}
+                  </h2>
+                  <div className="mt-4 text-center">
+                    <span className="text-4xl font-bold">{formattedPrice}</span>
+                    <span className="text-lg"> VNĐ</span>
+                    {!isBronze && (
+                      <p className="mt-1 text-sm opacity-90">
+                        {pkg.duration} ngày
+                      </p>
+                    )}
+                  </div>
+                  {!isBronze && pkg.discount && pkg.discount > 0 && (
+                    <div className="mt-2 text-center">
+                      <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
+                        Tiết kiệm {Math.round(savings).toLocaleString()} VNĐ
+                      </span>
+                    </div>
+                  )}
+                  {isBronze && (
+                    <div className="mt-2 text-center">
+                      <br></br>
+                      <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
+                        Gói mặc định của hệ thống
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                <div className="p-6 sm:px-8">
-                  <p className="text-lg font-medium text-gray-900 sm:text-xl">
-                    Package Detail:
-                  </p>
-                  <ul className="mt-2 text-gray-700">
-                    <li>
-                      <strong>Level:</strong> {pkg.packageLevel || "Not specified"}
-                    </li>
-                    <li>
-                      <strong>Description:</strong> {pkg.description || "No description available"}
-                    </li>
-                    {pkg.imageUrl && (
-                      <li className="mt-4">
-                        <img
-                          src={pkg.imageUrl}
-                          alt={pkg.packageName}
-                          className="h-32 w-full object-cover rounded-lg"
-                        />
-                      </li>
+                <div className="flex-grow p-6">
+                  <p className="text-gray-600">{pkg.description}</p>
+                  <ul className="mt-6 space-y-3 text-sm">
+                    {isBronze ? (
+                      // Hiển thị tính năng cơ bản cho gói Bronze
+                      BRONZE_FEATURES.map((feature, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <Check className="h-5 w-5 text-green-500" />
+                          {feature}
+                        </li>
+                      ))
+                    ) : (
+                      // Hiển thị tính năng cho các gói khác
+                      <>
+                        {pkg.maxRecordAdded !== 0 && (
+                          <li className="flex items-center gap-2">
+                            <Check className="h-5 w-5 text-green-500" />
+                            {pkg.maxRecordAdded === -1
+                              ? "Không giới hạn số lượng hồ sơ"
+                              : `Tối đa ${pkg.maxRecordAdded} hồ sơ`}
+                          </li>
+                        )}
+                        {pkg.maxGrowthChartShares !== 0 && (
+                          <li className="flex items-center gap-2">
+                            <Check className="h-5 w-5 text-green-500" />
+                            {pkg.maxGrowthChartShares === -1
+                              ? "Không giới hạn chia sẻ biểu đồ"
+                              : `Chia sẻ tối đa ${pkg.maxGrowthChartShares} biểu đồ`}
+                          </li>
+                        )}
+                        {pkg.hasGenerateAppointments && (
+                          <li className="flex items-center gap-2">
+                            <Check className="h-5 w-5 text-green-500" />
+                            Tạo lịch hẹn tự động
+                          </li>
+                        )}
+                        {pkg.hasStandardDeviationAlerts && (
+                          <li className="flex items-center gap-2">
+                            <Check className="h-5 w-5 text-green-500" />
+                            Cảnh báo độ lệch chuẩn
+                          </li>
+                        )}
+                        {pkg.hasViewGrowthChart && (
+                          <li className="flex items-center gap-2">
+                            <Check className="h-5 w-5 text-green-500" />
+                            Xem biểu đồ tăng trưởng
+                          </li>
+                        )}
+                      </>
                     )}
                   </ul>
                 </div>
 
-                <div className="p-6 sm:px-8 bg-white">
-                  <button
-                    className="mt-6 block w-full rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-center text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
-                    onClick={() => handleSelect(pkg.id)}
-                  >
-                    Buy Now
-                  </button>
-                </div>
-              </div>
+                {!isBronze && (
+                  <div className="p-6 pt-0">
+                    <Button
+                      className={`w-full bg-gradient-to-r ${styles.gradient} text-white hover:opacity-90`}
+                      onClick={() => handleSelect(pkg.id)}
+                    >
+                      Chọn Gói {pkg.packageLevel === "Silver" ? "Bạc" : "Vàng"}
+                    </Button>
+                  </div>
+                )}
+              </Card>
             );
           })}
         </div>
       </div>
     </div>
   );
-};
-
-export default MembershipContainer;
+}

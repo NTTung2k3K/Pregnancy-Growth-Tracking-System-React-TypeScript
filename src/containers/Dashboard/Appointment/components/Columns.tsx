@@ -6,10 +6,9 @@ import { Badge } from "@/components/ui/badge";
 
 import { Appointment } from "@/containers/Dashboard/Appointment";
 import ActionRow from "@/containers/Dashboard/Appointment/components/action-row";
+import { getSlotString } from "@/lib/utils";
 
-const columnFields: { key: keyof Appointment; label: string }[] = [
-  { key: "name", label: "Name" },
-];
+const columnFields: { key: keyof Appointment; label: string }[] = [];
 
 export const columns: ColumnDef<Appointment>[] = [
   ...columnFields.map(({ key, label }) => ({
@@ -97,6 +96,28 @@ export const columns: ColumnDef<Appointment>[] = [
           {row.original.childs.map((child, index) => (
             <li key={index}>{child.name}</li>
           ))}
+        </ul>
+      );
+    },
+  },
+  {
+    accessorKey: "appointmentDate",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date & Slot
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <ul className="list-disc pl-4">
+          {new Date(row.original.appointmentDate).toLocaleDateString("vi-VN")} |
+          Slot: {getSlotString(row.original.appointmentSlot)}
         </ul>
       );
     },
