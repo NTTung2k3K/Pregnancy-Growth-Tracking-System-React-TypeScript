@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   addMonths,
   subMonths,
@@ -15,20 +15,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import type { Appointment } from "@/containers/Dashboard/Appointment";
-import type { CreateAppointmentPayload } from "@/containers/Appointment-History/_components/appoinment-calendar";
 import toast from "react-hot-toast";
-import { CreateAppointmentForm } from "@/containers/Appointment-History/_components/create-appoinment-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { CookiesEmployeeService } from "@/services/cookies.service";
@@ -43,11 +35,8 @@ export function DoctorCalendar() {
   const [appointments, setAppointments] = React.useState<Appointment[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setIsLoading] = React.useState(true);
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
-  const [selectedAppointmentId] = React.useState<number | null>(null);
 
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const today = new Date();
 
   // Fetch appointments for the current month
   const fetchAppointments = React.useCallback(async (date: Date) => {
@@ -84,34 +73,6 @@ export function DoctorCalendar() {
   React.useEffect(() => {
     fetchAppointments(currentMonth);
   }, [currentMonth, fetchAppointments]);
-
-  const handleCreateAppointment = async (data: CreateAppointmentPayload) => {
-    try {
-      setIsSubmitting(true);
-      const response = await fetch(`${BASE_URL}/appointments/confirm`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (result.isSuccessed) {
-        toast.success("Appointment created successfully");
-        setIsCreateDialogOpen(false);
-        fetchAppointments(currentMonth);
-      } else {
-        toast.error(result.message || "Failed to create appointment");
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const previousMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
@@ -178,18 +139,18 @@ export function DoctorCalendar() {
           const dayAppointments = getAppointmentsForDate(day);
           dayAppointments.sort((a, b) => a.appointmentSlot - b.appointmentSlot);
           const isCurrentMonth = isSameMonth(day, currentMonth);
+          const isToday = isSameDay(day, today);
 
           return (
             <HoverCard key={day.toString()} openDelay={200}>
               <HoverCardTrigger asChild>
                 <Card
-                  className={`aspect-square p-0.5 cursor-pointer transition-colors hover:bg-accent ${
+                  className={` aspect-square p-0.5 cursor-pointer transition-colors hover:bg-accent ${
                     isCurrentMonth ? "bg-background" : "bg-muted/20"
-                  } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}`}
-                  onClick={() => {
-                    setSelectedDate(day);
-                    setIsCreateDialogOpen(true);
-                  }}
+                  } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}
+                  ${
+                    isToday ? "border-2 border-emerald-400" : "" // Highlight today
+                  }`}
                 >
                   <div className="flex flex-col h-full">
                     <div className="flex items-start justify-between">
@@ -200,6 +161,7 @@ export function DoctorCalendar() {
                       >
                         {format(day, "d")}
                       </span>
+                      {isToday && <span className="absolute text-xs font-bold text-emerald-400 ml-8">Today</span>}
                       {dayAppointments.length > 0 && (
                         <Badge
                           variant="secondary"
@@ -251,19 +213,6 @@ export function DoctorCalendar() {
                     <h4 className="text-sm font-semibold">
                       {format(day, "MMM d, yyyy")}
                     </h4>
-                    {dayAppointments.length === 0 && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 bg-transparent"
-                        onClick={() => {
-                          window.location.href = ROUTES.APPOINTMENT_BOOKING;
-                        }}
-                      >
-                        <Plus className="h-3 w-3 mr-1" />
-                        Booking
-                      </Button>
-                    )}
                   </div>
                   {dayAppointments.length > 0 ? (
                     <div className="space-y-1">
@@ -312,29 +261,6 @@ export function DoctorCalendar() {
           );
         })}
       </div>
-
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>
-              Create New Appointment for{" "}
-              {selectedAppointmentId
-                ? appointments
-                    .find((a) => a.id === selectedAppointmentId)
-                    ?.childs.map((x) => x.name)
-                    .join(", ")
-                : ""}
-            </DialogTitle>
-          </DialogHeader>
-          <CreateAppointmentForm
-            initialDate={selectedDate || undefined}
-            appointmentId={selectedAppointmentId ?? 0}
-            onSubmit={handleCreateAppointment}
-            onCancel={() => setIsCreateDialogOpen(false)}
-            isSubmitting={isSubmitting}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

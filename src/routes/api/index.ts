@@ -76,9 +76,13 @@ export const API_ROUTES = {
   DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/membershippackages/get-package",
 
   //-----------------APPOINTMENT
-  DASHBOARD_APPOINTMENT_ALL: "/appointments/get-all",
+  DASHBOARD_APPOINTMENT_ADMIN_ALL: "/appointments/get-all-by-admin",
+  DASHBOARD_APPOINTMENT_DOCTOR_BY_ID: "/appointments/get-all",
+  DASHBOARD_APPOINTMENT_DOCTOR_FREE: "/appointments/get-doctor-free",
   DASHBOARD_APPOINTMENT_UPDATE: "/appointments/update",
   DASHBOARD_APPOINTMENT_CREATE: "/appointments/create",
+  DASHBOARD_APPOINTMENT_CHANGE_DOCTOR:
+    "/appointments/change-doctor-appointment",
 
   //-----------------APPOINTMENT TEMPLATES
   DASHBOARD_APPOINTMENT_TEMPLATES_ALL: "/appointmenttemplates/get-all",

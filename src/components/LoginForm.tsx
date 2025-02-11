@@ -45,13 +45,13 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 10000);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     try {
       handleLoading();
-      dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data, onClose });
+      dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data });
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -74,7 +74,6 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
           payload: res.data,
         });
         toast.success("Successfully logged in with Google!");
-        onClose();
       } catch (err) {
         console.error("Login with Google failed:", err);
         toast.error("Failed to login with Google. Please try again.");

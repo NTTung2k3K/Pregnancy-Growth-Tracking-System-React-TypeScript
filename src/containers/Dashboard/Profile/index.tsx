@@ -74,7 +74,7 @@ const EmployeeProfileContainer = () => {
 
   const onSubmit = async (data: Employee) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_UPDATE_PROFILE}`,
         {
@@ -101,6 +101,8 @@ const EmployeeProfileContainer = () => {
       }
     } catch (error) {
       console.error("Failed to create employee:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,13 +116,6 @@ const EmployeeProfileContainer = () => {
       setImageTemp(newImageUrl);
       setImageFile(file);
     }
-  };
-
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
   };
 
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {

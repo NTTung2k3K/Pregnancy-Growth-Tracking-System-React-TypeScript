@@ -5,6 +5,7 @@ import { DataTable } from "@/containers/Dashboard/Appointment/components/DataTab
 import { columns } from "@/containers/Dashboard/Appointment/components/Columns";
 import { FetalGrowthRecord } from "@/containers/Dashboard/Appointment/components/chart-record";
 import { CookiesEmployeeService } from "@/services/cookies.service";
+import { API_ROUTES } from "@/routes/api";
 
 export interface Appointment {
   id: number;
@@ -92,16 +93,29 @@ const AppointmentAdminContainer = () => {
 
   const dotorId = CookiesEmployeeService.get();
 
+  const role = localStorage.getItem("role");
+
   const fetchAppointment = async () => {
-    const response = await axios.get(`${BASE_URL}/appointments/get-all`, {
-      params: { doctorId: dotorId },
-    });
+    let response;
+    if (role === "Admin") {
+      response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_ADMIN_ALL}`
+      );
+    } else {
+      response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_DOCTOR_BY_ID}`,
+        {
+          params: { doctorId: dotorId },
+        }
+      );
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedResult = response.data.resultObj.map((item: any) => ({
       ...item,
     }));
     setAppointments(formattedResult || []);
   };
+
 
   useEffect(() => {
     fetchAppointment();

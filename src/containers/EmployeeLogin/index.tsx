@@ -44,7 +44,7 @@ const EmployeeLoginContainer = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 5000);
   };
 
   const togglePasswordVisibility = () => {

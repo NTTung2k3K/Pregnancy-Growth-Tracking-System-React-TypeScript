@@ -40,13 +40,6 @@ const AppointmentTemplatesUpdateContainer = () => {
   const [template, setTemplate] = useState<AppointmentTemplates>();
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const fetchAppointmentTemplate = async () => {
     try {
       const response = await axios.get(
@@ -81,7 +74,7 @@ const AppointmentTemplatesUpdateContainer = () => {
 
   const onSubmit = async (data: AppointmentTemplatesFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const image = imageFile ? imageFile : template?.image;
       console.log(image);
       const response = await axios.put(
@@ -108,6 +101,8 @@ const AppointmentTemplatesUpdateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to update template:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

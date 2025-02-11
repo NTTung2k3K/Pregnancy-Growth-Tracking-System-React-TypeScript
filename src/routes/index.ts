@@ -6,9 +6,10 @@ export const ROUTES = {
   EMPLOYEE_LOGIN: "/auth/employee-login",
 
   // Main
+  COMMING_SOON:"/comming-soon",
   HOME: "/",
   ABOUT: "/about",
-  BLOG: "/blog/:type",
+  BLOG: "/blog",
   BLOG_DETAIL: "/blog-detail/:id",
   APPOINTMENT: "/appointment",
   MEMBERSHIP: "/membership",

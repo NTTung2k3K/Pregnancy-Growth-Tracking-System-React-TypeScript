@@ -38,17 +38,11 @@ const AddRecordForm = ({ child }: { child: Child }) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<ChildFormValues>({
     mode: "onChange",
   });
-
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
 
   const maxWeekRecord =
     child?.fetalGrowthRecordModelViews?.reduce(
@@ -64,7 +58,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
 
   const onSubmit = async (data: ChildFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.RECORD_CREATE}`,
         {
@@ -91,8 +85,12 @@ const AddRecordForm = ({ child }: { child: Child }) => {
       }
     } catch (error) {
       console.error("Failed to update child:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const selectedWeek = watch("weekOfPregnancy");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -196,23 +194,6 @@ const AddRecordForm = ({ child }: { child: Child }) => {
           )}
 
           {/* Fetal Heart Rate */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="fetalHeartRate" className="text-right">
-              Fetal Heart Rate (bpm)
-            </Label>
-            <Input
-              type="number"
-              {...register("fetalHeartRate", {
-                required: "Heart rate is required",
-              })}
-              className="col-span-3"
-            />
-          </div>
-          {errors.fetalHeartRate && (
-            <p className="text-red-500 flex items-center justify-center">
-              {errors.fetalHeartRate.message}
-            </p>
-          )}
 
           {/* Week of Pregnancy */}
           <div className="grid grid-cols-4 items-center gap-4">
@@ -236,6 +217,27 @@ const AddRecordForm = ({ child }: { child: Child }) => {
           {errors.weekOfPregnancy && (
             <p className="text-red-500 flex items-center justify-center">
               {errors.weekOfPregnancy.message}
+            </p>
+          )}
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="fetalHeartRate" className="text-right">
+              Fetal Heart Rate (bpm)
+            </Label>
+            <Input
+              type="number"
+              {...register("fetalHeartRate", {
+                required:
+                  selectedWeek && Number(selectedWeek) > 3
+                    ? "Heart rate is required"
+                    : false,
+              })}
+              className="col-span-3"
+            />
+          </div>
+          {errors.fetalHeartRate && (
+            <p className="text-red-500 flex items-center justify-center">
+              {errors.fetalHeartRate.message}
             </p>
           )}
 

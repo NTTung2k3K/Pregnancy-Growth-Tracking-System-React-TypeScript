@@ -10,6 +10,7 @@ import {
   Package,
   BookMarked,
   UserPen,
+  CalendarDays,
 } from "lucide-react";
 
 import {
@@ -141,6 +142,11 @@ const adminNav = [
     title: "Growth Charts",
     icon: Package,
     url: ROUTES.DASHBOARD_GROWTH_CHARTS,
+  },
+  {
+    title: "Appointments",
+    icon: CalendarDays,
+    url: ROUTES.DASHBOARD_APPOINTMENT,
   },
 ];
 
