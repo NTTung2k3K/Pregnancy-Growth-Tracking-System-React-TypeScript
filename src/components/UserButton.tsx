@@ -59,7 +59,7 @@ const UserButton = () => {
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Link
               className="text-black font-normal w-full"
               to={ROUTES.APPOINTMENT_HISTORY}
@@ -90,7 +90,7 @@ const UserButton = () => {
             >
               Growth chart
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem>
             <Link className="text-black font-normal w-full" to={ROUTES.PROFILE}>
               Profile

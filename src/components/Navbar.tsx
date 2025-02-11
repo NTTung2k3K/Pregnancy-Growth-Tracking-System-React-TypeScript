@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaRegMoon, FaRegSun } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import SearchContainer from "./SearchContainter";
 import AuthForm from "./AuthForm";
@@ -18,9 +18,12 @@ export interface BlogType {
   thumbnail: string | null;
 }
 
+import toast from "react-hot-toast";
+
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
-  const userId = CookiesService.get(); // Nếu cần truyền key cụ thể: CookiesService.get("userId")
+  const userId = CookiesService.get(); 
+  const navigate = useNavigate();
 
   // Khai báo kiểu cho blogTypes
   const [blogTypes, setBlogTypes] = useState<BlogType[]>([]);
@@ -48,31 +51,32 @@ const Navbar = () => {
   // Cấu trúc mảng categories, trong đó mục Blogs có children là blogTypes lấy từ API
   const categories = [
     {
-      name: "Community",
-      link: "/community",
-    },
-    { name: "Getting Pregnant", link: "/community" },
-    { name: "Pregnancy", link: "/community" },
-    { name: "Baby Name", link: "/community" },
-    { name: "Baby", link: "/community" },
-    { name: "Toddler", link: "/community" },
-    { name: "Health", link: "/community" },
-    { name: "Family", link: "/community" },
-    {
       name: "Blogs",
-      link: ROUTES.BLOG, // Khi ấn vào sẽ nhảy ra trang blog
+      link: ROUTES.BLOG, 
       children: blogTypes.map((bt) => ({
         name: bt.name,
         link: `/blog/${bt.id}`,
       })),
       
     },
-    { name: "Growth Chart", link: ROUTES.GROWTH_CHART },
-    { name: "Booking Appointment", link: ROUTES.APPOINTMENT_BOOKING },
+    { name: "Growth Chart", link: ROUTES.MY_GROWTH_CHART, isAuth: true },
+    { name: "Appointments", link: ROUTES.APPOINTMENT_HISTORY, isAuth: true },
+    { name: " My calendar", link: ROUTES.APPOINTMENT_CALENDAR, isAuth: true },
+    { name: "Children", link: ROUTES.CHILDREN, isAuth: true },
+    { name: "Booking Appointment", link: ROUTES.APPOINTMENT_BOOKING, isAuth: false },
   ];
+
+  const handleNavigate = (link: string) => {
+    if (userId) {
+      navigate(link);
+    } else {
+      toast.error("Please login to access this function");
+    }
+  };
 
   return (
     <div className="flex flex-col">
+      {/* Header */}
       <div className="fixed w-full flex justify-between items-center mt-11 px-32 bg-white z-20">
         <div className="flex text-2xl text-sky-900">
           <SearchContainer />
@@ -83,7 +87,7 @@ const Navbar = () => {
             {theme === "dark" ? <FaRegSun /> : <FaRegMoon />}
           </div>
         </div>
-        <Link to={"/"} className="hover:cursor-pointer">
+        <Link to="/" className="hover:cursor-pointer">
           <img
             src="/assets/images/navbar-logo.png"
             className="h-[60px]"
@@ -92,7 +96,7 @@ const Navbar = () => {
           />
         </Link>
         <div className="flex items-center text-2xl text-sky-900">
-          <div className="mr-2 hover:bg-slate-100 hover:rounded-full hover:cursor-pointer p-2">
+          <div className="mr-2 hover:bg-slate-100 hover:rounded-full cursor-pointer p-2">
             <IoIosNotifications />
           </div>
           {userId ? <UserButton /> : <AuthForm />}
@@ -103,14 +107,12 @@ const Navbar = () => {
       <div className="flex justify-between h-10 mt-40 px-32 bg-white z-50">
         {categories.map((category, index) => (
           <div key={index} className="relative group">
-            {/* Dùng Link cho tất cả các mục, kể cả mục có dropdown */}
-            <Link
-              to={category.link}
+            <div
+               onClick={() => handleNavigate(category.link)}
               className="text-sky-900 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
             >
               {category.name}
-            </Link>
-            {/* Nếu mục có children (như Blogs), hiển thị dropdown khi hover */}
+            </div>
             {category.children && category.children.length > 0 && (
               <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 {category.children.map((child, childIndex) => (

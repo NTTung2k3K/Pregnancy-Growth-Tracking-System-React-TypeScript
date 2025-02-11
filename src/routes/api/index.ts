@@ -23,7 +23,7 @@ export const API_ROUTES = {
   CHILD_DELETE: "/child/delete",
 
   //USER FEEDBACK
-  USER_FEEDBACK:"/feedback/get-feedback-pagination",
+  USER_FEEDBACK: "/feedback/get-feedback-pagination",
 
   //RECORD
   RECORD_CREATE: "/fetalgrowthrecord/create",
@@ -76,9 +76,13 @@ export const API_ROUTES = {
   DASHBOARD_MEMBERSHIPPACKAGE_DETAIL: "/membershippackages/get-package",
 
   //-----------------APPOINTMENT
-  DASHBOARD_APPOINTMENT_ALL: "/appointments/get-all",
+  DASHBOARD_APPOINTMENT_ADMIN_ALL: "/appointments/get-all-by-admin",
+  DASHBOARD_APPOINTMENT_DOCTOR_BY_ID: "/appointments/get-all",
+  DASHBOARD_APPOINTMENT_DOCTOR_FREE: "/appointments/get-doctor-free",
   DASHBOARD_APPOINTMENT_UPDATE: "/appointments/update",
   DASHBOARD_APPOINTMENT_CREATE: "/appointments/create",
+  DASHBOARD_APPOINTMENT_CHANGE_DOCTOR:
+    "/appointments/change-doctor-appointment",
 
   //-----------------APPOINTMENT TEMPLATES
   DASHBOARD_APPOINTMENT_TEMPLATES_ALL: "/appointmenttemplates/get-all",
@@ -86,7 +90,7 @@ export const API_ROUTES = {
   DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL: "/appointmenttemplates/get-by-id",
   DASHBOARD_APPOINTMENT_TEMPLATES_CREATE: "/appointmenttemplates/create",
   DASHBOARD_APPOINTMENT_TEMPLATES_DELETE: "/appointmenttemplates/delete",
-  
+
   //---------------------GROWTH CHARTS
   DASHBOARD_GROWTH_CHARTS_ALL: "/growthchart/get-all-growth-chart-by-admin",
   DASHBOARD_GROWTH_CHARTS_STATUS_ALL: "/growthchart/get-status-handler",
@@ -98,6 +102,14 @@ export const API_ROUTES = {
   DASHBOARD_FEEDBACKS_ALL: "/feedback/get-feedback-pagination-admin",
   DASHBOARD_FEEDBACKS_BAN: "/feedback/ban-feedback",
   DASHBOARD_FEEDBACKS_DELETE: "/feedback/delete",
-  // DASHBOARD_GROWTH_CHARTS_DETAIL: "/growthchart/get-by-id",
-  // DASHBOARD_GROWTH_CHARTS_DELETE: "/growthchart/delete",
+
+  //-------------------DOCTOR CALENDAR
+  DOCTOR_CALENDAR: "/appointments/get-doctor-in-range-by-user-id",
+
+  //--------------------MAIN ADMIN
+  NEW_DATA_USER: "/users/get-new-user-statistic",
+  MONTHLY_BLOG: "/blog/count-by-month",
+  MONTHLY_PAYMENTS: "/payments/get-monthly-payment-statistics",
+  GET_REVENUE: "/payments/get-total-revenue-for-current-year",
+  GET_RECENT_TRANSACTION: "/payments/get-recent-transactions",
 };

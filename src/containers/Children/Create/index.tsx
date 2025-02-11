@@ -45,17 +45,10 @@ const ChildCreateContainer = () => {
 
   const id = CookiesService.get();
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: ChildFormValues) => {
     if (id) {
       try {
-        handleLoading();
+        setIsLoading(true);
         const response = await axios.post(
           `${BASE_URL + API_ROUTES.CHILD_CREATE}`,
           {
@@ -87,6 +80,8 @@ const ChildCreateContainer = () => {
         }
       } catch (error) {
         console.error("Failed to create employee:", error);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       toast.error("Please login to create child");
@@ -199,9 +194,12 @@ const ChildCreateContainer = () => {
                 </div>
                 <input
                   type="number"
+                  step="any"
                   className="flex-1 p-2"
                   {...register("weightEstimate", {
                     required: "Weight Estimate is required",
+                    setValueAs: (value) =>
+                      value ? parseFloat(value) : undefined,
                   })}
                 />
               </div>
@@ -214,9 +212,12 @@ const ChildCreateContainer = () => {
                 </div>
                 <input
                   type="number"
+                  step="any"
                   className="flex-1 p-2"
                   {...register("heightEstimate", {
                     required: "Height Estimate is required",
+                    setValueAs: (value) =>
+                      value ? parseFloat(value) : undefined,
                   })}
                 />
               </div>

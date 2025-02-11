@@ -20,6 +20,7 @@ import { getSlotString } from "@/lib/utils";
 const AppointmentDetailContainer = () => {
   const { id } = useParams();
   const [appointment, setAppointment] = useState<Appointment>();
+  const [doctor, setDoctor] = useState<Doctor>();
 
   const fetchAppointment = async () => {
     try {
@@ -30,6 +31,7 @@ const AppointmentDetailContainer = () => {
         ...response.data.resultObj,
       };
       setAppointment(fetchedAppointment);
+      setDoctor(response.data.resultObj.appoinmentUsers[0].doctor);
     } catch (error) {
       console.error("Failed to fetch Appointment:", error);
     }
@@ -148,28 +150,26 @@ const AppointmentDetailContainer = () => {
               </p>
             </div>
 
-            {appointment?.doctors?.map((doctor: Doctor) => (
-              <div key={doctor.id}>
-                <div className="flex items-center gap-x-2 my-5">
-                  <IconBadge icon={BriefcaseMedicalIcon} />
-                  <h2 className="text-xl text-sky-900 font-semibold">Doctor</h2>
-                </div>
-
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6">
-                    Doctor name
-                  </div>
-                  <p className="flex-1 p-2">{doctor.fullName}</p>
-                </div>
-
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6">
-                    Doctor phone number
-                  </div>
-                  <p className="flex-1 p-2">{doctor.phoneNumber}</p>
-                </div>
+            <div key={doctor?.id}>
+              <div className="flex items-center gap-x-2 my-5">
+                <IconBadge icon={BriefcaseMedicalIcon} />
+                <h2 className="text-xl text-sky-900 font-semibold">Doctor</h2>
               </div>
-            ))}
+
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10 w-1/6">
+                  Doctor name
+                </div>
+                <p className="flex-1 p-2">{doctor?.fullName}</p>
+              </div>
+
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10 w-1/6">
+                  Doctor phone number
+                </div>
+                <p className="flex-1 p-2">{doctor?.phoneNumber}</p>
+              </div>
+            </div>
 
             <div className="flex items-center gap-x-2 my-5">
               <IconBadge icon={FileUser} />

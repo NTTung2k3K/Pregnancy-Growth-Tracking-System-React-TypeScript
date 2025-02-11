@@ -125,12 +125,12 @@ const ComingSoonContainer: React.FC = () => {
             </div>
           </div>
           <p className="text-center text-[#92a4ad] text-sm font-normal leading-snug">
-            Get in touch with us:{" "}
+            Go to home page
             <a
-              href="mailto:mail@pagedone.com"
-              className="hover:text-gray-100 transition-all duration-700 ease-in-out text-emerald-400"
+              href="/"
+              className="hover:text-gray-100 transition-all duration-700 ease-in-out text-emerald-400 ml-2"
             >
-              pregnancy@fpt.edu.vn
+              Home
             </a>
           </p>
         </div>

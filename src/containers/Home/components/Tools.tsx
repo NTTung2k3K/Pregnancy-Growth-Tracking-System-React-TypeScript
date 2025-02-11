@@ -21,18 +21,18 @@ const Tools = () => {
     {
       imageUrl: "/assets/images/Home/Tools/gender.png",
       title: "Gender Predictor",
-      link: ROUTES.DUE_DATE_CALCULATOR,
+      link: ROUTES.COMMING_SOON,
     },
     {
       imageUrl:
         "/assets/images/Home/Tools/pregnancy-weight-gain-calculator.jpg",
       title: "Pregnancy Weight Gain Calculator",
-      link: ROUTES.DUE_DATE_CALCULATOR,
+      link: ROUTES.COMMING_SOON,
     },
     {
       imageUrl: "/assets/images/Home/Tools/birth-plan-worksheet.webp",
       title: "Birth Plan Worksheet",
-      link: ROUTES.DUE_DATE_CALCULATOR,
+      link: ROUTES.COMMING_SOON,
     },
   ];
 

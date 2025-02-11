@@ -15,9 +15,6 @@ interface ResetFormValues {
 
 const NewPasswordContainer = () => {
   const navigate = useNavigate();
-  //   const username = useSelector(selectAuthStateUsername);
-  //   useVerifyUserInRedux();
-
   const {
     register,
     watch,
@@ -31,15 +28,7 @@ const NewPasswordContainer = () => {
 
   const location = useLocation();
 
-  // const getQueryParams = (queryString: string) => {
-  //   const params = new URLSearchParams(queryString);
-  //   return {
-  //     email: params.get("email"),
-  //     token: params.get("token"),
-  //   };
-  // };
-
-  // const { email, token } = getQueryParams(location.search);
+ 
 
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token"); // Get the token value
@@ -48,27 +37,13 @@ const NewPasswordContainer = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  //   const onSubmit = (data: any) => {
-  //     const { confirmPassword, ...newData } = data;
 
-  //     UserService.postNewPassword(newData)
-  //       .then((response) => {
-  //         if (response.statusCode === 201) {
-  //           toast.success(response.data.message);
-  //           navigate(`${ROUTES.LOGIN}`);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error: ", error);
-  //         toast.error(error.message);
-  //       });
-  //   };
 
   const handleLoading = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 5000);
   };
 
   const action = localStorage.getItem("action");

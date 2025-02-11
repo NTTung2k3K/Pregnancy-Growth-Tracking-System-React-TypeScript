@@ -80,13 +80,13 @@ const ChildDetailContainer = () => {
 
   const onSubmit = async (data: ChildFormValue) => {
     try {
-      handleLoading();
+      setIsLoading(true);
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.CHILD_UPDATE}/${id}`,
         {
           userId: child?.userId,
           name: data.name,
-          fetalGender: data.fetalGender === 1 ? "Male" : "Female",
+          fetalGender: data.fetalGender,
           pregnancyStage: data.pregnancyStage,
           weightEstimate: data.weightEstimate,
           heightEstimate: data.heightEstimate,
@@ -97,6 +97,11 @@ const ChildDetailContainer = () => {
           isGenerateSampleAppointments: false,
           photoUrl: imageFile,
           bloodType: data.bloodType,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       if (response.data.statusCode === 200) {
@@ -110,6 +115,8 @@ const ChildDetailContainer = () => {
       }
     } catch (error) {
       console.error("Failed to update child:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,13 +130,6 @@ const ChildDetailContainer = () => {
       setImageTemp(newImageUrl);
       setImageFile(file);
     }
-  };
-
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
   };
 
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -266,9 +266,12 @@ const ChildDetailContainer = () => {
                 </div>
                 <input
                   type="number"
+                  step="any"
                   className="flex-1 p-2"
                   {...register("weightEstimate", {
                     required: "Weight Estimate is required",
+                    setValueAs: (value) =>
+                      value ? parseFloat(value) : undefined,
                   })}
                 />
               </div>
@@ -283,9 +286,12 @@ const ChildDetailContainer = () => {
                 </div>
                 <input
                   type="number"
+                  step="any"
                   className="flex-1 p-2"
                   {...register("heightEstimate", {
                     required: "Height Estimate is required",
+                    setValueAs: (value) =>
+                      value ? parseFloat(value) : undefined,
                   })}
                 />
               </div>

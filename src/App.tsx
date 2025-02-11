@@ -5,10 +5,6 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 // import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
-import GrowthChart from "@/containers/Growth-Chart";
-import GrowthChartDetail from "@/containers/Growth-Chart/Detail";
-import GrowthChartMe from "@/containers/Growth-Chart/Me";
-import AppointmentCalendarContainer from "@/containers/AppointmentCalendar";
 
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
@@ -80,6 +76,14 @@ const AppointmentDetailContainer = lazy(
 const AppointmentAdminContainer = lazy(
   () => import("@/containers/Dashboard/Appointment")
 );
+const AppointmentCalendarContainer = lazy(
+  () => import("@/containers/AppointmentCalendar")
+);
+const GrowthChartDetail = lazy(
+  () => import("@/containers/Growth-Chart/Detail")
+);
+const GrowthChartMe = lazy(() => import("@/containers/Growth-Chart/Me"));
+const GrowthChart = lazy(() => import("./containers/Growth-Chart"));
 //-----------DASHBOARD APPOINTMENT TEMPLATES
 
 const AppointmentTemplatesDashboardContainer = lazy(
@@ -206,7 +210,7 @@ const router = createBrowserRouter([
     element: <MainLayout children={<HomeContainer />} />,
   },
   {
-    path: ROUTES.ABOUT,
+    path: ROUTES.COMMING_SOON,
     element: <ComingSoonContainer />,
   },
   {

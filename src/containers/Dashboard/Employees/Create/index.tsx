@@ -70,16 +70,12 @@ const EmployeeCreateContainer = () => {
     fetchRoles();
   }, []);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
+
 
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
+
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_EMPLOYEE_CREATE}`,
         {
@@ -108,6 +104,9 @@ const EmployeeCreateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to create employee:", error);
+    }finally{
+      setIsLoading(false);
+      
     }
   };
 

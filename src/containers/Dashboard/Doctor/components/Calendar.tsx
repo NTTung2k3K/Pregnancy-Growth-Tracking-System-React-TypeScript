@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   addMonths,
   subMonths,
@@ -17,38 +15,26 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import type { Appointment } from "@/containers/Dashboard/Appointment";
-import type { CreateAppointmentPayload } from "@/containers/Appointment-History/_components/appoinment-calendar";
 import toast from "react-hot-toast";
-import { CreateAppointmentForm } from "@/containers/Appointment-History/_components/create-appoinment-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
-import { CookiesService } from "@/services/cookies.service";
+import { CookiesEmployeeService } from "@/services/cookies.service";
 import { ROUTES } from "@/routes";
 import { cn } from "@/lib/utils";
+import { API_ROUTES } from "@/routes/api";
+import { useNavigate } from "react-router-dom";
 
-export function LargeCalendar() {
+export function DoctorCalendar() {
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = React.useState(new Date());
   const [appointments, setAppointments] = React.useState<Appointment[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setIsLoading] = React.useState(true);
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
-  const [selectedAppointmentId, setSelectedAppointmentId] = React.useState<
-    number | null
-  >(null);
-
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const today = new Date();
 
@@ -58,14 +44,16 @@ export function LargeCalendar() {
       setIsLoading(true);
       const startDay = startOfMonth(date);
       const endDate = endOfMonth(date);
-      const userId = CookiesService.get();
+      const userId = CookiesEmployeeService.get();
       if (!userId) {
         toast.error("User ID not found");
         return;
       }
 
       const response = await axios.get(
-        `${BASE_URL}/appointments/get-in-range-by-user-id?userId=${userId}&startDay=${format(
+        `${
+          BASE_URL + API_ROUTES.DOCTOR_CALENDAR
+        }?userId=${userId}&startDay=${format(
           startDay,
           "yyyy-MM-dd"
         )}&endDate=${format(endDate, "yyyy-MM-dd")}`
@@ -85,34 +73,6 @@ export function LargeCalendar() {
   React.useEffect(() => {
     fetchAppointments(currentMonth);
   }, [currentMonth, fetchAppointments]);
-
-  const handleCreateAppointment = async (data: CreateAppointmentPayload) => {
-    try {
-      setIsSubmitting(true);
-      const response = await fetch(`${BASE_URL}/appointments/confirm`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (result.isSuccessed) {
-        toast.success("Appointment created successfully");
-        setIsCreateDialogOpen(false);
-        fetchAppointments(currentMonth);
-      } else {
-        toast.error(result.message || "Failed to create appointment");
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const previousMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
@@ -177,6 +137,7 @@ export function LargeCalendar() {
 
         {days.map((day) => {
           const dayAppointments = getAppointmentsForDate(day);
+          dayAppointments.sort((a, b) => a.appointmentSlot - b.appointmentSlot);
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isToday = isSameDay(day, today);
 
@@ -184,17 +145,12 @@ export function LargeCalendar() {
             <HoverCard key={day.toString()} openDelay={200}>
               <HoverCardTrigger asChild>
                 <Card
-                  className={`aspect-square p-0.5 cursor-pointer transition-colors hover:bg-accent ${
+                  className={` aspect-square p-0.5 cursor-pointer transition-colors hover:bg-accent ${
                     isCurrentMonth ? "bg-background" : "bg-muted/20"
                   } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}
                   ${
                     isToday ? "border-2 border-emerald-400" : "" // Highlight today
-                  }
-                  `}
-                  onClick={() => {
-                    setSelectedDate(day);
-                    setIsCreateDialogOpen(true);
-                  }}
+                  }`}
                 >
                   <div className="flex flex-col h-full">
                     <div className="flex items-start justify-between">
@@ -205,11 +161,7 @@ export function LargeCalendar() {
                       >
                         {format(day, "d")}
                       </span>
-                      {isToday && (
-                        <span className="absolute text-xs font-bold text-emerald-400 ml-8">
-                          Today
-                        </span>
-                      )}
+                      {isToday && <span className="absolute text-xs font-bold text-emerald-400 ml-8">Today</span>}
                       {dayAppointments.length > 0 && (
                         <Badge
                           variant="secondary"
@@ -261,78 +213,39 @@ export function LargeCalendar() {
                     <h4 className="text-sm font-semibold">
                       {format(day, "MMM d, yyyy")}
                     </h4>
-                    {dayAppointments.length === 0 && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 bg-transparent"
-                        onClick={() => {
-                          window.location.href = ROUTES.APPOINTMENT_BOOKING;
-                        }}
-                      >
-                        <Plus className="h-3 w-3 mr-1" />
-                        Booking
-                      </Button>
-                    )}
                   </div>
                   {dayAppointments.length > 0 ? (
                     <div className="space-y-1">
                       {dayAppointments.map((appointment) => (
                         <div
+                          onClick={() => {
+                            navigate(
+                              ROUTES.DASHBOARD_APPOINTMENT_DETAIL.replace(
+                                ":id",
+                                String(appointment.id)
+                              )
+                            );
+                          }}
                           key={appointment.id}
-                          className="p-1.5 rounded-md bg-muted text-xs"
+                          className="p-1.5 rounded-md bg-muted text-xs cursor-pointer"
                         >
                           <div className="flex items-center justify-between">
                             <div className="font-medium">
                               {appointment.appointmentTemplate.name}
                             </div>
-                            {appointment.status === "Pending" ? (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-6 bg-transparent"
-                                onClick={() => {
-                                  setSelectedAppointmentId(appointment.id);
-                                  setSelectedDate(day);
-                                  setIsCreateDialogOpen(true);
-                                }}
-                              >
-                                Confirm
-                              </Button>
-                            ) : (
-                              <Badge
-                                className={cn({
-                                  "bg-green-500/10 text-green-500":
-                                    appointment.status === "Completed",
-                                  "bg-yellow-500/10 text-yellow-500":
-                                    appointment.status === "Pending",
-                                  "bg-red-500/10 text-red-500": [
-                                    "NoShow",
-                                    "Failed",
-                                    "CancelledByUser",
-                                    "CancelledByDoctor",
-                                  ].includes(appointment.status),
-                                  "bg-blue-500/10 text-blue-500":
-                                    appointment.status === "InProgress",
-                                  "bg-violet-500/10 text-violet-500":
-                                    appointment.status === "Confirmed",
-                                  "bg-pink-500/10 text-pink-500":
-                                    appointment.status === "Rescheduled",
-                                })}
-                              >
-                                {appointment.status}
-                              </Badge>
-                            )}
+
+                            <Badge className="bg-sky-900 text-emerald-400">
+                              Slot {appointment.appointmentSlot}
+                            </Badge>
                           </div>
-                          <div className="text-[10px] text-muted-foreground">
-                            {appointment.appointmentTemplate.description}
+                          <div className="flex text-[10px] text-muted-foreground">
+                            Child:
+                            {appointment.childs.map((child) => (
+                              <p className="ml-2">{child.name},</p>
+                            ))}
                           </div>
-                          <div className="text-[10px] mt-0.5">
-                            Fee: &nbsp;
-                            {Math.round(
-                              appointment.appointmentTemplate.fee
-                            ).toLocaleString()}
-                            VNĐ
+                          <div className="flex text-[10px] text-muted-foreground">
+                            Parent: {appointment.user.fullName}
                           </div>
                         </div>
                       ))}
@@ -348,29 +261,6 @@ export function LargeCalendar() {
           );
         })}
       </div>
-
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>
-              Create New Appointment for{" "}
-              {selectedAppointmentId
-                ? appointments
-                    .find((a) => a.id === selectedAppointmentId)
-                    ?.childs.map((x) => x.name)
-                    .join(", ")
-                : ""}
-            </DialogTitle>
-          </DialogHeader>
-          <CreateAppointmentForm
-            initialDate={selectedDate || undefined}
-            appointmentId={selectedAppointmentId ?? 0}
-            onSubmit={handleCreateAppointment}
-            onCancel={() => setIsCreateDialogOpen(false)}
-            isSubmitting={isSubmitting}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

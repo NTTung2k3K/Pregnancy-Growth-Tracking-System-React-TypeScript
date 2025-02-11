@@ -25,6 +25,7 @@ interface BlogFormValues {
   thumbnail: File;
   status: string;
   sources: string;
+  isFeatured: boolean;
 }
 
 const BlogCreateContainer = () => {
@@ -33,9 +34,13 @@ const BlogCreateContainer = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<BlogFormValues>({ mode: "onChange" });
+  } = useForm<BlogFormValues>({
+    mode: "onChange",
+  });
 
-  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [imagePreview, setImagePreview] = useState<string | undefined>(
+    undefined
+  );
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [blogTypes, setBlogTypes] = useState<any[]>([]);
@@ -49,7 +54,9 @@ const BlogCreateContainer = () => {
   
     const fetchBlogTypes = async () => {
       try {
-        const response = await axios.get(`${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPES}`);
+        const response = await axios.get(
+          `${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPES}`
+        );
         setBlogTypes(response.data.resultObj.items);
       } catch (error) {
         console.error("Error fetching blog types:", error);
@@ -74,16 +81,9 @@ const BlogCreateContainer = () => {
     setValue("content", content);
   };
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: BlogFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
 
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_BLOG_CREATE}`,
@@ -112,6 +112,8 @@ const BlogCreateContainer = () => {
       }
     } catch (error) {
       console.error("Error creating blog:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -146,7 +148,9 @@ const BlogCreateContainer = () => {
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={FileText} />
-                <h2 className="text-xl text-sky-900 font-semibold">Blog Details</h2>
+                <h2 className="text-xl text-sky-900 font-semibold">
+                  Blog Details
+                </h2>
               </div>
 
               {/* Title Field */}
@@ -157,17 +161,27 @@ const BlogCreateContainer = () => {
                   {...register("title", { required: "Title is required" })}
                 />
               </div>
-              {errors.title && <p className="text-red-500">{errors.title?.message}</p>}
+              {errors.title && (
+                <p className="text-red-500">{errors.title.message}</p>
+              )}
 
-              {/* Author Field (ẩn hoàn toàn) */}
-              <input
-                type="hidden"
-                {...register("authorId", { required: "Author is required" })}
-              />
+              {/* Author Field */}
+              <div className="hidden mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
+                  Author
+                </div>
+                <input
+                  className="flex-1 p-2"
+                  readOnly
+                  {...register("authorId", { required: "Author is required" })}
+                />
+              </div>
 
               {/* Blog Type Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Blog Type</div>
+                <div className="font-medium flex items-center mr-10">
+                  Blog Type
+                </div>
                 <select
                   className="flex-1 p-2"
                   {...register("blogTypeId", {
@@ -187,7 +201,17 @@ const BlogCreateContainer = () => {
                   )}
                 </select>
               </div>
-              {errors.blogTypeId && <p className="text-red-500">{errors.blogTypeId?.message}</p>}
+              {errors.blogTypeId && (
+                <p className="text-red-500">{errors.blogTypeId.message}</p>
+              )}
+
+              {/* Featured Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
+                  Featured
+                </div>
+                <input type="checkbox" {...register("isFeatured")} />
+              </div>
 
               {/* Week Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -196,14 +220,17 @@ const BlogCreateContainer = () => {
                   type="number"
                   className="flex-1 p-2"
                   {...register("week", {
-                    setValueAs: (value) => (value === "" ? null : parseInt(value, 10)),
+                    setValueAs: (value) =>
+                      value === "" ? null : parseInt(value, 10),
                   })}
                 />
               </div>
 
               {/* Status Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Status</div>
+                <div className="font-medium flex items-center mr-10">
+                  Status
+                </div>
                 <select
                   className="flex-1 p-2"
                   {...register("status", { required: "Status is required" })}
@@ -211,6 +238,7 @@ const BlogCreateContainer = () => {
                   <option value="">Select status</option>
                   {statusOptions && statusOptions.length > 0 ? (
                     statusOptions.map((s: any) => (
+            
                       <option key={s.id} value={s.id}>
                         {s.status}
                       </option>
@@ -220,17 +248,23 @@ const BlogCreateContainer = () => {
                   )}
                 </select>
               </div>
-              {errors.status && <p className="text-red-500">{errors.status?.message}</p>}
+              {errors.status && (
+                <p className="text-red-500">{errors.status.message}</p>
+              )}
 
               {/* Sources Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Sources</div>
-                <textarea
+                <div className="font-medium flex items-center mr-10">
+                  Sources
+                </div>
+                <input
                   className="flex-1 p-2"
                   {...register("sources", { required: "Sources are required" })}
                 />
               </div>
-              {errors.sources && <p className="text-red-500">{errors.sources?.message}</p>}
+              {errors.sources && (
+                <p className="text-red-500">{errors.sources.message}</p>
+              )}
             </div>
 
             {/* Thumbnail Upload */}
@@ -238,7 +272,9 @@ const BlogCreateContainer = () => {
               <div>
                 <div className="flex items-center gap-x-2">
                   <IconBadge icon={Image} />
-                  <h2 className="text-xl text-sky-900 font-semibold">Thumbnail</h2>
+                  <h2 className="text-xl text-sky-900 font-semibold">
+                    Thumbnail
+                  </h2>
                 </div>
                 <div className="flex justify-center">
                   <Avatar className="h-32 w-32 border text-center">
@@ -253,9 +289,8 @@ const BlogCreateContainer = () => {
             </div>
           </div>
         </div>
-
-        {/* Content Field */}
         <div className="p-6">
+          {/* Content Field */}
           <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center mr-10">Content</div>
             <div>
@@ -312,37 +347,15 @@ const BlogCreateContainer = () => {
                     respondWith.string(() =>
                       Promise.reject("See docs to implement AI Assistant")
                     ),
-                  images_upload_handler: async (blobInfo) => {
-                    const file = blobInfo.blob();
-                    const formData = new FormData();
-                    formData.append("Image", file, blobInfo.filename());
-                    try {
-                      const response = await axios.post(`${BASE_URL}/users/upload-image`, formData, {
-                        headers: {
-                          "Content-Type": "multipart/form-data",
-                        },
-                      });
-                      if (
-                        response.data &&
-                        response.data.resultObj &&
-                        response.data.resultObj.imageUrl
-                      ) {
-                        return response.data.resultObj.imageUrl;
-                      } else {
-                        throw new Error("Upload failed: Invalid response");
-                      }
-                    } catch (error: any) {
-                      console.error("Image upload error:", error);
-                      throw error;
-                    }
-                  },
                 }}
                 initialValue="Welcome to TinyMCE!"
                 onEditorChange={onEditorChange}
               />
             </div>
           </div>
-          {errors.content && <p className="text-red-500">{errors.content?.message}</p>}
+          {errors.content && (
+            <p className="text-red-500">{errors.content.message}</p>
+          )}
         </div>
 
         <div className="flex items-center justify-center mt-10 mr-10">
@@ -351,7 +364,11 @@ const BlogCreateContainer = () => {
             disabled={isLoading}
             className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
           >
-            {isLoading ? <AiOutlineLoading className="animate-spin" /> : "Submit"}
+            {isLoading ? (
+              <AiOutlineLoading className="animate-spin" />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </div>
       </form>

@@ -15,6 +15,7 @@ function* login(action: any): Generator<any, void, any> {
   const { email, password } = action.payload;
 
   const response = yield call(UserService.login, { email, password });
+  console.log(response)
 
   if (response.data.statusCode === 200) {
     CookiesService.set(response.data.resultObj.id);

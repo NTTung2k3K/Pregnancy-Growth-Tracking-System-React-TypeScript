@@ -19,9 +19,7 @@ import { API_ROUTES } from "@/routes/api";
 import { GrowthChart } from "../components/IGrowthCharts";
 import { GrowthCharts } from "../../Appointment/components/chart-record";
 import { CommentsSection } from "../../components/CommentSection";
-import {
-  CookiesEmployeeService,
-} from "@/services/cookies.service";
+import { CookiesEmployeeService } from "@/services/cookies.service";
 import { MdFamilyRestroom } from "react-icons/md";
 
 interface GrowthChartsFormValues {
@@ -86,16 +84,10 @@ const GrowthChartUpdateContainer = () => {
     fetchChart();
   }, []);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: GrowthChartsFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
+
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE}`,
         {
@@ -114,6 +106,8 @@ const GrowthChartUpdateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to update employee:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

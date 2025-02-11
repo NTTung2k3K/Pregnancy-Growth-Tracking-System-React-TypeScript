@@ -23,6 +23,7 @@ interface UserFormValue {
   gender: number;
   email: string;
   bloodGroup: string;
+  fullName: string;
 }
 
 const UserProfileContainer = () => {
@@ -72,12 +73,14 @@ const UserProfileContainer = () => {
 
   const onSubmit = async (data: UserFormValue) => {
     try {
-      handleLoading();
+      setIsLoading(true);
+
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.USER_UPDATE_PROFILE}`,
         {
           Id: id,
           Image: imageFile,
+          FullName: data.fullName,
           DateOfBirth: data.dateOfBirth,
           Address: data.address,
           Gender: Number(data.gender),
@@ -98,6 +101,8 @@ const UserProfileContainer = () => {
       }
     } catch (error) {
       console.error("Failed to create employee:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -111,13 +116,6 @@ const UserProfileContainer = () => {
       setImageTemp(newImageUrl);
       setImageFile(file);
     }
-  };
-
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
   };
 
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -154,12 +152,28 @@ const UserProfileContainer = () => {
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
+                  Full Name
+                </div>
+                <input
+                  className="flex-1 p-2"
+                  {...register("fullName", {
+                    required: "Full Name is required",
+                  })}
+                />
+              </div>
+              {errors.fullName && (
+                <span className="text-red-500 text-sm">
+                  {errors.fullName.message}
+                </span>
+              )}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
                   Phone Number
                 </div>
                 <input
                   className="flex-1 p-2"
                   {...register("phoneNumber", {
-                    required: "Full Name is required",
+                    required: "Phone number is required",
                   })}
                 />
               </div>

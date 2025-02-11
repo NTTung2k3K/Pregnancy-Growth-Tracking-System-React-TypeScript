@@ -51,7 +51,9 @@ const ChildrenGridContainer = () => {
               <Link
                 to={`${ROUTES.CHILDREN_CREATE}`}
                 className="bg-sky-800 hover:bg-sky-900 text-emerald-400 p-4 rounded-full font-bold"
-              ></Link>
+              >
+                Add new children
+              </Link>
             </div>
           </div>
         </div>

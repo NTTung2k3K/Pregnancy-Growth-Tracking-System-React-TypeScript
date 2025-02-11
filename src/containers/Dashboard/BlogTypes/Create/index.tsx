@@ -6,7 +6,7 @@ import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { useState } from "react";
-import React from 'react';
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -21,31 +21,30 @@ interface BlogTypeFormValues {
 }
 
 const BlogTypeCreateContainer = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<BlogTypeFormValues>( {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BlogTypeFormValues>({
     mode: "onChange",
   });
 
-  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [imagePreview, setImagePreview] = useState<string | undefined>(
+    undefined
+  );
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-  };
-
   const onSubmit = async (data: BlogTypeFormValues) => {
     try {
-      handleLoading();
+      setIsLoading(true);
 
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPE_CREATE}`,
         {
-            name: data.name,
-            description: data.description,
-            thumbnail: imageFile,
+          name: data.name,
+          description: data.description,
+          thumbnail: imageFile,
         },
         {
           headers: {
@@ -53,7 +52,7 @@ const BlogTypeCreateContainer = () => {
           },
         }
       );
-      console.log(response.data)
+      console.log(response.data);
 
       if (response.data.statusCode === 200) {
         window.location.href = `/dashboard/blogtypes`;
@@ -63,6 +62,8 @@ const BlogTypeCreateContainer = () => {
       }
     } catch (error) {
       console.error("Error creating blogtype:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,7 +98,9 @@ const BlogTypeCreateContainer = () => {
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={FileText} />
-                <h2 className="text-xl text-sky-900 font-semibold">BlogType Details</h2>
+                <h2 className="text-xl text-sky-900 font-semibold">
+                  BlogType Details
+                </h2>
               </div>
 
               {/* Name Field */}
@@ -108,29 +111,41 @@ const BlogTypeCreateContainer = () => {
                   {...register("name", { required: "Name is required" })}
                 />
               </div>
-              {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-500">{errors.name.message}</p>
+              )}
 
               {/* Description Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Description</div>
-                <textarea
+                <div className="font-medium flex items-center mr-10">
+                  Description
+                </div>
+                <input
                   className="flex-1 p-2"
-                  {...register("description", { required: "Description is required" })}
+                  {...register("description", {
+                    required: "Description is required",
+                  })}
                 />
               </div>
-              {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+              {errors.description && (
+                <p className="text-red-500">{errors.description.message}</p>
+              )}
 
               {/* Thumbnail Upload */}
               <div className="space-y-6 mt-10">
                 <div>
                   <div className="flex items-center gap-x-2">
                     <IconBadge icon={Image} />
-                    <h2 className="text-xl text-sky-900 font-semibold">Thumbnail</h2>
+                    <h2 className="text-xl text-sky-900 font-semibold">
+                      Thumbnail
+                    </h2>
                   </div>
                   <div className="flex justify-center">
                     <Avatar className="h-32 w-32 border text-center">
                       <AvatarImage src={imagePreview} />
-                      <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">?</AvatarFallback>
+                      <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
+                        ?
+                      </AvatarFallback>
                       <AvatarOverlay onFileChange={handleFileChange} />
                     </Avatar>
                   </div>
@@ -145,7 +160,11 @@ const BlogTypeCreateContainer = () => {
             disabled={isLoading}
             className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
           >
-            {isLoading ? <AiOutlineLoading className="animate-spin" /> : "Submit"}
+            {isLoading ? (
+              <AiOutlineLoading className="animate-spin" />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </div>
       </form>
