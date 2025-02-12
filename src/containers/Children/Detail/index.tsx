@@ -24,6 +24,7 @@ import { Child } from "@/containers/Dashboard/Children/components/IChild";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 import AddRecordForm from "./components/AddRecordForm";
 import ShareGrowthChart from "@/containers/Children/Detail/components/share-growth-chart";
+import { CookiesService } from "@/services/cookies.service";
 
 interface ChildFormValue {
   name: string;
@@ -41,6 +42,7 @@ interface ChildFormValue {
 
 const ChildDetailContainer = () => {
   const { id } = useParams();
+  const userId = CookiesService.get()
   const [child, setChild] = useState<Child>();
   const {
     register,
@@ -52,6 +54,19 @@ const ChildDetailContainer = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
+
+  const [isMember, setIsMember] = useState<boolean>(false);
+
+  const fetchIsMember = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL + API_ROUTES.IS_MEMBER}`, {
+        params: { id: userId },
+      });
+      setIsMember(response.data.resultObj);
+    } catch (error) {
+      console.error("Failed to fetch employee:", error);
+    }
+  };
 
   const fetchChild = async () => {
     try {
@@ -76,6 +91,7 @@ const ChildDetailContainer = () => {
 
   useEffect(() => {
     fetchChild();
+    fetchIsMember();
   }, []);
 
   const onSubmit = async (data: ChildFormValue) => {
@@ -458,12 +474,18 @@ const ChildDetailContainer = () => {
             </h1>
           </div>
         </div>
-        <div className="my-10">{child && <GrowthCharts child={child} />}</div>
-        <div className="flex items-center justify-center my-10">
-          <AddRecordForm child={child} />
-          <div className="mx-3"></div>
-          <ShareGrowthChart key={child.id} child={child} />
-        </div>
+        {isMember && (
+          <>
+            <div className="my-10 flex items-center justify-center">
+              {child && <GrowthCharts child={child} />}
+            </div>
+            <div className="flex items-center justify-center my-10">
+              <AddRecordForm child={child} />
+              <div className="mx-3"></div>
+              <ShareGrowthChart key={child.id} child={child} />
+            </div>
+          </>
+        )}
       </div>
     </>
   );

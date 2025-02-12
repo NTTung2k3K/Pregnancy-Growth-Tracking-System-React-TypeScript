@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use server"
+
 
 import { BASE_URL } from "@/services/config"
 

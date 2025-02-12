@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
-  const userId = CookiesService.get(); 
+  const userId = CookiesService.get();
   const navigate = useNavigate();
 
   // Khai báo kiểu cho blogTypes
@@ -52,18 +52,21 @@ const Navbar = () => {
   const categories = [
     {
       name: "Blogs",
-      link: ROUTES.BLOG, 
+      link: ROUTES.BLOG,
       children: blogTypes.map((bt) => ({
         name: bt.name,
         link: `/blog/${bt.id}`,
       })),
-      
     },
     { name: "Growth Chart", link: ROUTES.MY_GROWTH_CHART, isAuth: true },
     { name: "Appointments", link: ROUTES.APPOINTMENT_HISTORY, isAuth: true },
     { name: " My calendar", link: ROUTES.APPOINTMENT_CALENDAR, isAuth: true },
     { name: "Children", link: ROUTES.CHILDREN, isAuth: true },
-    { name: "Booking Appointment", link: ROUTES.APPOINTMENT_BOOKING, isAuth: false },
+    {
+      name: "Booking Appointment",
+      link: ROUTES.APPOINTMENT_BOOKING,
+      isAuth: false,
+    },
   ];
 
   const handleNavigate = (link: string) => {
@@ -106,9 +109,9 @@ const Navbar = () => {
       {/* Thanh categories với dropdown */}
       <div className="flex justify-between h-10 mt-40 px-32 bg-white z-50">
         {categories.map((category, index) => (
-          <div key={index} className="relative group">
+          <div key={index} className="relative group cursor-pointer">
             <div
-               onClick={() => handleNavigate(category.link)}
+              onClick={() => handleNavigate(category.link)}
               className="text-sky-900 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
             >
               {category.name}
