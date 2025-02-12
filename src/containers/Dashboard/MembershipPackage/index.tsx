@@ -16,6 +16,11 @@ export interface MembershipPackage {
   imageUrl: string;
   discount: number;
   showPriority: number;
+  maxRecordAdded: number;
+  maxGrowthChartShares: number;
+  hasGenerateAppointments: boolean;
+  hasStandardDeviationAlerts: boolean;
+  hasViewGrowthChart: boolean;
 }
 
 const MembershipPackageContainer = () => {
