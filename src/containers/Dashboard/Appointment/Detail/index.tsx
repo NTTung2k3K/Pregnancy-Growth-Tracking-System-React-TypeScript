@@ -145,33 +145,35 @@ const AppointmentDetailContainer = () => {
               <p className="flex-1 p-2">{appointment?.status}</p>
             </div>
 
-            <div className="mt-4">
-              <div className="flex items-center justify-between gap-x-2">
-                <div className="flex items-center">
-                  <IconBadge icon={History} />
-                  <h2 className="ml-4 text-xl text-sky-900 font-semibold">
-                    History of doctor change
-                  </h2>
+            {isAdmin && (
+              <div className="mt-4">
+                <div className="flex items-center justify-between gap-x-2">
+                  <div className="flex items-center">
+                    <IconBadge icon={History} />
+                    <h2 className="ml-4 text-xl text-sky-900 font-semibold">
+                      History of doctor change
+                    </h2>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col mt-4 border bg-slate-100 rounded-md p-4">
-                {history.map((item: any) => (
-                  <div className=" bg-sky-800 p-4 my-2 text-emerald-400 rounded-lg font-semibold">
-                    <div className="flex justify-between items-center">
-                      <p>Date: {" " + formatDate(item.assignedTime)}</p>
-                      <ArrowBigRightDash />
-                      <p> {item.doctor.fullName}</p>
-                    </div>
-                    <div className="flex  items-center my-2">
-                      <div className="flex">
-                        <CircleHelp className="mr-2" />
-                        {item.reason}
+                <div className="flex flex-col mt-4 border bg-slate-100 rounded-md p-4">
+                  {history.map((item: any) => (
+                    <div className=" bg-sky-800 px-20 py-4 my-2 text-emerald-400 rounded-lg font-semibold">
+                      <div className="flex justify-between items-center">
+                        <p>Date: {" " + formatDate(item.assignedTime)}</p>
+                        <ArrowBigRightDash />
+                        <p> {item.doctor.fullName}</p>
+                      </div>
+                      <div className="flex  items-center my-2">
+                        <div className="flex">
+                          <CircleHelp className="mr-2" />
+                          {item.reason}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="space-y-6">
