@@ -35,6 +35,8 @@ const MembershipPackageDetailContainer = () => {
     fetchMembershipPackage();
   }, []);
 
+  console.log(membershipPackage);
+
   return (
     <>
       <div className="p-6">
@@ -90,6 +92,20 @@ const MembershipPackageDetailContainer = () => {
               </div>
               <p className="flex-1 p-2">{membershipPackage?.duration} days</p>
             </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Max Record Added
+              </div>
+              <p className="flex-1 p-2">{membershipPackage?.maxRecordAdded}</p>
+            </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Max Growth Chart Shares
+              </div>
+              <p className="flex-1 p-2">
+                {membershipPackage?.maxGrowthChartShares}
+              </p>
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -115,6 +131,32 @@ const MembershipPackageDetailContainer = () => {
                 Status
               </div>
               <p className="flex-1 p-2">{membershipPackage?.status}</p>
+            </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Has Generate Appointments
+              </div>
+              <p className="flex-1 p-2">
+                {membershipPackage?.hasGenerateAppointments ? "true" : "false"}
+              </p>
+            </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Has Standard Deviation Alerts
+              </div>
+              <p className="flex-1 p-2">
+                {membershipPackage?.hasStandardDeviationAlerts
+                  ? "true"
+                  : "false"}
+              </p>
+            </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Has View Growth Chart
+              </div>
+              <p className="flex-1 p-2">
+                {membershipPackage?.hasViewGrowthChart ? "true" : "false"}
+              </p>
             </div>
             <div>
               <div className="flex items-center gap-x-2">

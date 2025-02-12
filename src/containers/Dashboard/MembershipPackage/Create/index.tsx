@@ -24,6 +24,11 @@ interface MembershipPackageFormValues {
   imageUrl: string;
   discount: number;
   showPriority: number;
+  maxRecordAdded: number;
+  maxGrowthChartShares: number;
+  hasGenerateAppointments: boolean;
+  hasStandardDeviationAlerts: boolean;
+  hasViewGrowthChart: boolean;
 }
 
 export interface MembershipPackage {
@@ -37,6 +42,11 @@ export interface MembershipPackage {
   imageUrl: string;
   discount: number;
   showPriority: number;
+  maxRecordAdded: number;
+  maxGrowthChartShares: number;
+  hasGenerateAppointments: boolean;
+  hasStandardDeviationAlerts: boolean;
+  hasViewGrowthChart: boolean;
 }
 
 export interface Status {
@@ -94,6 +104,11 @@ const MembershipPackageCreateContainer = () => {
           discount: data.discount,
           showPriority: data.showPriority,
           imageUrl: imageFile,
+          maxRecordAdded: data.maxRecordAdded,
+          maxGrowthChartShares: data.maxGrowthChartShares,
+          hasGenerateAppointments: data.hasGenerateAppointments,
+          hasStandardDeviationAlerts: data.hasStandardDeviationAlerts,
+          hasViewGrowthChart: data.hasViewGrowthChart,
         },
         {
           headers: {
@@ -167,7 +182,7 @@ const MembershipPackageCreateContainer = () => {
                 </h1>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 {/* Username Field */}
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -260,6 +275,46 @@ const MembershipPackageCreateContainer = () => {
                 {errors.duration && (
                   <p className="text-red-500">{errors.duration.message}</p>
                 )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Max Record Added
+                  </div>
+                  <input
+                    type="number"
+                    className="flex-1 p-2 bg-white"
+                    {...register("maxRecordAdded", {
+                      required: "maxRecordAdded is required",
+                      validate: (value) =>
+                        value > 0 || "maxRecordAdded must be positive",
+                    })}
+                    min={1}
+                  />
+                </div>
+                {errors.maxRecordAdded && (
+                  <p className="text-red-500">
+                    {errors.maxRecordAdded.message}
+                  </p>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Max Growth Chart Shared
+                  </div>
+                  <input
+                    type="number"
+                    className="flex-1 p-2 bg-white"
+                    {...register("maxGrowthChartShares", {
+                      required: "maxGrowthChartShares is required",
+                      validate: (value) =>
+                        value > 0 || "maxGrowthChartShares must be positive",
+                    })}
+                    min={1}
+                  />
+                </div>
+                {errors.maxGrowthChartShares && (
+                  <p className="text-red-500">
+                    {errors.maxGrowthChartShares.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-6">
@@ -323,6 +378,36 @@ const MembershipPackageCreateContainer = () => {
                 {errors.packageLevel && (
                   <p className="text-red-500">{errors.packageLevel.message}</p>
                 )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <input
+                    type="checkbox"
+                    className=" p-2 bg-white mr-4"
+                    {...register("showPriority")}
+                  />
+                  <div className="flex-1 font-medium flex items-center mr-10 w-1/6 ">
+                    Has Generate Appointments
+                  </div>
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <input
+                    type="checkbox"
+                    className=" p-2 bg-white mr-4"
+                    {...register("hasStandardDeviationAlerts")}
+                  />
+                  <div className="flex-1 font-medium flex items-center mr-10 w-1/6 ">
+                    Has Standard Deviation Alerts
+                  </div>
+                </div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <input
+                    type="checkbox"
+                    className=" p-2 bg-white mr-4"
+                    {...register("hasViewGrowthChart")}
+                  />
+                  <div className="flex-1 font-medium flex items-center mr-10 w-1/6 ">
+                    Has View Growth Chart
+                  </div>
+                </div>
                 {/* Image Upload */}
                 <div className="">
                   <div className="flex items-center gap-x-2">
