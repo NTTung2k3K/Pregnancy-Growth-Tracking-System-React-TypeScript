@@ -31,6 +31,7 @@ export const API_ROUTES = {
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
+  IS_MEMBER:"/membershippackages/can-generate-appointment",
 
   //-------------------------------DASHBOARD-------------------------------------------
 
@@ -77,6 +78,8 @@ export const API_ROUTES = {
 
   //-----------------APPOINTMENT
   DASHBOARD_APPOINTMENT_ADMIN_ALL: "/appointments/get-all-by-admin",
+  DASHBOARD_APPOINTMENT_DOCTOR_DETAIL: "/appointments/get-by-id",
+  DASHBOARD_APPOINTMENT_ADMIN_DETAIL: "/appointments/get-by-id-side-admin",
   DASHBOARD_APPOINTMENT_DOCTOR_BY_ID: "/appointments/get-all",
   DASHBOARD_APPOINTMENT_DOCTOR_FREE: "/appointments/get-doctor-free",
   DASHBOARD_APPOINTMENT_UPDATE: "/appointments/update",

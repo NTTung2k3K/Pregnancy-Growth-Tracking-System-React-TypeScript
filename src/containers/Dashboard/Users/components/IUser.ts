@@ -14,4 +14,22 @@ export interface User {
   isEmailConfirmed: boolean | null; // Email confirmation status, nullable
   lastUpdatedBy: string | null; // ID or name of the last person who updated, nullable
   childs: Child[]; // List of child users (nested users)
+  userMembershipResponses: UserMembership[];
+}
+
+export interface UserMembership {
+  endDate: string;
+  startDate: string;
+  addedRecordCount: number;
+  growthChartShareCount: number;
+  package: Package;
+}
+
+interface Package {
+  duration: number;
+  id: number;
+  price: number;
+  packageLevel: string;
+  packageName: string;
+  showPriority: number;
 }

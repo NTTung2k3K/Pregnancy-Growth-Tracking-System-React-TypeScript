@@ -1,4 +1,4 @@
-"use client";
+
 
 import { Check, Star } from "lucide-react";
 import { useEffect, useState } from "react";

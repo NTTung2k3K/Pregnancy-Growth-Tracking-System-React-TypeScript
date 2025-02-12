@@ -1,10 +1,13 @@
 import { IconBadge } from "@/components/IconBadge";
 import {
+  ArrowBigRightDash,
   Baby,
   BadgeAlert,
   BriefcaseMedicalIcon,
   CircleArrowLeft,
+  CircleHelp,
   FileUser,
+  History,
   SquareMousePointer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,22 +19,39 @@ import { ROUTES } from "@/routes";
 import { Appointment, Child, Doctor } from "@/containers/Dashboard/Appointment";
 import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/chart-record";
 import { getSlotString } from "@/lib/utils";
+import { API_ROUTES } from "@/routes/api";
+import { formatDate } from "@/lib/text";
 
 const AppointmentDetailContainer = () => {
   const { id } = useParams();
   const [appointment, setAppointment] = useState<Appointment>();
   const [doctor, setDoctor] = useState<Doctor>();
+  const role = localStorage.getItem("role");
+  const isAdmin = role === "Admin";
+  const [history, setHistory] = useState([]);
+
+  const apiLink = isAdmin
+    ? API_ROUTES.DASHBOARD_APPOINTMENT_ADMIN_DETAIL
+    : API_ROUTES.DASHBOARD_APPOINTMENT_DOCTOR_DETAIL;
 
   const fetchAppointment = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/appointments/get-by-id`, {
+      const response = await axios.get(`${BASE_URL + apiLink}`, {
         params: { id: id },
       });
       const fetchedAppointment = {
         ...response.data.resultObj,
       };
       setAppointment(fetchedAppointment);
-      setDoctor(response.data.resultObj.appoinmentUsers[0].doctor);
+      const sortedAppointments = response.data.resultObj.appoinmentUsers
+        ?.slice() // Create a copy to avoid mutating the original array
+        .sort(
+          (a: any, b: any) =>
+            new Date(b.assignedTime).getTime() -
+            new Date(a.assignedTime).getTime()
+        );
+      setHistory(sortedAppointments);
+      setDoctor(sortedAppointments[0].doctor);
     } catch (error) {
       console.error("Failed to fetch Appointment:", error);
     }
@@ -123,6 +143,34 @@ const AppointmentDetailContainer = () => {
                 Status
               </div>
               <p className="flex-1 p-2">{appointment?.status}</p>
+            </div>
+
+            <div className="mt-4">
+              <div className="flex items-center justify-between gap-x-2">
+                <div className="flex items-center">
+                  <IconBadge icon={History} />
+                  <h2 className="ml-4 text-xl text-sky-900 font-semibold">
+                    History of doctor change
+                  </h2>
+                </div>
+              </div>
+              <div className="flex flex-col mt-4 border bg-slate-100 rounded-md p-4">
+                {history.map((item: any) => (
+                  <div className=" bg-sky-800 p-4 my-2 text-emerald-400 rounded-lg font-semibold">
+                    <div className="flex justify-between items-center">
+                      <p>Date: {" " + formatDate(item.assignedTime)}</p>
+                      <ArrowBigRightDash />
+                      <p> {item.doctor.fullName}</p>
+                    </div>
+                    <div className="flex  items-center my-2">
+                      <div className="flex">
+                        <CircleHelp className="mr-2" />
+                        {item.reason}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

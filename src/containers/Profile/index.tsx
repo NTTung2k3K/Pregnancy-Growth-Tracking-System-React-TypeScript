@@ -1,5 +1,14 @@
 import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image, UserPen } from "lucide-react";
+import {
+  ArrowBigRightDash,
+  CalendarClock,
+  CircleArrowLeft,
+  DollarSign,
+  Gem,
+  Image,
+  Package,
+  UserPen,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
@@ -8,13 +17,13 @@ import { Link } from "react-router-dom";
 import { API_ROUTES } from "@/routes/api";
 import { useForm } from "react-hook-form";
 import { CookiesService } from "@/services/cookies.service";
-import { User } from "../Dashboard/Users/components/IUser";
+import { User, UserMembership } from "../Dashboard/Users/components/IUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
-import { formatDateSliceTime } from "@/lib/text";
+import { formatDate, formatDateSliceTime } from "@/lib/text";
 
 interface UserFormValue {
   phoneNumber: string;
@@ -125,6 +134,17 @@ const UserProfileContainer = () => {
   const handleUndoClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsEditingImg(false);
+  };
+
+  const calculateDaysRemaining = (endDate: string) => {
+    const now = new Date();
+    const end = new Date(endDate);
+
+    const diffInMs = end.getTime() - now.getTime();
+
+    const daysRemaining = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+    return daysRemaining;
   };
 
   return (
@@ -333,6 +353,55 @@ const UserProfileContainer = () => {
                     </div>
                   </div>
                 )}
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-x-2">
+                  <div className="flex items-center">
+                    <IconBadge icon={Image} />
+                    <h2 className="ml-4 text-xl text-sky-900 font-semibold">
+                      Transactions
+                    </h2>
+                  </div>
+                </div>
+                <div className="flex flex-col mt-4 border bg-slate-100 rounded-md p-4">
+                  {user?.userMembershipResponses
+                    ?.slice()
+                    .sort(
+                      (a, b) =>
+                        new Date(a.endDate).getTime() -
+                        new Date(b.endDate).getTime()
+                    )
+                    .map((item: UserMembership) => (
+                      <div className="w-full bg-sky-800 p-4 my-2 text-emerald-400 rounded-lg font-semibold">
+                        <div className="flex justify-between items-center">
+                          <p>Start Date: {" " + formatDate(item.startDate)}</p>
+                          <ArrowBigRightDash />
+                          <p>End Date: {" " + formatDate(item.endDate)}</p>
+                        </div>
+                        <div className="flex justify-around items-center my-2">
+                          <div className="flex">
+                            <Package className="mr-2" />
+                            {item.package.packageName}
+                          </div>
+
+                          <div className="flex">
+                            <Gem className="mr-2" />
+                            {item.package.packageLevel}
+                          </div>
+                        </div>
+                        <div className="flex justify-around items-center my-2">
+                          <div className="flex">
+                            <CalendarClock className="mr-2" />
+                            {calculateDaysRemaining(item.endDate)}
+                          </div>
+                          <div className="flex">
+                            <DollarSign className="mr-2" />
+                            {item.package.price} VNĐ
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>

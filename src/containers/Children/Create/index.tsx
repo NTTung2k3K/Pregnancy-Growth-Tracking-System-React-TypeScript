@@ -5,13 +5,14 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
 import { CookiesService } from "@/services/cookies.service";
+import { Link } from "react-router-dom";
 
 interface ChildFormValues {
   id: string;
@@ -42,8 +43,24 @@ const ChildCreateContainer = () => {
   const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isMember, setIsMember] = useState<boolean>(false);
 
   const id = CookiesService.get();
+
+  const fetchIsMember = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL + API_ROUTES.IS_MEMBER}`, {
+        params: { id: id },
+      });
+      setIsMember(response.data.resultObj);
+    } catch (error) {
+      console.error("Failed to fetch employee:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchIsMember();
+  }, []);
 
   const onSubmit = async (data: ChildFormValues) => {
     if (id) {
@@ -64,7 +81,9 @@ const ChildCreateContainer = () => {
             PhotoUrl: imageFile,
             BloodType: data.bloodType,
             PregnancyWeekAtBirth: data.pregnancyWeekAtBirth,
-            IsGenerateSampleAppointments: data.isGenerateSampleAppointments,
+            IsGenerateSampleAppointments: isMember
+              ? data.isGenerateSampleAppointments
+              : false,
           },
           {
             headers: {
@@ -300,16 +319,25 @@ const ChildCreateContainer = () => {
               )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    {...register("isGenerateSampleAppointments")}
-                  />
-                  <label
-                    htmlFor="terms"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Accept to generate sample appointments
-                  </label>
+                  {isMember ? (
+                    <>
+                      <input
+                        type="checkbox"
+                        {...register("isGenerateSampleAppointments")}
+                      />
+                      <label
+                        htmlFor="terms"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Accept to generate sample appointments
+                      </label>
+                    </>
+                  ) : (
+                    <Link className="text-black" to={ROUTES.MEMBERSHIP}>
+                      Purchase a membership plan to unlock appointments for
+                      automated generation.
+                    </Link>
+                  )}
                 </div>
               </div>
               {/* Image Upload */}

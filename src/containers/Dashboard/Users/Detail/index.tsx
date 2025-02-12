@@ -1,8 +1,13 @@
 import { IconBadge } from "@/components/IconBadge";
 import {
+  ArrowBigRightDash,
   Baby,
+  CalendarClock,
   CircleArrowLeft,
+  DollarSign,
+  Gem,
   Image,
+  Package,
   ShieldCheck,
   UserPen,
 } from "lucide-react";
@@ -13,7 +18,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import { formatDate } from "@/lib/text";
-import { User } from "../components/IUser";
+import { User, UserMembership } from "../components/IUser";
 import { API_ROUTES } from "@/routes/api";
 import { Child } from "../../Children/components/IChild";
 
@@ -42,6 +47,17 @@ const UserDetailContainer = () => {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  const calculateDaysRemaining = (endDate: string) => {
+    const now = new Date();
+    const end = new Date(endDate);
+
+    const diffInMs = end.getTime() - now.getTime();
+
+    const daysRemaining = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+    return daysRemaining;
+  };
 
   return (
     <>
@@ -98,6 +114,55 @@ const UserDetailContainer = () => {
                 Blood Group
               </div>
               <p className="flex-1 p-2">{user?.bloodGroup}</p>
+            </div>
+            <div className="mt-4">
+              <div className="flex items-center justify-between gap-x-2">
+                <div className="flex items-center">
+                  <IconBadge icon={Image} />
+                  <h2 className="ml-4 text-xl text-sky-900 font-semibold">
+                    Transactions
+                  </h2>
+                </div>
+              </div>
+              <div className="flex flex-col mt-4 border bg-slate-100 rounded-md p-4">
+                {user?.userMembershipResponses
+                  ?.slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(a.endDate).getTime() -
+                      new Date(b.endDate).getTime()
+                  )
+                  .map((item: UserMembership) => (
+                    <div className="w-full bg-sky-800 p-4 my-2 text-emerald-400 rounded-lg font-semibold">
+                      <div className="flex justify-between items-center">
+                        <p>Start Date: {" " + formatDate(item.startDate)}</p>
+                        <ArrowBigRightDash />
+                        <p>End Date: {" " + formatDate(item.endDate)}</p>
+                      </div>
+                      <div className="flex justify-around items-center my-2">
+                        <div className="flex">
+                          <Package className="mr-2" />
+                          {item.package.packageName}
+                        </div>
+
+                        <div className="flex">
+                          <Gem className="mr-2" />
+                          {item.package.packageLevel}
+                        </div>
+                      </div>
+                      <div className="flex justify-around items-center my-2">
+                        <div className="flex">
+                          <CalendarClock className="mr-2" />
+                          {calculateDaysRemaining(item.endDate)}
+                        </div>
+                        <div className="flex">
+                          <DollarSign className="mr-2" />
+                          {item.package.price} VNĐ
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
 

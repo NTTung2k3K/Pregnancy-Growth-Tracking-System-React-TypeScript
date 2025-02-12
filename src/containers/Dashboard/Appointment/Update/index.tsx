@@ -221,7 +221,7 @@ const AppointmentUpdateContainer = () => {
         setIsLoading(false);
       }
     } else {
-      toast.error("Doctor Id or Reason is required");
+      toast.error("Doctor or Reason is required");
     }
   };
 
@@ -257,6 +257,7 @@ const AppointmentUpdateContainer = () => {
                   Appointment Name
                 </div>
                 <input
+                  disabled={isAdmin}
                   className="flex-1 p-2 bg-white"
                   {...register("name", {
                     required: "Appointment name is required",
@@ -276,6 +277,7 @@ const AppointmentUpdateContainer = () => {
                   Description
                 </div>
                 <textarea
+                  disabled={isAdmin}
                   className="flex-1 p-2 bg-white h-40"
                   {...register("description", {
                     minLength: {
@@ -293,6 +295,7 @@ const AppointmentUpdateContainer = () => {
                   Note
                 </div>
                 <textarea
+                  disabled={isAdmin}
                   className="flex-1 p-2 bg-white h-40"
                   {...register("notes", {
                     minLength: {
@@ -310,6 +313,7 @@ const AppointmentUpdateContainer = () => {
                   Result
                 </div>
                 <textarea
+                  disabled={isAdmin}
                   className="flex-1 p-2 bg-white h-40"
                   {...register("result", {
                     required: "Result is required",
@@ -354,6 +358,7 @@ const AppointmentUpdateContainer = () => {
                   Status
                 </div>
                 <select
+                  disabled={isAdmin}
                   className="flex-1 p-2 bg-white"
                   {...register("status", {
                     required: "Status is required",
@@ -391,6 +396,7 @@ const AppointmentUpdateContainer = () => {
                   Fee
                 </div>
                 <input
+                  disabled={isAdmin}
                   {...register("fee", {
                     required: "Fee is required",
                   })}

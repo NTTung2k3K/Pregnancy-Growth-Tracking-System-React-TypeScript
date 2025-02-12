@@ -14,11 +14,13 @@ import { CookiesService } from "@/services/cookies.service";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Badge } from "./ui/badge";
 
 const UserButton = () => {
   const id = CookiesService.get();
 
   const [user, setUser] = useState<User>();
+  const [level, setLevel] = useState("");
 
   const fetchUser = async () => {
     try {
@@ -33,6 +35,7 @@ const UserButton = () => {
         role: response.data.resultObj.role?.name || null,
       };
       setUser(fetchedUser);
+      setLevel(fetchedUser.userMembershipResponses[0].package.packageLevel);
     } catch (error) {
       console.error("Failed to fetch employee:", error);
     }
@@ -47,6 +50,19 @@ const UserButton = () => {
     window.location.href = `/`;
   };
 
+  const getBadgeColor = (tier: string) => {
+    switch (tier) {
+      case "Bronze":
+        return "bg-[#cd7f32] hover:bg-[#cd7f32]";
+      case "Silver":
+        return "bg-[#c0c0c0] hover:bg-[#c0c0c0]";
+      case "Gold": // Corrected from "Bronze" to "Gold"
+        return "bg-[#ffd700] hover:bg-[#ffd700]";
+      default:
+        return "bg-gray-300 hover:bg-gray-300"; // Fallback color
+    }
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -57,40 +73,17 @@ const UserButton = () => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            <div className="">
+              <p>My account</p>
+              <div className="flex justify-center items-center my-2">
+                <Badge className={`${getBadgeColor(level)}`}>
+                  {level.toUpperCase()}
+                </Badge>
+              </div>
+            </div>
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* <DropdownMenuItem>
-            <Link
-              className="text-black font-normal w-full"
-              to={ROUTES.APPOINTMENT_HISTORY}
-            >
-              Appointments
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link
-              className="text-black font-normal w-full"
-              to={ROUTES.APPOINTMENT_CALENDAR}
-            >
-              My calendar
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link
-              className="text-black font-normal w-full"
-              to={ROUTES.CHILDREN}
-            >
-              Children
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link
-              className="text-black font-normal w-full"
-              to={ROUTES.MY_GROWTH_CHART}
-            >
-              Growth chart
-            </Link>
-          </DropdownMenuItem> */}
           <DropdownMenuItem>
             <Link className="text-black font-normal w-full" to={ROUTES.PROFILE}>
               Profile
