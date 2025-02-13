@@ -12,6 +12,10 @@ export const API_ROUTES = {
 
   //Users
 
+  //BLOG
+  BLOG_MOST_VIEW: "/blog/most-viewed",
+  BLOG_MOST_LIKE: "/blog/most-liked",
+
   //PROFILE
   USER_UPDATE_PROFILE: "/users/update-user-profile",
 
@@ -31,7 +35,7 @@ export const API_ROUTES = {
   //Membership
   MEMBERSHIP: "/membershippackages/get-pagination",
   BUYPACKAGE: "/membershippackages/buy-package",
-  IS_MEMBER:"/membershippackages/can-generate-appointment",
+  IS_MEMBER: "/membershippackages/can-generate-appointment",
 
   //-------------------------------DASHBOARD-------------------------------------------
 

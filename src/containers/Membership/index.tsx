@@ -89,14 +89,14 @@ export default function MembershipContainer() {
 
   if (loading)
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
+      <div className="flex min-h-[400px] items-center justify-center my-6">
         <div className="text-lg">Đang tải thông tin gói dịch vụ...</div>
       </div>
     );
 
   if (error)
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
+      <div className="flex min-h-[400px] items-center justify-center my-6">
         <div className="text-lg text-red-500">Lỗi: {error}</div>
       </div>
     );

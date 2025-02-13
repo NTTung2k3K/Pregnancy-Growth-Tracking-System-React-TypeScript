@@ -67,6 +67,11 @@ const Navbar = () => {
       link: ROUTES.APPOINTMENT_BOOKING,
       isAuth: false,
     },
+    {
+      name: "Membership Packages",
+      link: ROUTES.MEMBERSHIP,
+      isAuth: false,
+    },
   ];
 
   const handleNavigate = (link: string) => {
