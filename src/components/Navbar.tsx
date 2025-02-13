@@ -80,7 +80,7 @@ const Navbar = () => {
   return (
     <div className="flex flex-col">
       {/* Header */}
-      <div className="fixed w-full flex justify-between items-center mt-11 px-32 bg-white z-20">
+      <div className="fixed w-full flex justify-between items-center mt-11 px-32 bg-white z-50">
         <div className="flex text-2xl text-sky-900">
           <SearchContainer />
           <div
@@ -107,7 +107,7 @@ const Navbar = () => {
       </div>
 
       {/* Thanh categories với dropdown */}
-      <div className="flex justify-between h-10 mt-40 px-32 bg-white z-50">
+      <div className="flex justify-between h-10 mt-40 px-32 bg-white z-40">
         {categories.map((category, index) => (
           <div key={index} className="relative group cursor-pointer">
             <div

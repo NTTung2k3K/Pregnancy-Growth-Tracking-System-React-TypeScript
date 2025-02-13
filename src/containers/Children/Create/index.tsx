@@ -219,6 +219,7 @@ const ChildCreateContainer = () => {
                     required: "Weight Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
+                    validate: (value) => (value > 0 ? true : "Weight must be a positive number"),
                   })}
                 />
               </div>
@@ -237,6 +238,7 @@ const ChildCreateContainer = () => {
                     required: "Height Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
+                    validate: (value) => (value > 0 ? true : "Weight must be a positive number"),
                   })}
                 />
               </div>

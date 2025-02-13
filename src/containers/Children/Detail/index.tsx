@@ -42,7 +42,7 @@ interface ChildFormValue {
 
 const ChildDetailContainer = () => {
   const { id } = useParams();
-  const userId = CookiesService.get()
+  const userId = CookiesService.get();
   const [child, setChild] = useState<Child>();
   const {
     register,
@@ -288,6 +288,8 @@ const ChildDetailContainer = () => {
                     required: "Weight Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
+                    validate: (value) =>
+                      value > 0 ? true : "Weight must be a positive number",
                   })}
                 />
               </div>
@@ -311,9 +313,9 @@ const ChildDetailContainer = () => {
                   })}
                 />
               </div>
-              {errors.weightEstimate && (
+              {errors.heightEstimate && (
                 <span className="text-red-500 text-sm">
-                  {errors.weightEstimate.message}
+                  {errors.heightEstimate.message}
                 </span>
               )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
