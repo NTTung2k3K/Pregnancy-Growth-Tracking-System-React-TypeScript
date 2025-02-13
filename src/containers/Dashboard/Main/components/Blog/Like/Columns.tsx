@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { BlogMainDashboard } from "../../IBlog";
+import { formatDate } from "@/lib/text";
 
 const columnFields: { key: keyof BlogMainDashboard; label: string }[] = [
   { key: "title", label: "Title" },
@@ -16,12 +17,12 @@ export const columnsLike: ColumnDef<BlogMainDashboard>[] = [
     },
   })),
   {
-    accessorKey: "author",
+    accessorKey: "date",
     header: () => {
-      return <Button variant="ghost">Author</Button>;
+      return <Button variant="ghost">Date</Button>;
     },
     cell: ({ row }) => {
-      return <p>{row.original.authorResponseModel.fullName}</p>;
+      return <p>{formatDate(row.original.createdTime)}</p>;
     },
   },
 ];

@@ -142,6 +142,8 @@ const DashboardMainContainer = () => {
   const admin = JSON.parse(CookiesEmployee2Service.get() || "");
   const [revenue, setRevenue] = useState();
   const [transactions, setTransactions] = useState<PaymentMainDashboard[]>([]);
+  const [mostView, setMostView] = useState<BlogMainDashboard[]>([]);
+  const [mostLike, setMostLike] = useState<BlogMainDashboard[]>([]);
 
   const fetchNewUserData = async () => {
     const response = await axios.get(`${BASE_URL + API_ROUTES.NEW_DATA_USER}`);
@@ -162,11 +164,35 @@ const DashboardMainContainer = () => {
     );
     setTransactions(response.data.resultObj);
   };
+  const fetchBlogMostView = async () => {
+    const response = await axios.get(
+      `${BASE_URL + API_ROUTES.BLOG_MOST_VIEW}`,
+      {
+        params: {
+          quantity: 5,
+        },
+      }
+    );
+    setMostView(response.data.resultObj);
+  };
+  const fetchBlogMostLike = async () => {
+    const response = await axios.get(
+      `${BASE_URL + API_ROUTES.BLOG_MOST_LIKE}`,
+      {
+        params: {
+          quantity: 5,
+        },
+      }
+    );
+    setMostLike(response.data.resultObj);
+  };
 
   useEffect(() => {
     fetchNewUserData();
     fetchRevenue();
     fetchRecentTransactions();
+    fetchBlogMostView();
+    fetchBlogMostLike();
   }, []);
 
   return (
@@ -175,7 +201,7 @@ const DashboardMainContainer = () => {
         Welcome, {admin.fullName} 🙌
       </h1>
       <div className="flex items-center justify-around">
-        <CardData data={revenue} description={"Revenue"} currency={"$"} />
+        <CardData data={revenue} description={"Revenue"} currency={"VND"} />
         <CardData
           data={data?.inDay}
           description={"In Day"}
@@ -212,11 +238,11 @@ const DashboardMainContainer = () => {
       <div className="my-10 flex justify-around">
         <div className="">
           <p className="mb-2">Most likes</p>
-          <DataTable columns={columnsLike} data={dummyBlogs} />
+          <DataTable columns={columnsLike} data={mostLike} />
         </div>
         <div className="">
           <p className="mb-2">Most views</p>
-          <DataTable columns={columnsView} data={dummyBlogs} />
+          <DataTable columns={columnsView} data={mostView} />
         </div>
       </div>
     </div>

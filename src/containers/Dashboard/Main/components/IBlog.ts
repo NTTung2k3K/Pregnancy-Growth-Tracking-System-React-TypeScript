@@ -10,6 +10,7 @@ export interface BlogMainDashboard {
   thumbnail: string;
   blogTypeModelView: BlogTypeModelView;
   authorResponseModel: AuthorResponseModel;
+  createdTime: string;
 }
 
 interface BlogTypeModelView {
