@@ -65,7 +65,10 @@ const PanelCarousel = ({ category }: PanelCarouselProps) => {
     <Carousel opts={{ align: "start" }} className="w-full px-10 mb-10 mt-10">
       <CarouselContent className="space-x-4">
         {items.map((item) => (
-          <CarouselItemComponent key={item.id} className="md:basis-1/2 lg:basis-1/4">
+          <CarouselItemComponent
+            key={item.id}
+            className="md:basis-1/2 lg:basis-1/4"
+          >
             <Link
               to={`/blog-detail/${item.id}`}
               className="block transform transition-all hover:scale-105"

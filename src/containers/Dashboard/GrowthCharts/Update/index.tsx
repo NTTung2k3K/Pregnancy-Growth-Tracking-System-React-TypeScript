@@ -34,6 +34,10 @@ const GrowthChartUpdateContainer = () => {
   const [status, setStatus] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentUserId = CookiesEmployeeService.get();
+  const isAdmin = localStorage.getItem("role") === "Amin";
+  const backLink = isAdmin
+    ? ROUTES.DASHBOARD_GROWTH_CHARTS
+    : ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS;
 
   const fetchStatus = async () => {
     try {
@@ -114,7 +118,7 @@ const GrowthChartUpdateContainer = () => {
   return (
     <div>
       <div className="mt-10">
-        <Link className="p-6" to={ROUTES.DASHBOARD_GROWTH_CHARTS}>
+        <Link className="p-6" to={backLink}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
             <CircleArrowLeft />
             Back
@@ -163,7 +167,11 @@ const GrowthChartUpdateContainer = () => {
                   <div className="font-medium flex items-center mr-10">
                     Status
                   </div>
-                  <select className="flex-1 p-2" {...register("status")}>
+                  <select
+                    disabled={!isAdmin}
+                    className="flex-1 p-2"
+                    {...register("status")}
+                  >
                     {status.map((item: any) => (
                       <option value={item.id}>{item.status}</option>
                     ))}
@@ -225,16 +233,18 @@ const GrowthChartUpdateContainer = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-end mt-10 mr-10">
-            <Button
-              disabled={isLoading}
-              className="bg-sky-900 text-emerald-400 px-10 py-6 text-xl"
-              type="submit"
-            >
-              {isLoading && <AiOutlineLoading className="animate-spin" />}
-              Save
-            </Button>
-          </div>
+          {isAdmin && (
+            <div className="flex items-center justify-end mt-10 mr-10">
+              <Button
+                disabled={isLoading}
+                className="bg-sky-900 text-emerald-400 px-10 py-6 text-xl"
+                type="submit"
+              >
+                {isLoading && <AiOutlineLoading className="animate-spin" />}
+                Save
+              </Button>
+            </div>
+          )}
           <div className="my-10">
             {chart?.childModelView && (
               <GrowthCharts child={chart?.childModelView} />

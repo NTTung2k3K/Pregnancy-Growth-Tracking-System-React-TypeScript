@@ -69,7 +69,7 @@ const UserButton = () => {
         <DropdownMenuTrigger className="p-0 border-none rounded-full">
           <img
             src={user?.image ? user.image : "/assets/images/logo.png"}
-            className="w-10 h-10 rounded-full "
+            className="w-12 h-12 rounded-full "
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
