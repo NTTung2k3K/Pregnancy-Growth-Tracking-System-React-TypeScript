@@ -3,7 +3,6 @@ import axios from "axios";
 import AdvisoryBoard from "./components/AdvisoryBoard";
 import Banner from "./components/Banner";
 import Panel from "./components/Panel";
-import PlatformOverview from "./components/PlatformOverview";
 import PregnancyTimeline from "./components/PregnancyTimeline";
 import Tools from "./components/Tools";
 import { BASE_URL } from "@/services/config";

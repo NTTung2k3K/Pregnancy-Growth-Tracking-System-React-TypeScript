@@ -6,7 +6,7 @@ export const ROUTES = {
   EMPLOYEE_LOGIN: "/auth/employee-login",
 
   // Main
-  COMMING_SOON:"/comming-soon",
+  COMMING_SOON: "/comming-soon",
   HOME: "/",
   ABOUT: "/about",
   BLOG: "/blog",
@@ -28,13 +28,12 @@ export const ROUTES = {
   //--------TOOLS
   DUE_DATE_CALCULATOR: "/due-date-calculator",
   NAME_GENERATOR: "/name-generator",
-  COST_CALCULATOR:"/cost-calculator",
+  COST_CALCULATOR: "/cost-calculator",
 
   //---------GROWTH CHARTS
   MY_GROWTH_CHART: "/growth-charts/me",
   GROWTH_CHART: "/growth-charts",
   GROWTH_CHART_DETAIL: "/growth-chart/:id",
-
 
   CHILDREN_DETAIL: "/child/:id",
 
@@ -58,8 +57,6 @@ export const ROUTES = {
   DASHBOARD_BLOGTYPE_UPDATE: "/dashboard/blogtype/:id",
   DASHBOARD_BLOGTYPE_CREATE: "/dashboard/blogtype/create",
   DASHBOARD_BLOGTYPE_DETAIL: "/dashboard/blogtype/detail/:id",
-
-
 
   //------CHILDREN
   DASHBOARD_CHILDREN: "/dashboard/children",
@@ -97,4 +94,9 @@ export const ROUTES = {
   DASHBOARD_GROWTH_CHARTS_UPDATE: "/dashboard/growth-charts/:id",
   DASHBOARD_DOCTOR_GROWTH_CHARTS: "/dashboard/doctor/growth-charts",
   DASHBOARD_DOCTOR_GROWTH_CHARTS_UPDATE: "/dashboard/doctor/growth-charts/:id",
+
+  //----------------GROWTH STANDARD
+  DASHBOARD_GROWTH_STANDARDS: "/dashboard/growth-standards",
+  DASHBOARD_GROWTH_STANDARDS_UPDATE: "/dashboard/growth-standards/:id",
+  DASHBOARD_GROWTH_STANDARDS_CREATE: "/dashboard/growth-standards/create",
 };

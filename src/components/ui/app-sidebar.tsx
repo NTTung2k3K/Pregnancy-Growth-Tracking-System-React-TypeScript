@@ -1,4 +1,3 @@
-
 import {
   ChevronDown,
   LogOut,
@@ -10,6 +9,7 @@ import {
   BookMarked,
   UserPen,
   CalendarDays,
+  Baby,
 } from "lucide-react";
 
 import {
@@ -138,9 +138,18 @@ const adminNav = [
     ],
   },
   {
-    title: "Growth Charts",
-    icon: Package,
-    url: ROUTES.DASHBOARD_GROWTH_CHARTS,
+    title: "Fetal Growth",
+    icon: Baby,
+    items: [
+      {
+        title: "Growth Charts",
+        url: ROUTES.DASHBOARD_GROWTH_CHARTS,
+      },
+      {
+        title: "Growth Standards",
+        url: ROUTES.DASHBOARD_GROWTH_STANDARDS,
+      },
+    ],
   },
   {
     title: "Appointments",
