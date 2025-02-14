@@ -15,9 +15,11 @@ const DashboardLayout = lazy(() => import("./layouts/Dashboard"));
 const NotFoundContainer = lazy(() => import("./containers/NotFound"));
 const HomeContainer = lazy(() => import("./containers/Home"));
 const ComingSoonContainer = lazy(() => import("./containers/ComingSoon"));
-const BlogContainer = lazy(() => import("./containers/Blog"))
-const BlogByWeekContainer = lazy(() => import("./containers/BlogWeek"))
-const BlogByBlogTypeContainer = lazy(() => import("./containers/Blog/getblogbyblogtype"))
+const BlogContainer = lazy(() => import("./containers/Blog"));
+const BlogByWeekContainer = lazy(() => import("./containers/BlogWeek"));
+const BlogByBlogTypeContainer = lazy(
+  () => import("./containers/Blog/getblogbyblogtype")
+);
 const BlogDetailContainer = lazy(() => import("./containers/BlogDetail"));
 const AppoinmentContainer = lazy(() => import("./containers/Appointment"));
 const AppoinmentHistoryContainer = lazy(
@@ -170,6 +172,18 @@ const GrowthChartsContainer = lazy(
 const GrowthChartUpdateContainer = lazy(
   () => import("./containers/Dashboard/GrowthCharts/Update")
 );
+//-------------------GROWTH STANDARDS
+
+const GrowthStandardContainer = lazy(
+  () => import("./containers/Dashboard/Standard")
+);
+const GrowthStandardCreateContainer = lazy(
+  () => import("./containers/Dashboard/Standard/Create")
+);
+
+const GrowthStandardUpdateContainer = lazy(
+  () => import("./containers/Dashboard/Standard/Update")
+);
 
 //------------------------------USERS
 const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
@@ -220,9 +234,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.BLOGTYPE,
     element: <MainLayout children={<BlogByBlogTypeContainer />} />,
-  },{
+  },
+  {
     path: ROUTES.BLOGWEEK,
-    element: <MainLayout children={<BlogByWeekContainer />} />
+    element: <MainLayout children={<BlogByWeekContainer />} />,
   },
   {
     path: ROUTES.BLOG_DETAIL,
@@ -485,6 +500,20 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS_UPDATE,
     element: <DashboardLayout children={<GrowthChartUpdateContainer />} />,
+  },
+  //--------------GROWTH STANDARD
+
+  {
+    path: ROUTES.DASHBOARD_GROWTH_STANDARDS,
+    element: <DashboardLayout children={<GrowthStandardContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_GROWTH_STANDARDS_CREATE,
+    element: <DashboardLayout children={<GrowthStandardCreateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_GROWTH_STANDARDS_UPDATE,
+    element: <DashboardLayout children={<GrowthStandardUpdateContainer />} />,
   },
 ]);
 

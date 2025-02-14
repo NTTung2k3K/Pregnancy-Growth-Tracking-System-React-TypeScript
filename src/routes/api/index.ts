@@ -119,4 +119,11 @@ export const API_ROUTES = {
   MONTHLY_PAYMENTS: "/payments/get-monthly-payment-statistics",
   GET_REVENUE: "/payments/get-total-revenue-for-current-year",
   GET_RECENT_TRANSACTION: "/payments/get-recent-transactions",
+
+  //-------------GROWTH STANDARD
+  DASHBOARD_GROWTH_STANDARD_ALL: "/fetalgrowthstandard/all",
+  DASHBOARD_GROWTH_STANDARD_DETAIL: "/fetalgrowthstandard",
+  DASHBOARD_GROWTH_STANDARD_UPDATE: "/fetalgrowthstandard/update",
+  DASHBOARD_GROWTH_STANDARD_CREATE: "/fetalgrowthstandard/create",
+  DASHBOARD_GROWTH_STANDARD_DELETE: "/fetalgrowthstandard/delete",
 };
