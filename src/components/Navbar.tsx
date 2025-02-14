@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
-import { FaRegMoon, FaRegSun } from "react-icons/fa";
-import { IoIosNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import SearchContainer from "./SearchContainter";
 import AuthForm from "./AuthForm";
-import { useTheme } from "./theme-provider";
 import UserButton from "./UserButton";
 import { ROUTES } from "@/routes";
 import { BASE_URL } from "@/services/config";
@@ -19,9 +15,9 @@ export interface BlogType {
 }
 
 import toast from "react-hot-toast";
+import { Baby, CalendarCheck2, ChartLine } from "lucide-react";
 
 const Navbar = () => {
-  const { theme, setTheme } = useTheme();
   const userId = CookiesService.get();
   const navigate = useNavigate();
 
@@ -86,13 +82,18 @@ const Navbar = () => {
     <div className="flex flex-col">
       {/* Header */}
       <div className="fixed w-full flex justify-between items-center mt-11 px-32 bg-white z-50">
-        <div className="flex text-2xl text-sky-900">
-          <SearchContainer />
+        <div className="flex text-2xl text-sky-900 items-center py-4">
           <div
-            className="hover:bg-slate-100 hover:rounded-full cursor-pointer p-2"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => handleNavigate(ROUTES.CHILDREN)}
+            className="mx-2 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
           >
-            {theme === "dark" ? <FaRegSun /> : <FaRegMoon />}
+            <Baby className="w-8 h-8" />
+          </div>
+          <div
+            onClick={() => handleNavigate(ROUTES.GROWTH_CHART)}
+            className="mx-2 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
+          >
+            <ChartLine className="w-8 h-8" />
           </div>
         </div>
         <Link to="/" className="hover:cursor-pointer">
@@ -104,8 +105,11 @@ const Navbar = () => {
           />
         </Link>
         <div className="flex items-center text-2xl text-sky-900">
-          <div className="mr-2 hover:bg-slate-100 hover:rounded-full cursor-pointer p-2">
-            <IoIosNotifications />
+          <div
+            onClick={() => handleNavigate(ROUTES.APPOINTMENT_HISTORY)}
+            className="mr-4 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
+          >
+            <CalendarCheck2 className="w-8 h-8" />
           </div>
           {userId ? <UserButton /> : <AuthForm />}
         </div>
@@ -117,7 +121,7 @@ const Navbar = () => {
           <div key={index} className="relative group cursor-pointer">
             <div
               onClick={() => handleNavigate(category.link)}
-              className="text-sky-900 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
+              className="text-sky-900 font-semibold pb-2 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
             >
               {category.name}
             </div>

@@ -43,8 +43,8 @@ const HomeContainer = () => {
 
   return (
     <div className="flex flex-col mt-10 mb-40 px-32">
-      <PlatformOverview />
-      <div className="flex flex-col bg-[#F3F2F2] p-4">
+      {/* <PlatformOverview /> */}
+      <div className="flex flex-col bg-[#F3F2F2] p-4 rounded-lg">
         <Banner />
         <p className="text-center text-3xl font-bold text-sky-900">
           My pregnancy week by week

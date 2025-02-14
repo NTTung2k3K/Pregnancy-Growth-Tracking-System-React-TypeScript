@@ -2,7 +2,7 @@ import { IoSearch } from "react-icons/io5";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Sheet,
@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { LuTextSearch } from "react-icons/lu";
+import { ROUTES } from "@/routes";
 
 const SearchContainter = () => {
   const menu = [
@@ -35,18 +36,20 @@ const SearchContainter = () => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  const navigate = useNavigate();
+
   return (
     <Sheet>
-      <SheetTrigger className="mr-2 hover:bg-slate-100 rounded-full hover:cursor-pointer p-2 bg-transparent border-none">
+      <SheetTrigger
+        onClick={() => navigate(ROUTES.COMMING_SOON)}
+        className="mr-2 hover:bg-slate-100 rounded-full hover:cursor-pointer p-2 bg-transparent border-none"
+      >
         <LuTextSearch />
       </SheetTrigger>
       <SheetContent side={"left"}>
         <SheetHeader>
           <SheetTitle>
-            <img
-              src="/assets/images/navbar-logo.png"
-              className="h-[60px]"
-            />
+            <img src="/assets/images/navbar-logo.png" className="h-[60px]" />
           </SheetTitle>
         </SheetHeader>
         <div className="mt-4">

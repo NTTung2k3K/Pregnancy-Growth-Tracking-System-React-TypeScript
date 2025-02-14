@@ -63,7 +63,7 @@ const ChildDashboardDetailContainer = () => {
 
   return (
     <>
-      <div className="px-32 my-10">
+      <div className="px-10 my-10">
         <div className="flex items-center justify-between">
           <Link to={`${ROUTES.DASHBOARD_CHILDREN}`}>
             <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">

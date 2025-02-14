@@ -9,7 +9,9 @@ import {
 import { ROUTES } from "@/routes";
 import { CookiesService } from "@/services/cookies.service";
 import toast from "react-hot-toast";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Autoplay from "embla-carousel-autoplay";
+import React from "react";
 
 const Banner = () => {
   const items = [
@@ -17,7 +19,7 @@ const Banner = () => {
       title: " Booking to receive medical advice",
       buttonTitle: "Making an appointment",
       link: ROUTES.APPOINTMENT_BOOKING,
-      imageUrl: "/assets/images/Home/Banner/carousel-1.webp",
+      imageUrl: "/assets/images/Home/Banner/carousel-1.png",
       isAuth: false,
     },
     {
@@ -51,15 +53,24 @@ const Banner = () => {
     }
   };
 
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+
   return (
     <>
-      <Carousel className="w-full p-10">
+      <Carousel
+        plugins={[plugin.current]}
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.reset}
+        className="w-full p-10"
+      >
         <CarouselContent>
           {items.map((item, index) => (
             <CarouselItem key={index}>
               <Card>
                 <CardContent className="relative w-full h-96 flex aspect-square items-center justify-center p-0">
-                  <img src={item.imageUrl} className="" />
+                  <img src={item.imageUrl} className="w-full" />
                   <div className="absolute flex flex-col">
                     <div className="flex flex-col justify-center items-center">
                       <p className="text-4xl bg-slate-100/70 font-semibold mb-10 text-center w-96">

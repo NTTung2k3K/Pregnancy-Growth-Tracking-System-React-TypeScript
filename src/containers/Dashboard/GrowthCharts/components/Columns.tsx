@@ -112,6 +112,7 @@ export const columns: ColumnDef<GrowthChart>[] = [
       const { id } = row.original;
 
       const role = localStorage.getItem("role");
+      const isAdmin = role === "Admin";
       const link =
         role === "Admin"
           ? ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE
@@ -130,20 +131,29 @@ export const columns: ColumnDef<GrowthChart>[] = [
               className="text-sky-800"
               to={`${link.replace(":id", String(id))}`}
             >
-              <DropdownMenuItem className="cursor-pointer">
-                <UserPen className="h-4 w-4 mr-2" />
-                Edit
-              </DropdownMenuItem>
+              {isAdmin ? (
+                <DropdownMenuItem className="cursor-pointer">
+                  <UserPen className="h-4 w-4 mr-2" />
+                  Edit
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem className="cursor-pointer">
+                  <UserPen className="h-4 w-4 mr-2" />
+                  Detail
+                </DropdownMenuItem>
+              )}
             </Link>
-            <DropdownMenuItem className="cursor-pointer font-semibold">
-              <div
-                onClick={() => handleDelete(id)}
-                className="w-full flex items-center"
-              >
-                <Trash className="h-4 w-4 mr-2" />
-                <p>Delete</p>
-              </div>
-            </DropdownMenuItem>
+            {isAdmin && (
+              <DropdownMenuItem className="cursor-pointer font-semibold">
+                <div
+                  onClick={() => handleDelete(id)}
+                  className="w-full flex items-center"
+                >
+                  <Trash className="h-4 w-4 mr-2" />
+                  <p>Delete</p>
+                </div>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );
