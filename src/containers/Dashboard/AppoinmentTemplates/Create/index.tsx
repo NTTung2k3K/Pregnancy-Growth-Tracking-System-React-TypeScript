@@ -31,6 +31,9 @@ const AppointmentTemplatesCreateContainer = () => {
   const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [weeksFromBirth, setWeeksFromBirth] = useState<string | undefined>(
+    undefined
+  );
 
   const onSubmit = async (data: AppointmentTemplatesFormValues) => {
     try {
@@ -71,6 +74,22 @@ const AppointmentTemplatesCreateContainer = () => {
       const newImageUrl = URL.createObjectURL(file);
       setImageTemp(newImageUrl);
       setImageFile(file);
+    }
+  };
+
+  const convertDaysToWeeks = (days: number) => {
+    const weeks = Math.abs(Math.floor(days / 7)); // Get absolute weeks
+
+    if (days < 0) {
+      setWeeksFromBirth(
+        weeks === 1
+          ? "1 week before due date"
+          : `${weeks} weeks before due date`
+      );
+    } else {
+      setWeeksFromBirth(
+        weeks === 1 ? "1 week after due date" : `${weeks} weeks after due date`
+      );
     }
   };
 
@@ -121,12 +140,19 @@ const AppointmentTemplatesCreateContainer = () => {
                   type="number"
                   className="flex-1 p-2"
                   {...register("daysFromBirth", {
-                    required: "Days From Birth Name is required",
+                    required: "Days From Birth is required",
+                    onChange: (e) => {
+                      const days = parseInt(e.target.value, 10) || 0; // Ensure a valid number
+                      convertDaysToWeeks(days); // Convert and update weeks field
+                    },
                   })}
                 />
               </div>
               {errors.daysFromBirth && (
                 <p className="text-red-500">{errors.daysFromBirth.message}</p>
+              )}
+              {weeksFromBirth && (
+                <p className="text-sky-700 font-bold m-4">{weeksFromBirth}</p>
               )}
 
               {/* Address Field */}

@@ -1,5 +1,3 @@
-
-
 import { Check, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { API_ROUTES } from "@/routes/api";
-import { https } from "@/services/config";
+import { BASE_URL, https } from "@/services/config";
+import { CookiesService } from "@/services/cookies.service";
+import toast from "react-hot-toast";
+import { User } from "../Dashboard/Users/components/IUser";
+import axios from "axios";
+import { formatDate } from "@/lib/text";
 
 interface MembershipPackage {
   id: string;
@@ -50,10 +53,10 @@ const PACKAGE_STYLES = {
 };
 
 const BRONZE_FEATURES = [
-  "Thêm trẻ em",
-  "Tạo lịch hẹn",
-  "Xem blog",
-  "Xem và bình luận các biểu đồ tăng trưởng",
+  "Add children",
+  "Create appointments",
+  "View blogs",
+  "View and comment on growth charts",
 ];
 
 export default function MembershipContainer() {
@@ -61,6 +64,34 @@ export default function MembershipContainer() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const userId = CookiesService.get();
+  const [isExpired, setIsExpired] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_USER_DETAIL}`,
+        {
+          params: { Id: userId },
+        }
+      );
+      const fetchedUser = {
+        ...response.data.resultObj,
+        role: response.data.resultObj.role?.name || null,
+      };
+      setIsExpired(
+        new Date(fetchedUser.userMembershipResponses[0].endDate) < new Date()
+      );
+      setUser(fetchedUser);
+    } catch (error) {
+      console.error("Failed to fetch employee:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchMembershipPackages = async () => {
@@ -81,9 +112,15 @@ export default function MembershipContainer() {
   }, []);
 
   const handleSelect = (pkgId: string) => {
-    const selectedPackage = packages.find((pkg) => pkg.id === pkgId);
-    if (selectedPackage) {
-      navigate(`/payment/${pkgId}`, { state: { pkg: selectedPackage, pkgId } });
+    if (userId) {
+      const selectedPackage = packages.find((pkg) => pkg.id === pkgId);
+      if (selectedPackage) {
+        navigate(`/payment/${pkgId}`, {
+          state: { pkg: selectedPackage, pkgId },
+        });
+      }
+    } else {
+      toast.error("Please login to buy packages");
     }
   };
 
@@ -101,16 +138,42 @@ export default function MembershipContainer() {
       </div>
     );
 
+  const getColor = (tier: string) => {
+    switch (tier) {
+      case "Bronze":
+        return "text-[#cd7f32] hover:text-[#cd7f32]";
+      case "Silver":
+        return "text-[#c0c0c0] hover:text-[#c0c0c0]";
+      case "Gold": // Corrected from "Bronze" to "Gold"
+        return "text-[#ffd700] hover:text-[#ffd700]";
+      default:
+        return "text-gray-300 hover:text-gray-300"; // Fallback color
+    }
+  };
+
   return (
     <div className="bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl text-center">
         <h1 className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
-          Chọn Gói Dịch Vụ Phù Hợp
+          Choose the Right Service Package
         </h1>
         <p className="mt-4 text-lg text-gray-600">
-          Khám phá các gói dịch vụ đa dạng, được thiết kế để đồng hành cùng thai
-          kỳ của bạn
+          Explore a range of packages designed to accompany your pregnancy
         </p>
+        {!isExpired && (
+          <p className="mt-4 text-lg text-emerald-400 font-bold">
+            You are currently using{" "}
+            <span
+              className={`${getColor(
+                user?.userMembershipResponses[0].package.packageLevel || ""
+              )}`}
+            >
+              {user?.userMembershipResponses[0].package.packageName}
+            </span>{" "}
+            , expired at :{" "}
+            {formatDate(user?.userMembershipResponses[0].endDate || "")}
+          </p>
+        )}
 
         <div className="mt-16 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {packages.map((pkg) => {
@@ -151,14 +214,14 @@ export default function MembershipContainer() {
                     <span className="text-lg"> VNĐ</span>
                     {!isBronze && (
                       <p className="mt-1 text-sm opacity-90">
-                        {pkg.duration} ngày
+                        {pkg.duration} days
                       </p>
                     )}
                   </div>
                   {!isBronze && pkg.discount && pkg.discount > 0 && (
                     <div className="mt-2 text-center">
                       <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
-                        Tiết kiệm {Math.round(savings).toLocaleString()} VNĐ
+                        Save {Math.round(savings).toLocaleString()} VNĐ
                       </span>
                     </div>
                   )}
@@ -166,7 +229,7 @@ export default function MembershipContainer() {
                     <div className="mt-2 text-center">
                       <br></br>
                       <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
-                        Gói mặc định của hệ thống
+                        System default packages
                       </span>
                     </div>
                   )}
@@ -190,34 +253,34 @@ export default function MembershipContainer() {
                           <li className="flex items-center gap-2">
                             <Check className="h-5 w-5 text-green-500" />
                             {pkg.maxRecordAdded === -1
-                              ? "Không giới hạn số lượng hồ sơ"
-                              : `Tối đa ${pkg.maxRecordAdded} hồ sơ`}
+                              ? "No limit record"
+                              : `Max ${pkg.maxRecordAdded} record`}
                           </li>
                         )}
                         {pkg.maxGrowthChartShares !== 0 && (
                           <li className="flex items-center gap-2">
                             <Check className="h-5 w-5 text-green-500" />
                             {pkg.maxGrowthChartShares === -1
-                              ? "Không giới hạn chia sẻ biểu đồ"
-                              : `Chia sẻ tối đa ${pkg.maxGrowthChartShares} biểu đồ`}
+                              ? "No limit share growth charts"
+                              : `Maximum sharing ${pkg.maxGrowthChartShares} growth charts`}
                           </li>
                         )}
                         {pkg.hasGenerateAppointments && (
                           <li className="flex items-center gap-2">
                             <Check className="h-5 w-5 text-green-500" />
-                            Tạo lịch hẹn tự động
+                            Create automatic appointments
                           </li>
                         )}
                         {pkg.hasStandardDeviationAlerts && (
                           <li className="flex items-center gap-2">
                             <Check className="h-5 w-5 text-green-500" />
-                            Cảnh báo độ lệch chuẩn
+                            Standard deviation warning
                           </li>
                         )}
                         {pkg.hasViewGrowthChart && (
                           <li className="flex items-center gap-2">
                             <Check className="h-5 w-5 text-green-500" />
-                            Xem biểu đồ tăng trưởng
+                            View growth charts
                           </li>
                         )}
                       </>
@@ -230,6 +293,7 @@ export default function MembershipContainer() {
                     <Button
                       className={`w-full bg-gradient-to-r ${styles.gradient} text-white hover:opacity-90`}
                       onClick={() => handleSelect(pkg.id)}
+                      disabled={!isExpired}
                     >
                       Chọn Gói {pkg.packageLevel === "Silver" ? "Bạc" : "Vàng"}
                     </Button>

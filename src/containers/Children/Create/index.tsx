@@ -156,7 +156,7 @@ const ChildCreateContainer = () => {
               {errors.name && (
                 <p className="text-red-500">{errors.name.message}</p>
               )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4 mb-2">
                 <div className="font-medium flex items-center mr-10">
                   Due Date
                 </div>
@@ -171,6 +171,12 @@ const ChildCreateContainer = () => {
               {errors.dueDate && (
                 <p className="text-red-500">{errors.dueDate.message}</p>
               )}
+              <Link
+                className="text-sky-700 hover:underline hover:text-sky-700"
+                to={ROUTES.DUE_DATE_CALCULATOR}
+              >
+                Due date calculator
+              </Link>
 
               <div>
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -219,7 +225,8 @@ const ChildCreateContainer = () => {
                     required: "Weight Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
-                    validate: (value) => (value > 0 ? true : "Weight must be a positive number"),
+                    validate: (value) =>
+                      value > 0 ? true : "Weight must be a positive number",
                   })}
                 />
               </div>
@@ -238,7 +245,8 @@ const ChildCreateContainer = () => {
                     required: "Height Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
-                    validate: (value) => (value > 0 ? true : "Weight must be a positive number"),
+                    validate: (value) =>
+                      value > 0 ? true : "Weight must be a positive number",
                   })}
                 />
               </div>

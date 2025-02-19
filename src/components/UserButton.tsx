@@ -17,10 +17,9 @@ import { Link } from "react-router-dom";
 import { Badge } from "./ui/badge";
 
 const UserButton = () => {
-  const id = CookiesService.get();
-
-  const [user, setUser] = useState<User>();
   const [level, setLevel] = useState("");
+  const id = CookiesService.get();
+  const [user, setUser] = useState<User>();
 
   const fetchUser = async () => {
     try {
