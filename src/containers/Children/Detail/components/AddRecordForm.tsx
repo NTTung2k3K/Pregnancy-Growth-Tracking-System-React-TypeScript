@@ -20,6 +20,7 @@ import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
+import { watch } from "fs";
 
 // Define form types
 type ChildFormValues = {
@@ -27,7 +28,7 @@ type ChildFormValues = {
   weight: number;
   headCircumference: number;
   abdominalCircumference: number;
-  fetalHeartRate: number;
+  fetalHeartRate: number | null;
   weekOfPregnancy: number;
   healthCondition: string;
 };
@@ -39,7 +40,6 @@ const AddRecordForm = ({ child }: { child: Child }) => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<ChildFormValues>({
     mode: "onChange",
@@ -116,8 +116,6 @@ const AddRecordForm = ({ child }: { child: Child }) => {
       setIsLoading(false);
     }
   };
-
-  const selectedWeek = watch("weekOfPregnancy");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -305,15 +303,16 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               type="number"
               disabled={!isWeekSelected || !standard?.fetalHeartRate}
               {...register("fetalHeartRate", {
-                setValueAs: (value) =>
-                  value === "" ? null : parseFloat(value), // Convert empty string to null
-                validate: (value) =>
-                  value === null || // Allow null values
-                  (value >= 120 &&
-                    value <= (standard?.fetalHeartRate ?? 160)) ||
-                  `Fetal heart rate must be between ${120}-${
-                    standard?.fetalHeartRate ?? 160
-                  } BPM`,
+                validate: (value) => {
+                  if (standard?.fetalHeartRate === null) return true; // Allow null when standard is null
+                  if (!value) return "This field is required"; // Required if standard is not null
+                  if (value < 120) return "Value must be at least 120";
+                  if (value > (standard?.fetalHeartRate || 160))
+                    return `Value must not exceed  ${
+                      standard?.fetalHeartRate || 160
+                    }`;
+                  return true;
+                },
               })}
               className="col-span-3"
             />

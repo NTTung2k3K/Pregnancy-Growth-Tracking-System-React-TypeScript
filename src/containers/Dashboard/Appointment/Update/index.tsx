@@ -44,7 +44,7 @@ export interface ChildsUpdated {
   height: number;
   headCircumference: number;
   abdominalCircumference: number;
-  fetalHeartRate: number;
+  fetalHeartRate: number | null;
   healthCondition: string;
 }
 
@@ -854,31 +854,40 @@ const AppointmentUpdateContainer = () => {
                               : ""
                           }`}
                           type="number"
-                          step="any"
                           placeholder="Enter fetal heart rate (optional)"
                           {...register(
                             `childsUpdated.${index}.fetalHeartRate`,
                             {
-                              setValueAs: (value) =>
-                                value === "" ? null : parseFloat(value), // Convert empty string to null
-                              validate: (value) =>
-                                value === null || // Allow null values
-                                (value >= 120 &&
-                                  value <= (standard?.fetalHeartRate ?? 160)) ||
-                                `Fetal heart rate must be between ${120}-${
-                                  standard?.fetalHeartRate ?? 160
-                                } BPM`,
+                              setValueAs: (value) => {
+                                if (standard?.fetalHeartRate === null) {
+                                  return 0; // Set value as 0 when standard is null
+                                }
+                                return value ? parseFloat(value) : null; // Otherwise, use user input
+                              },
+                              validate: (value) => {
+                                if (standard?.fetalHeartRate === null)
+                                  return true; // Allow 0 when standard is null
+                                if (!value) return "This field is required"; // Required if standard is not null
+                                if (value < 120)
+                                  return "Value must be at least 120";
+                                if (value > (standard?.fetalHeartRate || 160))
+                                  return `Value must not exceed ${
+                                    standard?.fetalHeartRate || 160
+                                  }`;
+                                return true;
+                              },
                             }
                           )}
                         />
                         {errors?.childsUpdated?.[index]?.fetalHeartRate && (
                           <p className="text-red-500 text-sm mt-1">
                             {
-                              errors.childsUpdated[index].fetalHeartRate
+                              errors.childsUpdated[index]?.fetalHeartRate
                                 ?.message
                             }
                           </p>
                         )}
+
                         {!standard?.fetalHeartRate && (
                           <p className="text-sky-800 font-bold text-sm mt-1">
                             In week 1,2,3 fetal heart rate is not required
