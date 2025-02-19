@@ -32,7 +32,7 @@ const Panel = ({
       <AccordionItem value="item-1" className="border-none">
         <AccordionTrigger className="rounded-none bg-white hover:no-underline">
           <div className="flex items-center">
-            <img className="w-14" src={iconUrl} alt={title} />
+            <img className="w-20 h-14" src={iconUrl} alt={title} />
             <p className="text-2xl font-semibold text-sky-900 ml-6">
               {title}
             </p>

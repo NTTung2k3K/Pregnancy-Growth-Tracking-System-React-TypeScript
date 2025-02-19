@@ -126,4 +126,7 @@ export const API_ROUTES = {
   DASHBOARD_GROWTH_STANDARD_UPDATE: "/fetalgrowthstandard/update",
   DASHBOARD_GROWTH_STANDARD_CREATE: "/fetalgrowthstandard/create",
   DASHBOARD_GROWTH_STANDARD_DELETE: "/fetalgrowthstandard/delete",
+
+  //-------------DOCTOR EDIT APPOINTMENT STANDARD BY WEEK
+  DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK: "/fetalgrowthstandard/get-by-week",
 };

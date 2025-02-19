@@ -19,6 +19,7 @@ import { Child } from "@/containers/Dashboard/Children/components/IChild";
 import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
+import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
 
 // Define form types
 type ChildFormValues = {
@@ -43,6 +44,32 @@ const AddRecordForm = ({ child }: { child: Child }) => {
   } = useForm<ChildFormValues>({
     mode: "onChange",
   });
+
+  const [standard, setStandard] = useState<Standard>();
+
+  const fetchStandard = async (week: number) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
+        {
+          params: { week: week },
+        }
+      );
+      setStandard(response.data.resultObj);
+
+      console.log(response.data.resultObj);
+    } catch (error) {
+      console.error("Failed to fetch roles:", error);
+    }
+  };
+
+  const [isWeekSelected, setIsWeekSelected] = useState(false);
+
+  const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedWeek = e.target.value;
+    setIsWeekSelected(!!selectedWeek); // Update the state based on selection
+    fetchStandard(parseInt(selectedWeek));
+  };
 
   const maxWeekRecord =
     child?.fetalGrowthRecordModelViews?.reduce(
@@ -109,17 +136,57 @@ const AddRecordForm = ({ child }: { child: Child }) => {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="weekOfPregnancy" className="text-right">
+              Week Of Pregnancy
+            </Label>
+            <select
+              className="col-span-3  shadow-sm  p-2 rounded-md"
+              {...register(`weekOfPregnancy`, {
+                required: "Week is required",
+              })}
+              onChange={(e) => {
+                fetchStandard(parseInt(e.target.value));
+                handleWeekChange(e);
+              }}
+            >
+              <option value="">Select week</option>
+              {weeks.map((week) => (
+                <option key={week} value={week}>
+                  {week}
+                </option>
+              ))}
+            </select>
+          </div>
+          {errors.weekOfPregnancy && (
+            <p className="text-red-500 flex items-center justify-center">
+              {errors.weekOfPregnancy.message}
+            </p>
+          )}
           {/* Height */}
           <div className="grid grid-cols-4 items-center gap-4 ">
             <Label htmlFor="height" className="text-right">
               Height (cm)
             </Label>
             <Input
+              disabled={!isWeekSelected}
               type="number"
               step="any"
               {...register("height", {
                 required: "Height is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
+                min: {
+                  value: standard?.minHeight ?? 0.25,
+                  message: `Height must be at least ${
+                    standard?.minHeight ?? 0.25
+                  } cm`,
+                },
+                max: {
+                  value: standard?.maxHeight ?? 0.3,
+                  message: `Height must be at most ${
+                    standard?.maxHeight ?? 0.3
+                  } cm`,
+                },
               })}
               className="col-span-3"
             />
@@ -136,11 +203,24 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               Weight (kg)
             </Label>
             <Input
+              disabled={!isWeekSelected}
               type="number"
               step="any"
               {...register("weight", {
                 required: "Weight is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
+                min: {
+                  value: standard?.minWeight ?? 1, // Default min weight to 1 kg if undefined
+                  message: `Weight must be at least ${
+                    standard?.minWeight ?? 1
+                  } kg`,
+                },
+                max: {
+                  value: standard?.maxWeight ?? 200, // Default max weight to 200 kg if undefined
+                  message: `Weight must be at most ${
+                    standard?.maxWeight ?? 200
+                  } kg`,
+                },
               })}
               className="col-span-3"
             />
@@ -157,11 +237,22 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               Head Circumference (cm)
             </Label>
             <Input
+              disabled={!isWeekSelected}
               type="number"
               step="any"
               {...register("headCircumference", {
                 required: "Head circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
+                min: {
+                  value: 0.2, // Default min to 30 cm
+                  message: `Head circumference must be at least 0.2 cm`,
+                },
+                max: {
+                  value: standard?.headCircumference ?? 60, // Default max to 60 cm
+                  message: `Head circumference must be at most ${
+                    standard?.headCircumference ?? 60
+                  } cm`,
+                },
               })}
               className="col-span-3"
             />
@@ -178,11 +269,22 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               Abdominal Circumference (cm)
             </Label>
             <Input
+              disabled={!isWeekSelected}
               type="number"
               step="any"
               {...register("abdominalCircumference", {
                 required: "Abdominal circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
+                min: {
+                  value: 0.15, // Default min: 20 cm
+                  message: `Abdominal circumference must be at least 0.15 cm`,
+                },
+                max: {
+                  value: standard?.abdominalCircumference ?? 100, // Default max: 100 cm
+                  message: `Abdominal circumference must be at most ${
+                    standard?.abdominalCircumference ?? 100
+                  } cm`,
+                },
               })}
               className="col-span-3"
             />
@@ -195,42 +297,23 @@ const AddRecordForm = ({ child }: { child: Child }) => {
 
           {/* Fetal Heart Rate */}
 
-          {/* Week of Pregnancy */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="weekOfPregnancy" className="text-right">
-              Week Of Pregnancy
-            </Label>
-            <select
-              className="col-span-3  shadow-sm  p-2 rounded-md"
-              {...register(`weekOfPregnancy`, {
-                required: "Week is required",
-              })}
-            >
-              <option value="">Select week</option>
-              {weeks.map((week) => (
-                <option key={week} value={week}>
-                  {week}
-                </option>
-              ))}
-            </select>
-          </div>
-          {errors.weekOfPregnancy && (
-            <p className="text-red-500 flex items-center justify-center">
-              {errors.weekOfPregnancy.message}
-            </p>
-          )}
-
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="fetalHeartRate" className="text-right">
               Fetal Heart Rate (bpm)
             </Label>
             <Input
               type="number"
+              disabled={!isWeekSelected || !standard?.fetalHeartRate}
               {...register("fetalHeartRate", {
-                required:
-                  selectedWeek && Number(selectedWeek) > 3
-                    ? "Heart rate is required"
-                    : false,
+                setValueAs: (value) =>
+                  value === "" ? null : parseFloat(value), // Convert empty string to null
+                validate: (value) =>
+                  value === null || // Allow null values
+                  (value >= 120 &&
+                    value <= (standard?.fetalHeartRate ?? 160)) ||
+                  `Fetal heart rate must be between ${120}-${
+                    standard?.fetalHeartRate ?? 160
+                  } BPM`,
               })}
               className="col-span-3"
             />
@@ -247,6 +330,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               Health Condition
             </Label>
             <Input
+              disabled={!isWeekSelected}
               {...register("healthCondition", {
                 required: "Health condition is required",
               })}

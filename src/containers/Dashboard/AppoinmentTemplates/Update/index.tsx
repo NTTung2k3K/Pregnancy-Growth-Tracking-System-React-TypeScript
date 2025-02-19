@@ -40,6 +40,10 @@ const AppointmentTemplatesUpdateContainer = () => {
   const [template, setTemplate] = useState<AppointmentTemplates>();
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
 
+  const [weeksFromBirth, setWeeksFromBirth] = useState<string | undefined>(
+    undefined
+  );
+
   const fetchAppointmentTemplate = async () => {
     try {
       const response = await axios.get(
@@ -62,6 +66,7 @@ const AppointmentTemplatesUpdateContainer = () => {
         "status",
         fetchedAppointmentTemplate.status === "Active" ? 1 : 0
       );
+      convertDaysToWeeks(fetchedAppointmentTemplate.daysFromBirth);
       setTemplate(fetchedAppointmentTemplate);
     } catch (error) {
       console.error("Failed to fetch template:", error);
@@ -127,6 +132,22 @@ const AppointmentTemplatesUpdateContainer = () => {
     setIsEditingImg(false);
   };
 
+  const convertDaysToWeeks = (days: number) => {
+    const weeks = Math.abs(Math.floor(days / 7)); // Get absolute weeks
+
+    if (days < 0) {
+      setWeeksFromBirth(
+        weeks === 1
+          ? "1 week before due date"
+          : `${weeks} weeks before due date`
+      );
+    } else {
+      setWeeksFromBirth(
+        weeks === 1 ? "1 week after due date" : `${weeks} weeks after due date`
+      );
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -175,11 +196,18 @@ const AppointmentTemplatesUpdateContainer = () => {
                   className="flex-1 p-2"
                   {...register("daysFromBirth", {
                     required: "Days From Birth Name is required",
+                    onChange: (e) => {
+                      const days = parseInt(e.target.value, 10) || 0; // Ensure a valid number
+                      convertDaysToWeeks(days); // Convert and update weeks field
+                    },
                   })}
                 />
               </div>
               {errors.daysFromBirth && (
                 <p className="text-red-500">{errors.daysFromBirth.message}</p>
+              )}
+              {weeksFromBirth && (
+                <p className="text-sky-700 font-bold m-4">{weeksFromBirth}</p>
               )}
 
               {/* Address Field */}
