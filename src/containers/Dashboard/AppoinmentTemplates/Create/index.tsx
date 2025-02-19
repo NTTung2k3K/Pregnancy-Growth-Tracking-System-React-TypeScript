@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
 import { Link } from "react-router-dom";
-import { set } from "date-fns";
 
 interface AppointmentTemplatesFormValues {
   name: string;
