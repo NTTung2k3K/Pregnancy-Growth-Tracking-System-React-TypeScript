@@ -358,7 +358,7 @@ const ChildCreateContainer = () => {
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-center">
-                    <Avatar className="h-32 w-32 border text-center ">
+                    <Avatar className="h-52 w-52 border text-center ">
                       <AvatarImage src={imageTemp} />
                       <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
                         ?

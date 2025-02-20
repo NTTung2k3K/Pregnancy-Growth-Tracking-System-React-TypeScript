@@ -1,5 +1,3 @@
-
-
 import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,7 +16,7 @@ import toast from "react-hot-toast";
 export interface CreateAppointmentPayload {
   id: number;
   userId: string;
-  appointmentDate: string;
+  appointmentDate: Date;
   appointmentSlot: number;
   notes?: string;
   description?: string;
