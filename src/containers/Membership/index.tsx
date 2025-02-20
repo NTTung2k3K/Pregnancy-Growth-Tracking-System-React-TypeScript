@@ -160,7 +160,7 @@ export default function MembershipContainer() {
         <p className="mt-4 text-lg text-gray-600">
           Explore a range of packages designed to accompany your pregnancy
         </p>
-        {!isExpired && (
+        {userId && !isExpired && (
           <p className="mt-4 text-lg text-emerald-400 font-bold">
             You are currently using{" "}
             <span
@@ -197,7 +197,7 @@ export default function MembershipContainer() {
                       variant="default"
                       className={`w-full bg-gradient-to-r ${styles.gradient} py-1 text-center text-white`}
                     >
-                      Phổ biến nhất
+                      Most popular
                     </Badge>
                   </div>
                 )}
@@ -293,9 +293,9 @@ export default function MembershipContainer() {
                     <Button
                       className={`w-full bg-gradient-to-r ${styles.gradient} text-white hover:opacity-90`}
                       onClick={() => handleSelect(pkg.id)}
-                      disabled={!isExpired}
+                      disabled={!isExpired && !!userId}
                     >
-                      Chọn Gói {pkg.packageLevel === "Silver" ? "Bạc" : "Vàng"}
+                      Pick {pkg.packageLevel} Package
                     </Button>
                   </div>
                 )}

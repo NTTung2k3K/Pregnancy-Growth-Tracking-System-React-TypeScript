@@ -142,6 +142,12 @@ export default function CostCalculatorContainer() {
 
   const [total, setTotal] = useState(0);
 
+  const USD_TO_VND_RATE = 24000; // Example rate
+
+  const convertToVND = (amount: number): number => {
+    return amount * USD_TO_VND_RATE;
+  };
+
   const calculateSubtotal = useCallback(
     (items: Record<string, CostItem>): number => {
       return Object.values(items).reduce((sum, item) => {
@@ -238,11 +244,12 @@ export default function CostCalculatorContainer() {
           Your baby's first year may cost around:
         </h2>
         <p className="text-2xl font-bold">
-          Total cost: $
-          {total.toLocaleString(undefined, {
+          Total cost:{" "}
+          {convertToVND(total).toLocaleString(undefined, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 2,
-          })}
+          })}{" "}
+          VNĐ
         </p>
       </div>
 

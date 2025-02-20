@@ -70,9 +70,7 @@ export const columns: ColumnDef<AppointmentTemplates>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        <p>{convertDaysToWeeks(row.getValue("daysFromBirth"))} days left</p>
-      );
+      return <p>{convertDaysToWeeks(row.getValue("daysFromBirth"))}</p>;
     },
   },
   {

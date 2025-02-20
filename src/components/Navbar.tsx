@@ -62,7 +62,7 @@ const Navbar = () => {
     {
       name: "Booking Appointment",
       link: ROUTES.APPOINTMENT_BOOKING,
-      isAuth: false,
+      isAuth: true,
     },
     {
       name: "Membership Packages",
