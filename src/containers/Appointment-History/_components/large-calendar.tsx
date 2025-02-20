@@ -1,5 +1,3 @@
-
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import {
@@ -286,6 +284,7 @@ export function LargeCalendar() {
                             <div className="font-medium">
                               {appointment.appointmentTemplate.name}
                             </div>
+
                             {appointment.status === "Pending" ? (
                               <Button
                                 size="sm"
@@ -297,7 +296,7 @@ export function LargeCalendar() {
                                   setIsCreateDialogOpen(true);
                                 }}
                               >
-                                Confirm
+                                Click to confirm
                               </Button>
                             ) : (
                               <Badge
@@ -327,12 +326,36 @@ export function LargeCalendar() {
                           <div className="text-[10px] text-muted-foreground">
                             {appointment.appointmentTemplate.description}
                           </div>
-                          <div className="text-[10px] mt-0.5">
-                            Fee: &nbsp;
-                            {Math.round(
-                              appointment.appointmentTemplate.fee
-                            ).toLocaleString()}
-                            VNĐ
+                          <div className="flex justify-between">
+                            <div className="text-[10px] mt-0.5">
+                              Fee: &nbsp;
+                              {Math.round(
+                                appointment.appointmentTemplate.fee
+                              ).toLocaleString()}
+                              VNĐ
+                            </div>
+                            <Badge
+                              className={cn({
+                                "bg-green-500/10 text-green-500":
+                                  appointment.status === "Completed",
+                                "bg-yellow-500/10 text-yellow-500":
+                                  appointment.status === "Pending",
+                                "bg-red-500/10 text-red-500": [
+                                  "NoShow",
+                                  "Failed",
+                                  "CancelledByUser",
+                                  "CancelledByDoctor",
+                                ].includes(appointment.status),
+                                "bg-blue-500/10 text-blue-500":
+                                  appointment.status === "InProgress",
+                                "bg-violet-500/10 text-violet-500":
+                                  appointment.status === "Confirmed",
+                                "bg-pink-500/10 text-pink-500":
+                                  appointment.status === "Rescheduled",
+                              })}
+                            >
+                              {appointment.status}
+                            </Badge>
                           </div>
                         </div>
                       ))}
@@ -353,7 +376,7 @@ export function LargeCalendar() {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              Create New Appointment for{" "}
+              Confirm New Appointment for{" "}
               {selectedAppointmentId
                 ? appointments
                     .find((a) => a.id === selectedAppointmentId)

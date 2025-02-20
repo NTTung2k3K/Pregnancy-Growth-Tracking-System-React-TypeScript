@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
@@ -31,7 +29,12 @@ import { Input } from "@/components/ui/input";
 import { AppointmentTemplate, Child } from "@/containers/Dashboard/Appointment";
 
 export const timeSlots = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
-
+export const timeSlotsStartHours = [
+  { id: 1, startHour: 7, label: "07:00 - 09:30" },
+  { id: 2, startHour: 9.5, label: "09:30 - 12:00" },
+  { id: 3, startHour: 12, label: "12:00 - 14:30" },
+  { id: 4, startHour: 14.5, label: "14:30 - 17:00" },
+];
 export default function AppointmentBookingContainer() {
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date>();

@@ -219,7 +219,8 @@ const ChildCreateContainer = () => {
                     required: "Weight Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
-                    validate: (value) => (value > 0 ? true : "Weight must be a positive number"),
+                    validate: (value) =>
+                      value > 0 ? true : "Weight must be a positive number",
                   })}
                 />
               </div>
@@ -238,7 +239,8 @@ const ChildCreateContainer = () => {
                     required: "Height Estimate is required",
                     setValueAs: (value) =>
                       value ? parseFloat(value) : undefined,
-                    validate: (value) => (value > 0 ? true : "Weight must be a positive number"),
+                    validate: (value) =>
+                      value > 0 ? true : "Weight must be a positive number",
                   })}
                 />
               </div>
@@ -350,7 +352,7 @@ const ChildCreateContainer = () => {
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-center">
-                    <Avatar className="h-32 w-32 border text-center ">
+                    <Avatar className="h-52 w-52 border text-center ">
                       <AvatarImage src={imageTemp} />
                       <AvatarFallback className="flex w-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
                         ?

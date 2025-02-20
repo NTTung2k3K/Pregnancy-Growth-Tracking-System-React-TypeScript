@@ -1,4 +1,3 @@
-
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,8 +20,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { CreateAppointmentPayload } from "@/containers/Appointment-History/_components/appoinment-calendar";
-import { timeSlots } from "@/containers/Appointment-Booking";
-import { cn, getSlotString } from "@/lib/utils";
+import { timeSlotsStartHours } from "@/containers/Appointment-Booking";
+import { cn } from "@/lib/utils";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -58,10 +57,23 @@ export function CreateAppointmentForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      appointmentDate: initialDate,
+      appointmentDate: initialDate
+        ? initialDate instanceof Date
+          ? initialDate
+          : new Date(initialDate)
+        : new Date(),
       notes: "",
       description: "",
     },
+  });
+
+  const filteredSlots = timeSlotsStartHours.filter((slot) => {
+    const now = new Date();
+    const selectedDate = form.watch("appointmentDate");
+
+    const isToday = selectedDate?.toDateString() === now.toDateString();
+
+    return !isToday || now.getHours() + now.getMinutes() / 60 < slot.startHour;
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -73,10 +85,15 @@ export function CreateAppointmentForm({
       toast.error("User ID not found");
       return;
     }
+    const appointmentDateInLocalTime = new Date(values.appointmentDate);
+
+    appointmentDateInLocalTime.setHours(0, 0, 0, 0);
+    console.log(appointmentDateInLocalTime);
+
     await onSubmit({
       id: appointmentId,
       userId: userId, // Hardcoded for demo
-      appointmentDate: values.appointmentDate.toISOString(),
+      appointmentDate: appointmentDateInLocalTime,
       appointmentSlot: Number.parseInt(values.appointmentSlot),
       notes: values.notes,
       description: values.description,
@@ -112,13 +129,43 @@ export function CreateAppointmentForm({
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
+                  {/* <Calendar
+                    mode="single"
+                    selected={new Date("2024-10-10")}
+                    onSelect={(date) => {
+                      console.log("Selected date:", date);
+                      field.onChange(date);
+                    }}
+                    className="w-full flex justify-center bg-gray-400"
+                    disabled={(date) => date < new Date().setHours(0, 0, 0, 0)}
+                    initialFocus
+                    footer={
+                      field.value
+                        ? `Selected: ${field.value.toLocaleDateString("vi-VN")}`
+                        : "Pick a day."
+                    }
+                  /> */}
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
-                    className="w-full flex justify-center bg-gray-400"
-                    disabled={(date) => date < new Date()}
+                    defaultMonth={field.value} // Thêm defaultMonth để mở đúng tháng
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    onSelect={(date: any) => {
+                      const selectedDate = new Date(date);
+                      selectedDate.setHours(0, 0, 0, 0);
+                      field.onChange(selectedDate);
+                    }}
+                    className="rounded-md border bg-[#1dd186]"
+                    disabled={(date) =>
+                      date.setHours(0, 0, 0, 0) <
+                      new Date().setHours(0, 0, 0, 0)
+                    }
                     initialFocus
+                    footer={
+                      field.value
+                        ? `Selected: ${field.value.toLocaleDateString("vi-VN")}`
+                        : "Pick a day."
+                    }
                   />
                 </PopoverContent>
               </Popover>
@@ -140,11 +187,17 @@ export function CreateAppointmentForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {timeSlots.map((slot) => (
-                    <SelectItem key={slot.id} value={slot.id.toString()}>
-                      {getSlotString(slot.id)}
+                  {filteredSlots.length > 0 ? (
+                    filteredSlots.map((slot) => (
+                      <SelectItem key={slot.id} value={slot.id.toString()}>
+                        Slot {slot.id} - {slot.label}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem key={0} value="Invalid">
+                      No slot available
                     </SelectItem>
-                  ))}
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -187,7 +240,7 @@ export function CreateAppointmentForm({
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create Appointment"}
+            {isSubmitting ? "Creating..." : "Confirm Appointment"}
           </Button>
         </div>
       </form>
