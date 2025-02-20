@@ -32,20 +32,15 @@ The **Pregnancy Development Tracking Software** is a comprehensive system design
 | Category       | Technologies Used |
 |---------------|------------------|
 | **Frontend**  | React, TypeScript |
-| **Backend**   | Node.js, NestJS |
-| **Database**  | MongoDB |
+| **Backend**   | .NET |
+| **Database**  | MS SQL |
 | **Authentication** | JWT, OAuth |
-| **Payments**  | Stripe API |
-| **Hosting**   | AWS, Firebase |
+| **Payments**  | VNPAY |
+| **Hosting**   | Vercel Firebase |
 
 ---
 
 ## 🏗️ Installation & Setup  
-
-### 🔹 Prerequisites  
-- **Node.js** (v16+ recommended)  
-- **MongoDB** (local or cloud)  
-- **Stripe account** (for payment integration)  
 
 ### 🔹 Steps to Set Up the Project  
 
@@ -53,3 +48,31 @@ The **Pregnancy Development Tracking Software** is a comprehensive system design
    ```sh
    git clone https://github.com/your-username/pregnancy-tracking.git
    cd pregnancy-tracking
+2. **Install dependencies:**  
+   ```sh
+   npm install
+3. **Run the development server:**  
+   ```sh
+   npm run dev
+3. **Build for production:**  
+   ```sh
+   npm run build
+
+---
+
+## 📜 Contribution Guidelines
+
+### 🔹 We welcome contributions! Follow these steps: 
+- Fork the repository.  
+- Create a new branch (feature-branch).
+- Make your changes and commit.
+- Push to your fork and submit a pull request.
+- Wait for the maintainers to review and merge.
+
+---
+
+## 📞 Contact
+For inquiries, support, or collaboration opportunities, reach out via:
+📧 Email: BabyCareSystemFPT@gmail.com
+
+
