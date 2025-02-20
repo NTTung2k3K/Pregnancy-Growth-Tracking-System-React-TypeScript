@@ -18,9 +18,6 @@ import { Standard } from "./IStandard";
 
 const columnFields: { key: keyof Standard; label: string }[] = [
   { key: "gestationalAge", label: "Week" },
-  { key: "averageWeight", label: "Weight" },
-  { key: "averageHeight", label: "Height" },
-  { key: "fetalHeartRate", label: "Heart Rate" },
 ];
 
 export const columns: ColumnDef<Standard>[] = [
@@ -38,6 +35,57 @@ export const columns: ColumnDef<Standard>[] = [
       );
     },
   })),
+  {
+    accessorKey: "averageWeight",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Weight
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{row.getValue("averageWeight")} kg</p>;
+    },
+  },
+  {
+    accessorKey: "averageHeight",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Height
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{row.getValue("averageHeight")} cm</p>;
+    },
+  },
+  {
+    accessorKey: "fetalHeartRate",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Fetal Heart Rate
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{row.getValue("fetalHeartRate")} BPM</p>;
+    },
+  },
 
   {
     id: "actions",
@@ -54,7 +102,10 @@ export const columns: ColumnDef<Standard>[] = [
           <DropdownMenuContent align="end" className="text-sky-800">
             <Link
               className="text-sky-800"
-              to={`${ROUTES.DASHBOARD_GROWTH_STANDARDS_UPDATE.replace(":id", String(week))}`}
+              to={`${ROUTES.DASHBOARD_GROWTH_STANDARDS_UPDATE.replace(
+                ":id",
+                String(week)
+              )}`}
             >
               <DropdownMenuItem className="cursor-pointer">
                 <UserPen className="h-4 w-4 mr-2" />

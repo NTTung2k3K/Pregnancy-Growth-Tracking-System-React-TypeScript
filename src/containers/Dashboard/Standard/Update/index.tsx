@@ -1,4 +1,3 @@
-
 import { CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -38,6 +37,18 @@ const numberFields: Array<keyof Standard> = [
   "abdominalCircumference",
   "fetalHeartRate",
 ];
+
+const formatFieldName = (field: string): string => {
+  return field
+    .replace(/\bminWeight\b/gi, "Min Height") // Convert "minWeight" to "Min Height"
+    .replace(/\bmaxWeight\b/gi, "Max Weight") // Convert "maxWeight" correctly
+    .replace(/\bmin\b/gi, "Min") // Convert "min" to "Min"
+    .replace(/\bmax\b/gi, "Max") // Convert "max" to "Max"
+    .replace(/\baverage\b/gi, "Average") // Convert "average" to "Average"
+    .replace(/([A-Z])/g, " $1") // Insert space before capital letters (camelCase to words)
+    .trim()
+    .replace(/^./, (char) => char.toUpperCase()); // Capitalize first letter
+};
 
 const GrowthStandardUpdateContainer = () => {
   const {
@@ -105,7 +116,9 @@ const GrowthStandardUpdateContainer = () => {
               key={key}
               className="flex mt-4 border bg-slate-100 rounded-md p-4"
             >
-              <div className="font-medium flex items-center mr-10">{key}</div>
+              <div className="font-medium flex items-center mr-10">
+                {formatFieldName(key)}
+              </div>
               <input
                 type={numberFields.includes(key) ? "number" : "text"}
                 className="flex-1 p-2 border rounded-md"
