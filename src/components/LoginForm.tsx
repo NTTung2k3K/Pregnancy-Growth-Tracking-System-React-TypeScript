@@ -45,7 +45,7 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 10000);
+    }, 1000000);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import { Image, UserPen } from "lucide-react";
+import { CalendarIcon, Image, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -13,6 +13,27 @@ import { ROUTES } from "@/routes";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
 import { CookiesService } from "@/services/cookies.service";
 import { Link } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { addDateWithMonthsAndDays } from "@/lib/date";
+import { addDays, addMonths, format } from "date-fns";
+import { formatDate } from "@/lib/text";
 
 interface ChildFormValues {
   id: string;
@@ -35,6 +56,8 @@ const ChildCreateContainer = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<ChildFormValues>({
     mode: "onChange",
@@ -171,12 +194,39 @@ const ChildCreateContainer = () => {
               {errors.dueDate && (
                 <p className="text-red-500">{errors.dueDate.message}</p>
               )}
-              <Link
-                className="text-sky-700 hover:underline hover:text-sky-700"
-                to={ROUTES.DUE_DATE_CALCULATOR}
-              >
-                Due date calculator
-              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <p className="text-sky-800 hover:underline cursor-pointer font-bold">
+                    Due date calculator
+                  </p>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Due Date Calculator</DialogTitle>
+                  </DialogHeader>
+
+                  {/* Date Picker */}
+                  <Calendar
+                    mode="single"
+                    selected={new Date()} // Default selected date
+                    onSelect={(date) => {
+                      if (date) {
+                        const updatedDate = addDays(addMonths(date, 9), 10); // Add 9 months and 10 days
+                        const formattedDate = format(updatedDate, "yyyy-MM-dd"); // Format updated date
+
+                        setValue("dueDate", formattedDate); // Assign updated date to form input
+                        (document.activeElement as HTMLElement | null)?.blur(); // Close dialog safely
+                      }
+                    }}
+                  />
+
+                  {/* Display Updated Due Date */}
+                  <p className="mt-2 text-gray-700">
+                    Estimated Due Date:{" "}
+                    <strong>{formatDate(watch("dueDate"))}</strong>
+                  </p>
+                </DialogContent>
+              </Dialog>
 
               <div>
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
