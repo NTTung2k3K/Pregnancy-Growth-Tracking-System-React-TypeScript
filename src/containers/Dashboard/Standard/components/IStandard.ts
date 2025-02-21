@@ -9,5 +9,5 @@ export interface Standard {
   averageHeight: number;
   headCircumference: number;
   abdominalCircumference: number;
-  fetalHeartRate: number;
+  fetalHeartRate: number | null;
 }

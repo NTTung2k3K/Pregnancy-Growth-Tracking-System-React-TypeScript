@@ -53,6 +53,7 @@ const Navbar = () => {
         name: bt.name,
         link: `/blog/${bt.id}`,
       })),
+      isAuth: false,
     },
     { name: "Growth Chart", link: ROUTES.MY_GROWTH_CHART, isAuth: true },
     { name: "Appointments", link: ROUTES.APPOINTMENT_HISTORY, isAuth: true },
@@ -61,7 +62,7 @@ const Navbar = () => {
     {
       name: "Booking Appointment",
       link: ROUTES.APPOINTMENT_BOOKING,
-      isAuth: false,
+      isAuth: true,
     },
     {
       name: "Membership Packages",
@@ -70,11 +71,15 @@ const Navbar = () => {
     },
   ];
 
-  const handleNavigate = (link: string) => {
-    if (userId) {
-      navigate(link);
+  const handleNavigate = (link: string, isAuth: boolean) => {
+    if (isAuth) {
+      if (userId) {
+        navigate(link);
+      } else {
+        toast.error("Please login to access this function");
+      }
     } else {
-      toast.error("Please login to access this function");
+      navigate(link);
     }
   };
 
@@ -84,13 +89,13 @@ const Navbar = () => {
       <div className="fixed w-full flex justify-between items-center mt-11 px-32 bg-white z-50">
         <div className="flex text-2xl text-sky-900 items-center py-4">
           <div
-            onClick={() => handleNavigate(ROUTES.CHILDREN)}
+            onClick={() => handleNavigate(ROUTES.CHILDREN, true)}
             className="mx-2 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
           >
             <Baby className="w-8 h-8" />
           </div>
           <div
-            onClick={() => handleNavigate(ROUTES.GROWTH_CHART)}
+            onClick={() => handleNavigate(ROUTES.GROWTH_CHART, true)}
             className="mx-2 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
           >
             <ChartLine className="w-8 h-8" />
@@ -106,7 +111,7 @@ const Navbar = () => {
         </Link>
         <div className="flex items-center text-2xl text-sky-900">
           <div
-            onClick={() => handleNavigate(ROUTES.APPOINTMENT_HISTORY)}
+            onClick={() => handleNavigate(ROUTES.APPOINTMENT_HISTORY, true)}
             className="mr-4 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
           >
             <CalendarCheck2 className="w-8 h-8" />
@@ -120,7 +125,7 @@ const Navbar = () => {
         {categories.map((category, index) => (
           <div key={index} className="relative group cursor-pointer">
             <div
-              onClick={() => handleNavigate(category.link)}
+              onClick={() => handleNavigate(category.link, category.isAuth)}
               className="text-sky-900 font-semibold pb-2 hover:border-b-2 hover:border-emerald-400 hover:text-sky-900"
             >
               {category.name}

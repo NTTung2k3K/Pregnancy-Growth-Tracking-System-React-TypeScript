@@ -21,8 +21,25 @@ import toast from "react-hot-toast";
 const columnFields: { key: keyof AppointmentTemplates; label: string }[] = [
   { key: "name", label: "Name" },
   { key: "description", label: "Description" },
-  { key: "fee", label: "Fee" },
 ];
+
+const convertDaysToWeeks = (days: number) => {
+  const weeks = Math.abs(Math.floor(days / 7)); // Get absolute weeks
+
+  if (days < 0) {
+    return weeks === 1
+      ? "1 week before due date"
+      : `${weeks} weeks before due date`;
+  } else {
+    return weeks === 1
+      ? "1 week after due date"
+      : `${weeks} weeks after due date`;
+  }
+};
+
+const formatToVND = (amount: number) => {
+  return new Intl.NumberFormat("vi-VN").format(amount) + " VND";
+};
 
 export const columns: ColumnDef<AppointmentTemplates>[] = [
   ...columnFields.map(({ key, label }) => ({
@@ -53,7 +70,24 @@ export const columns: ColumnDef<AppointmentTemplates>[] = [
       );
     },
     cell: ({ row }) => {
-      return <p>{Math.abs(row.getValue("daysFromBirth"))} days left</p>;
+      return <p>{convertDaysToWeeks(row.getValue("daysFromBirth"))}</p>;
+    },
+  },
+  {
+    accessorKey: "fee",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Fee
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{formatToVND(row.getValue("fee"))}</p>;
     },
   },
   {

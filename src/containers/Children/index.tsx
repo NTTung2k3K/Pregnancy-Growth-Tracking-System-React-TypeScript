@@ -52,7 +52,7 @@ const ChildrenGridContainer = () => {
                 to={`${ROUTES.CHILDREN_CREATE}`}
                 className="bg-sky-800 hover:bg-sky-900 text-emerald-400 p-4 rounded-full font-bold"
               >
-                Add new children
+                Register new children
               </Link>
             </div>
           </div>
@@ -79,7 +79,7 @@ const ChildrenGridContainer = () => {
         to={`${ROUTES.CHILDREN_CREATE}`}
         className="mt-10 bg-sky-800 hover:bg-sky-900 text-emerald-400 p-4 rounded-full font-bold"
       >
-        Add new child
+        Register new child
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
         {children.slice(0, visibleCount).map((item, index) => (

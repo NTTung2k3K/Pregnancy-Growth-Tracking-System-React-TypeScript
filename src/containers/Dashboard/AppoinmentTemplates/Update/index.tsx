@@ -17,8 +17,10 @@ import { AppointmentTemplates } from "../components/IAppointmentTemplates";
 interface AppointmentTemplatesFormValues {
   name: string;
   daysFromBirth: number;
+  fee: number;
   description: string;
   status: number;
+  dueDateStatus: string;
 }
 
 const AppointmentTemplatesUpdateContainer = () => {
@@ -39,6 +41,10 @@ const AppointmentTemplatesUpdateContainer = () => {
 
   const [template, setTemplate] = useState<AppointmentTemplates>();
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
+
+  const [dueDateStatus, setDueDateStatus] = useState<string | undefined>(
+    undefined
+  );
 
   const fetchAppointmentTemplate = async () => {
     try {
@@ -62,6 +68,17 @@ const AppointmentTemplatesUpdateContainer = () => {
         "status",
         fetchedAppointmentTemplate.status === "Active" ? 1 : 0
       );
+      setValue(
+        "dueDateStatus",
+        fetchedAppointmentTemplate.daysFromBirth < 0 ? "before" : "after"
+      );
+      setValue(
+        "daysFromBirth",
+        Math.abs(Math.floor(fetchedAppointmentTemplate.daysFromBirth / 7))
+      );
+      setDueDateStatus(
+        fetchedAppointmentTemplate.daysFromBirth < 0 ? "before" : "after"
+      );
       setTemplate(fetchedAppointmentTemplate);
     } catch (error) {
       console.error("Failed to fetch template:", error);
@@ -82,7 +99,11 @@ const AppointmentTemplatesUpdateContainer = () => {
         {
           Id: id,
           Name: data.name,
-          DaysFromBirth: data.daysFromBirth,
+          DaysFromBirth:
+            dueDateStatus === "before"
+              ? -data.daysFromBirth * 7
+              : data.daysFromBirth * 7,
+          Fee: data.fee,
           Description: data.description,
           Status: Number(data.status),
           Image: imageFile ? imageFile : null,
@@ -168,13 +189,36 @@ const AppointmentTemplatesUpdateContainer = () => {
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
-                  Day From Birth
+                  Due date
                 </div>
+                <select
+                  className="flex-1 p-2"
+                  {...register("dueDateStatus")}
+                  value={dueDateStatus}
+                  onChange={(e) => setDueDateStatus(e.target.value)}
+                >
+                  <option value="">Select status</option>
+                  <option value="before">Before</option>
+                  <option value="after">After</option>
+                </select>
+              </div>
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Week</div>
                 <input
                   type="number"
                   className="flex-1 p-2"
                   {...register("daysFromBirth", {
-                    required: "Days From Birth Name is required",
+                    required: "Days From Birth is required",
+                    min: {
+                      value: 1,
+                      message: "Value must be at least 1",
+                    },
+                    max: {
+                      value: dueDateStatus === "before" ? 42 : 8,
+                      message: `Value must be at most ${
+                        dueDateStatus === "before" ? 42 : 8
+                      }`,
+                    },
                   })}
                 />
               </div>
@@ -182,7 +226,31 @@ const AppointmentTemplatesUpdateContainer = () => {
                 <p className="text-red-500">{errors.daysFromBirth.message}</p>
               )}
 
-              {/* Address Field */}
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">Name</div>
+                <input
+                  type="number"
+                  step="1000"
+                  className="flex-1 p-2"
+                  {...register("fee", {
+                    required: "Fee is required",
+                    min: {
+                      value: 100000,
+                      message: "Fee must be at least 100000",
+                    },
+                    validate: {
+                      positive: (value) =>
+                        value > 0 || "Fee must be a positive number",
+                      step: (value) =>
+                        value % 1000 === 0 || "Fee must be a multiple of 1000",
+                    },
+                  })}
+                />
+              </div>
+              {errors.fee && (
+                <p className="text-red-500">{errors.fee.message}</p>
+              )}
+
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   Description
