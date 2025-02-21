@@ -1,4 +1,4 @@
-import { Check, Star } from "lucide-react";
+import { Check, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -29,6 +29,7 @@ interface MembershipPackage {
   hasGenerateAppointments: boolean;
   hasStandardDeviationAlerts: boolean;
   hasViewGrowthChart: boolean;
+  maxAppointmentCanBooking: number;
 }
 
 const PACKAGE_STYLES = {
@@ -239,13 +240,64 @@ export default function MembershipContainer() {
                   <p className="text-gray-600">{pkg.description}</p>
                   <ul className="mt-6 space-y-3 text-sm">
                     {isBronze ? (
-                      // Hiển thị tính năng cơ bản cho gói Bronze
-                      BRONZE_FEATURES.map((feature, index) => (
-                        <li key={index} className="flex items-center gap-2">
-                          <Check className="h-5 w-5 text-green-500" />
-                          {feature}
-                        </li>
-                      ))
+                      <>
+                        {BRONZE_FEATURES.map((feature, index) => (
+                          <>
+                            <li key={index} className="flex items-center gap-2">
+                              <Check className="h-5 w-5 text-green-500" />
+                              {feature}
+                            </li>
+                          </>
+                        ))}
+                        {
+                          <li className="flex items-center gap-2">
+                            <X className="h-5 w-5 text-red-500" />
+                            {pkg.maxRecordAdded === -1
+                              ? "No limit record"
+                              : `No add record`}
+                          </li>
+                        }
+                        {
+                          <li className="flex items-center gap-2">
+                            <X className="h-5 w-5 text-red-500" />
+                            {pkg.maxGrowthChartShares === -1
+                              ? "No limit share growth charts"
+                              : `No sharing growth charts`}
+                          </li>
+                        }
+                        {
+                          <li className="flex items-center gap-2">
+                            <X className="h-5 w-5 text-red-500" />
+                            {pkg.maxAppointmentCanBooking === -1
+                              ? "No limit booking"
+                              : `No booking appointment`}
+                          </li>
+                        }
+                        {
+                          <li className="flex items-center gap-2">
+                            <X className="h-5 w-5 text-red-500" />
+                            {pkg.hasGenerateAppointments === true
+                              ? "Create automatic appointments"
+                              : `No automatic appointments`}
+                          </li>
+                        }
+                        {
+                          <li className="flex items-center gap-2">
+                            <X className="h-5 w-5 text-red-500" />
+                            {pkg.hasStandardDeviationAlerts === true
+                              ? "Standard deviation warning"
+                              : `No standard deviation warning`}
+                          </li>
+                        }
+                        {
+                          <li className="flex items-center gap-2">
+                            <X className="h-5 w-5 text-red-500" />
+                            {pkg.hasStandardDeviationAlerts === true
+                              ? "View growth charts"
+                              : `No view growth charts`}
+                          </li>
+                        }
+                      </>
                     ) : (
                       // Hiển thị tính năng cho các gói khác
                       <>
@@ -263,6 +315,14 @@ export default function MembershipContainer() {
                             {pkg.maxGrowthChartShares === -1
                               ? "No limit share growth charts"
                               : `Maximum sharing ${pkg.maxGrowthChartShares} growth charts`}
+                          </li>
+                        )}
+                        {pkg.maxAppointmentCanBooking !== 0 && (
+                          <li className="flex items-center gap-2">
+                            <Check className="h-5 w-5 text-green-500" />
+                            {pkg.maxAppointmentCanBooking === -1
+                              ? "No limit booking"
+                              : `Maximum booking ${pkg.maxAppointmentCanBooking} for appointment`}
                           </li>
                         )}
                         {pkg.hasGenerateAppointments && (
