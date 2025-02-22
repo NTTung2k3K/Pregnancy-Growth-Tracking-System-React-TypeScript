@@ -28,7 +28,12 @@ import { getSlotString } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { AppointmentTemplate, Child } from "@/containers/Dashboard/Appointment";
 
-export const timeSlots = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+export const timeSlots = [
+  { id: 1, start: "07:00", end: "09:30" },
+  { id: 2, start: "09:30", end: "12:00" },
+  { id: 3, start: "12:00", end: "14:30" },
+  { id: 4, start: "14:30", end: "17:00" },
+];
 export const timeSlotsStartHours = [
   { id: 1, startHour: 7, label: "07:00 - 09:30" },
   { id: 2, startHour: 9.5, label: "09:30 - 12:00" },
@@ -184,7 +189,36 @@ export default function AppointmentBookingContainer() {
         Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
       );
       setSelectedDate(localDate);
+      setSelectedSlot("");
     }
+  };
+
+  const isSlotDisabled = (
+    selectedDate: Date | undefined,
+    endTime: string
+  ): boolean => {
+    if (!selectedDate) return false; // No date selected yet
+
+    const now = new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+
+    const selected = new Date(selectedDate);
+    selected.setHours(0, 0, 0, 0); // Start of selected date
+
+    // If selected date is in the future, enable all slots
+    if (selected > today) return false;
+
+    // If selected date is today, check endTime
+    if (selected.getTime() === today.getTime()) {
+      const [hours, minutes] = endTime.split(":").map(Number);
+      const slotEndDateTime = new Date();
+      slotEndDateTime.setHours(hours, minutes, 0, 0);
+
+      return now > slotEndDateTime; // Disable if the slot's end time is in the past
+    }
+
+    return false;
   };
 
   return (
@@ -304,11 +338,9 @@ export default function AppointmentBookingContainer() {
                       mode="single"
                       selected={selectedDate}
                       onSelect={handleDateSelect}
-                      //   disabled={(date) =>
-                      //     date < new Date() ||
-                      //     date.getDay() === 0 ||
-                      //     date.getDay() === 6
-                      //   }
+                      disabled={(date) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -325,21 +357,30 @@ export default function AppointmentBookingContainer() {
                   onValueChange={setSelectedSlot}
                   disabled={isLoading}
                 >
-                  {timeSlots.map((slot) => (
-                    <div key={slot.id}>
-                      <RadioGroupItem
-                        value={slot.id.toString()}
-                        id={`slot-${slot.id}`}
-                        className="peer sr-only"
-                      />
-                      <Label
-                        htmlFor={`slot-${slot.id}`}
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-muted hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  {timeSlots.map((slot) => {
+                    const isDisabled = isSlotDisabled(selectedDate, slot.end);
+                    return (
+                      <div
+                        key={slot.id}
+                        className={
+                          isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                        }
                       >
-                        {getSlotString(slot.id)}
-                      </Label>
-                    </div>
-                  ))}
+                        <RadioGroupItem
+                          value={slot.id.toString()}
+                          id={`slot-${slot.id}`}
+                          className="peer sr-only"
+                          disabled={isDisabled}
+                        />
+                        <Label
+                          htmlFor={`slot-${slot.id}`}
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-muted hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          {getSlotString(slot.id)}
+                        </Label>
+                      </div>
+                    );
+                  })}
                 </RadioGroup>
               </div>
 
