@@ -51,6 +51,20 @@ const AppointmentCreateContainer = () => {
   >([]);
   const [selectedChildren, setSelectedChildren] = useState<string[]>([]); // List of selected children
 
+  const mapSlotsToTimeSlots = (slots: number[]) => {
+    const timeSlotMap: Record<
+      number,
+      { id: number; start: string; end: string }
+    > = {
+      1: { id: 1, start: "07:00", end: "09:30" },
+      2: { id: 2, start: "09:30", end: "12:00" },
+      3: { id: 3, start: "12:00", end: "14:30" },
+      4: { id: 4, start: "14:30", end: "17:00" },
+    };
+
+    return slots.map((slot) => timeSlotMap[slot]).filter(Boolean);
+  };
+
   const handleAddChild = () => {
     // Add a new child selection placeholder
 
@@ -126,15 +140,37 @@ const AppointmentCreateContainer = () => {
           headers: configHeaders(),
         }
       );
+
       if (response.data.statusCode === 200) {
-        setAvailableSlots(response.data.resultObj.slots);
+        let timeSlots = mapSlotsToTimeSlots(response.data.resultObj.slots);
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+          setAvailableSlots([]);
+        } else if (selectedDate.toDateString() === today.toDateString()) {
+          const now = new Date();
+          timeSlots = timeSlots.filter((slot) => {
+            const [hours, minutes] = slot.end.split(":").map(Number);
+            const slotEndTime = new Date();
+            slotEndTime.setHours(hours, minutes, 0, 0);
+            return slotEndTime > now;
+          });
+        }
+
+        // Convert filtered `timeSlots` to an array of slot IDs
+        const availableSlotIds = timeSlots.map((slot) => slot.id);
+
+        setAvailableSlots(availableSlotIds);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("Failed to fetch roles:", error);
+      toast.error("Failed to fetch available slots.");
     }
   };
+
   useEffect(() => {
     if (appointmentDate) {
       fetchAvailableSlots(appointmentDate);
@@ -269,7 +305,7 @@ const AppointmentCreateContainer = () => {
                     Issue
                   </div>
                   <select
-                    className="flex-1 p-2 bg-white"
+                    className="flex-1 p-2 bg-white w-64"
                     {...register("appointmentTemplateId", {
                       required: "Issue is required",
                     })}
@@ -298,12 +334,18 @@ const AppointmentCreateContainer = () => {
                   </div>
                   <input
                     type="date"
-                    className="flex-1 p-2 "
+                    className="flex-1 p-2"
                     {...register("appointmentDate", {
                       required: "Appointment date is required",
-                      validate: (value) =>
-                        new Date(value) > new Date() ||
-                        "Appointment date cannot be in the past",
+                      validate: (value) => {
+                        const selectedDate = new Date(value);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
+                        return (
+                          selectedDate >= today ||
+                          "Appointment date cannot be in the past"
+                        );
+                      },
                     })}
                   />
                 </div>
@@ -342,7 +384,7 @@ const AppointmentCreateContainer = () => {
                     Customer
                   </div>
                   <select
-                    className="flex-1 p-2 bg-white"
+                    className="flex-1 p-2 bg-white w-64"
                     {...register("userId", {
                       required: "Customer is required",
                     })}

@@ -10,6 +10,7 @@ import {
   isSameMonth,
   isSameDay,
   parseISO,
+  isBefore,
 } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -177,6 +178,7 @@ export function LargeCalendar() {
           const dayAppointments = getAppointmentsForDate(day);
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isToday = isSameDay(day, today);
+          const isPast = isBefore(day, today);
 
           return (
             <HoverCard key={day.toString()} openDelay={200}>
@@ -188,10 +190,13 @@ export function LargeCalendar() {
                   ${
                     isToday ? "border-2 border-emerald-400" : "" // Highlight today
                   }
+                   ${isPast && !isToday ? "opacity-50 cursor-default" : ""}
                   `}
                   onClick={() => {
-                    setSelectedDate(day);
-                    setIsCreateDialogOpen(true);
+                    if (!isPast || isToday) {
+                      setSelectedDate(day);
+                      setIsCreateDialogOpen(true);
+                    }
                   }}
                 >
                   <div className="flex flex-col h-full">
@@ -259,7 +264,7 @@ export function LargeCalendar() {
                     <h4 className="text-sm font-semibold">
                       {format(day, "MMM d, yyyy")}
                     </h4>
-                    {dayAppointments.length === 0 && (
+                    {(!isPast || isToday) && dayAppointments.length === 0 && (
                       <Button
                         size="sm"
                         variant="ghost"
@@ -274,7 +279,11 @@ export function LargeCalendar() {
                     )}
                   </div>
                   {dayAppointments.length > 0 ? (
-                    <div className="space-y-1">
+                    <div
+                      className={`space-y-1
+                    ${dayAppointments.length > 1 && "h-44 overflow-y-scroll"}
+                     `}
+                    >
                       {dayAppointments.map((appointment) => (
                         <div
                           key={appointment.id}
@@ -334,28 +343,6 @@ export function LargeCalendar() {
                               ).toLocaleString()}
                               VNĐ
                             </div>
-                            <Badge
-                              className={cn({
-                                "bg-green-500/10 text-green-500":
-                                  appointment.status === "Completed",
-                                "bg-yellow-500/10 text-yellow-500":
-                                  appointment.status === "Pending",
-                                "bg-red-500/10 text-red-500": [
-                                  "NoShow",
-                                  "Failed",
-                                  "CancelledByUser",
-                                  "CancelledByDoctor",
-                                ].includes(appointment.status),
-                                "bg-blue-500/10 text-blue-500":
-                                  appointment.status === "InProgress",
-                                "bg-violet-500/10 text-violet-500":
-                                  appointment.status === "Confirmed",
-                                "bg-pink-500/10 text-pink-500":
-                                  appointment.status === "Rescheduled",
-                              })}
-                            >
-                              {appointment.status}
-                            </Badge>
                           </div>
                         </div>
                       ))}

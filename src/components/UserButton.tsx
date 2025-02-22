@@ -20,6 +20,8 @@ const UserButton = () => {
   const [level, setLevel] = useState("");
   const id = CookiesService.get();
   const [user, setUser] = useState<User>();
+  const [isMember, setIsMember] = useState<boolean>(false);
+  const [isExpired, setIsExpired] = useState<boolean>(false);
 
   const fetchUser = async () => {
     try {
@@ -31,10 +33,13 @@ const UserButton = () => {
       );
       const fetchedUser = {
         ...response.data.resultObj,
-        role: response.data.resultObj.role?.name || null,
       };
       setUser(fetchedUser);
       setLevel(fetchedUser.userMembershipResponses[0].package.packageLevel);
+      setIsMember(response.data.resultObj.userMembershipResponses.length > 0);
+      setIsExpired(
+        new Date(fetchedUser.userMembershipResponses[0].endDate) < new Date()
+      );
     } catch (error) {
       console.error("Failed to fetch employee:", error);
     }
@@ -76,13 +81,17 @@ const UserButton = () => {
             <div className="">
               <p>My account</p>
               <div className="flex justify-center items-center my-2">
-                <Badge className={`${getBadgeColor(level)}`}>
-                  {level.toUpperCase()}
-                </Badge>
+                {isMember && !isExpired ? (
+                  <Badge className={`${getBadgeColor(level)}`}>
+                    {level.toUpperCase()}
+                  </Badge>
+                ) : (
+                  <Badge className={`${getBadgeColor("Bronze")}`}>Bronze</Badge>
+                )}
               </div>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="" />
           <DropdownMenuItem>
             <Link className="text-black font-normal w-full" to={ROUTES.PROFILE}>
               Profile

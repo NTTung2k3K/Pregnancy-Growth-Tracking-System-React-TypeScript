@@ -3,7 +3,7 @@ import { LargeCalendar } from "@/containers/Appointment-History/_components/larg
 export default function AppointmentCalendarContainer() {
   return (
     <>
-      <h1 className="text-4xl font-bold text-center  text-blue-600 my-7">
+      <h1 className="text-4xl font-bold text-center  text-sky-800 my-7">
         My Calendar for Appointment
       </h1>
       <div className="flex justify-center">
