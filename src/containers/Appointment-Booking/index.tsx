@@ -222,10 +222,10 @@ export default function AppointmentBookingContainer() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
+    <div className="p-10">
       <Card className="mx-auto max-w-3xl">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">
+          <CardTitle className="text-2xl font-bold text-center text-sky-800">
             Book Development Tracking Appointment
           </CardTitle>
         </CardHeader>
@@ -233,14 +233,16 @@ export default function AppointmentBookingContainer() {
           {step === 1 && (
             <div className="space-y-6">
               <div>
-                <Label className="text-lg font-semibold">Select children</Label>
+                <Label className="flex items-center justify-center text-lg font-semibold text-sky-800">
+                  Select children
+                </Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                   {children.map((child) => (
                     <Button
                       key={child.id}
                       variant={
                         selectedChildren.includes(child.id)
-                          ? "default"
+                          ? "custom"
                           : "outline"
                       }
                       className="h-20 relative"
@@ -268,6 +270,7 @@ export default function AppointmentBookingContainer() {
               </div>
               <Button
                 className="w-full mt-6"
+                variant={selectedChildren.length === 0 ? "outline" : "custom"}
                 onClick={() => setStep(2)}
                 disabled={selectedChildren.length === 0 || isLoading}
               >
@@ -428,6 +431,7 @@ export default function AppointmentBookingContainer() {
                     !notes.trim() ||
                     isLoading
                   }
+                  variant="custom"
                 >
                   {isLoading ? "Booking..." : "Confirm Appointment"}
                 </Button>
