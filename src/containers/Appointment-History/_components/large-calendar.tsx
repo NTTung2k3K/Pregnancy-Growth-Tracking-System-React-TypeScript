@@ -334,7 +334,17 @@ export function LargeCalendar() {
                               ).toLocaleString()}
                               VNĐ
                             </div>
-                            <Badge
+                            {appointment.status === "Pending" && (
+                              <Badge
+                                className={cn({
+                                  "bg-yellow-500/10 text-yellow-500":
+                                    appointment.status === "Pending",
+                                })}
+                              >
+                                {appointment.status}
+                              </Badge>
+                            )}
+                            {/* <Badge
                               className={cn({
                                 "bg-green-500/10 text-green-500":
                                   appointment.status === "Completed",
@@ -355,7 +365,7 @@ export function LargeCalendar() {
                               })}
                             >
                               {appointment.status}
-                            </Badge>
+                            </Badge> */}
                           </div>
                         </div>
                       ))}

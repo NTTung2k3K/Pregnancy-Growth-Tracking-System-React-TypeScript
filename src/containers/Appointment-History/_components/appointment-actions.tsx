@@ -373,7 +373,6 @@ export function AppointmentActions({
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <p>Appointment #{id}</p>
               <div className="flex justify-between">
                 <DialogClose asChild>
                   <Button type="button" variant="secondary">

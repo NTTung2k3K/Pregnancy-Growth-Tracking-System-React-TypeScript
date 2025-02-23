@@ -6,6 +6,7 @@ import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  CookiesEmployee2Service,
   CookiesEmployeeService,
   CookiesTokenService,
 } from "@/services/cookies.service";
@@ -94,6 +95,15 @@ const EmployeeProfileContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
+        const userCookie = CookiesEmployee2Service.get();
+
+        if (userCookie) {
+          const userData = JSON.parse(userCookie);
+          console.log("before", userData); // In ra dữ liệu cũ
+
+          userData.fullName = data.fullName; // Cập nhật tên mới
+          CookiesEmployee2Service.set(JSON.stringify(userData)); // Ghi đè lại cookie
+        }
         window.location.href = `${ROUTES.DASHBOARD_EMPLOYEE_PROFILE}`;
         toast.success(response.data.message);
       } else {
