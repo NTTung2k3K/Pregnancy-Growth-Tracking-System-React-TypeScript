@@ -144,7 +144,6 @@ const AddRecordForm = ({ child }: { child: Child }) => {
                 required: "Week is required",
               })}
               onChange={(e) => {
-                fetchStandard(parseInt(e.target.value));
                 handleWeekChange(e);
               }}
             >

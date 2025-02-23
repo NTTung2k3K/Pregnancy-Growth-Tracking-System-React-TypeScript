@@ -25,6 +25,7 @@ import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/char
 import AddRecordForm from "./components/AddRecordForm";
 import ShareGrowthChart from "@/containers/Children/Detail/components/share-growth-chart";
 import { CookiesService } from "@/services/cookies.service";
+import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
 
 interface ChildFormValue {
   name: string;
@@ -49,11 +50,14 @@ const ChildDetailContainer = () => {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<ChildFormValue>();
+  } = useForm<ChildFormValue>({
+    mode: "onChange",
+  });
   const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
+  const [standard, setStandard] = useState<Standard>();
 
   const [isMember, setIsMember] = useState<boolean>(false);
 
@@ -74,9 +78,8 @@ const ChildDetailContainer = () => {
         `${BASE_URL + API_ROUTES.CHILD_DETAIL}/${id}`
       );
       const fetchedChild = response.data.resultObj;
+      fetchStandard(parseInt(fetchedChild.pregnancyWeekAtBirth));
       setChild(response.data.resultObj);
-
-      // Set form values
       for (const key in fetchedChild) {
         if (fetchedChild.hasOwnProperty(key)) {
           setValue(key as keyof ChildFormValue, fetchedChild[key]);
@@ -93,6 +96,25 @@ const ChildDetailContainer = () => {
     fetchChild();
     fetchIsMember();
   }, []);
+
+  const fetchStandard = async (week: number) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
+        {
+          params: { week: week },
+        }
+      );
+      setStandard(response.data.resultObj);
+    } catch (error) {
+      console.error("Failed to fetch roles:", error);
+    }
+  };
+
+  const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedWeek = e.target.value;
+    fetchStandard(parseInt(selectedWeek));
+  };
 
   const onSubmit = async (data: ChildFormValue) => {
     try {
@@ -276,46 +298,37 @@ const ChildDetailContainer = () => {
               {errors.fetalGender && (
                 <p className="text-red-500">{errors.fetalGender.message}</p>
               )}
+
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
-                  Weight Estimate
+                  Delivery Plan
                 </div>
                 <input
-                  type="number"
-                  step="any"
                   className="flex-1 p-2"
-                  {...register("weightEstimate", {
-                    required: "Weight Estimate is required",
-                    setValueAs: (value) =>
-                      value ? parseFloat(value) : undefined,
-                    validate: (value) =>
-                      value > 0 ? true : "Weight must be a positive number",
+                  {...register("deliveryPlan", {
+                    required: "Delivery Plan is required",
                   })}
                 />
               </div>
-              {errors.weightEstimate && (
+              {errors.deliveryPlan && (
                 <span className="text-red-500 text-sm">
-                  {errors.weightEstimate.message}
+                  {errors.deliveryPlan.message}
                 </span>
               )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
-                  Height Estimate
+                  Complications
                 </div>
                 <input
-                  type="number"
-                  step="any"
                   className="flex-1 p-2"
-                  {...register("heightEstimate", {
-                    required: "Height Estimate is required",
-                    setValueAs: (value) =>
-                      value ? parseFloat(value) : undefined,
+                  {...register("complications", {
+                    required: "Complications is required",
                   })}
                 />
               </div>
-              {errors.heightEstimate && (
+              {errors.complications && (
                 <span className="text-red-500 text-sm">
-                  {errors.heightEstimate.message}
+                  {errors.complications.message}
                 </span>
               )}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -409,50 +422,92 @@ const ChildDetailContainer = () => {
                 </div>
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                   <div className="font-medium flex items-center mr-10">
-                    Delivery Plan
-                  </div>
-                  <input
-                    className="flex-1 p-2"
-                    {...register("deliveryPlan", {
-                      required: "Delivery Plan is required",
-                    })}
-                  />
-                </div>
-                {errors.deliveryPlan && (
-                  <span className="text-red-500 text-sm">
-                    {errors.deliveryPlan.message}
-                  </span>
-                )}
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10">
-                    Complications
-                  </div>
-                  <input
-                    className="flex-1 p-2"
-                    {...register("complications", {
-                      required: "Complications is required",
-                    })}
-                  />
-                </div>
-                {errors.complications && (
-                  <span className="text-red-500 text-sm">
-                    {errors.complications.message}
-                  </span>
-                )}
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10">
                     Pregnancy Week At Birth
                   </div>
-                  <input
+                  <select
                     className="flex-1 p-2"
                     {...register("pregnancyWeekAtBirth", {
                       required: "Pregnancy Week At Birth is required",
                     })}
-                  />
+                    onChange={(e) => {
+                      handleWeekChange(e);
+                    }}
+                  >
+                    <option value="">Select week</option>
+                    {Array.from({ length: 42 }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 {errors.pregnancyWeekAtBirth && (
                   <span className="text-red-500 text-sm">
                     {errors.pregnancyWeekAtBirth.message}
+                  </span>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10">
+                    Weight Estimate
+                  </div>
+                  <input
+                    type="number"
+                    step="any"
+                    className="flex-1 p-2"
+                    {...register("weightEstimate", {
+                      required: "Weight is required",
+                      setValueAs: (value) =>
+                        value ? parseFloat(value) : undefined,
+                      min: {
+                        value: standard?.minWeight ?? 1, // Default min weight to 1 kg if undefined
+                        message: `Weight must be at least ${
+                          standard?.minWeight ?? 1
+                        } kg`,
+                      },
+                      max: {
+                        value: standard?.maxWeight ?? 200, // Default max weight to 200 kg if undefined
+                        message: `Weight must be at most ${
+                          standard?.maxWeight ?? 200
+                        } kg`,
+                      },
+                    })}
+                  />
+                </div>
+                {errors.weightEstimate && (
+                  <span className="text-red-500 text-sm">
+                    {errors.weightEstimate.message}
+                  </span>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10">
+                    Height Estimate
+                  </div>
+                  <input
+                    type="number"
+                    step="any"
+                    className="flex-1 p-2"
+                    {...register("heightEstimate", {
+                      required: "Height is required",
+                      setValueAs: (value) =>
+                        value ? parseFloat(value) : undefined,
+                      min: {
+                        value: standard?.minHeight ?? 0.25,
+                        message: `Height must be at least ${
+                          standard?.minHeight ?? 0.25
+                        } cm`,
+                      },
+                      max: {
+                        value: standard?.maxHeight ?? 0.3,
+                        message: `Height must be at most ${
+                          standard?.maxHeight ?? 0.3
+                        } cm`,
+                      },
+                    })}
+                  />
+                </div>
+                {errors.heightEstimate && (
+                  <span className="text-red-500 text-sm">
+                    {errors.heightEstimate.message}
                   </span>
                 )}
               </div>
