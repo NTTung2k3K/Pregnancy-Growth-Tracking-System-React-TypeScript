@@ -71,6 +71,20 @@ The **Pregnancy Development Tracking Software** is a comprehensive system design
 
 ---
 
+## 👨‍💻 Team Members
+
+### 🔹  Front-end Developers
+- Nguyễn Thanh Tùng
+- Trần Hoàng Huân
+- Lâm Thanh Quốc Thắng
+- 
+### 🔹  Back-end Developers
+- Nguyễn Thanh Tùng 
+- Lâm Quang Hưng
+- Võ Trọng Nhân
+
+---
+
 ## 📞 Contact
 For inquiries, support, or collaboration opportunities, reach out via:
 📧 Email: BabyCareSystemFPT@gmail.com
