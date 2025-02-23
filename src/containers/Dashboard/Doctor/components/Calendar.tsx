@@ -85,8 +85,10 @@ export function DoctorCalendar() {
 
   // Get appointments for a specific date
   const getAppointmentsForDate = (date: Date) => {
-    return appointments.filter((appointment) =>
-      isSameDay(parseISO(appointment.appointmentDate), date)
+    return appointments.filter(
+      (appointment) =>
+        isSameDay(parseISO(appointment.appointmentDate), date) &&
+        appointment.status !== "CancelledByUser"
     );
   };
 
@@ -266,8 +268,31 @@ export function DoctorCalendar() {
                               <p className="ml-2">{child.name},</p>
                             ))}
                           </div>
+
                           <div className="flex text-[10px] text-muted-foreground">
-                            Parent: {appointment.user.fullName}
+                            <span>Parent: {appointment.user.fullName}</span>
+                            <Badge
+                              className={cn({
+                                "bg-green-500/10 text-green-500":
+                                  appointment.status === "Completed",
+                                "bg-yellow-500/10 text-yellow-500":
+                                  appointment.status === "Pending",
+                                "bg-red-500/10 text-red-500": [
+                                  "NoShow",
+                                  "Failed",
+                                  "CancelledByUser",
+                                  "CancelledByDoctor",
+                                ].includes(appointment.status),
+                                "bg-blue-500/10 text-blue-500":
+                                  appointment.status === "InProgress",
+                                "bg-violet-500/10 text-violet-500":
+                                  appointment.status === "Confirmed",
+                                "bg-pink-500/10 text-pink-500":
+                                  appointment.status === "Rescheduled",
+                              })}
+                            >
+                              {appointment.status}
+                            </Badge>
                           </div>
                         </div>
                       ))}

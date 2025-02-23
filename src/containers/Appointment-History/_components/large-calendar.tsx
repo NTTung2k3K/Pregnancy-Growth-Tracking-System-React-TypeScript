@@ -343,6 +343,38 @@ export function LargeCalendar() {
                               ).toLocaleString()}
                               VNĐ
                             </div>
+                            {appointment.status === "Pending" && (
+                              <Badge
+                                className={cn({
+                                  "bg-yellow-500/10 text-yellow-500":
+                                    appointment.status === "Pending",
+                                })}
+                              >
+                                {appointment.status}
+                              </Badge>
+                            )}
+                            {/* <Badge
+                              className={cn({
+                                "bg-green-500/10 text-green-500":
+                                  appointment.status === "Completed",
+                                "bg-yellow-500/10 text-yellow-500":
+                                  appointment.status === "Pending",
+                                "bg-red-500/10 text-red-500": [
+                                  "NoShow",
+                                  "Failed",
+                                  "CancelledByUser",
+                                  "CancelledByDoctor",
+                                ].includes(appointment.status),
+                                "bg-blue-500/10 text-blue-500":
+                                  appointment.status === "InProgress",
+                                "bg-violet-500/10 text-violet-500":
+                                  appointment.status === "Confirmed",
+                                "bg-pink-500/10 text-pink-500":
+                                  appointment.status === "Rescheduled",
+                              })}
+                            >
+                              {appointment.status}
+                            </Badge> */}
                           </div>
                         </div>
                       ))}

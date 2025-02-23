@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect, useCallback } from "react";
 import { Calendar } from "lucide-react";
 import { isAfter } from "date-fns";
@@ -105,7 +103,7 @@ export default function AppointmentManagement() {
     []
   );
   const [sortBy, setSortBy] = useState("appointmentDate");
-  const [isDescending, setIsDescending] = useState(false);
+  const [isDescending, setIsDescending] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [appointments, setAppointments] = useState<AppointmentResponseModel[]>(
