@@ -24,6 +24,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { ROUTES } from "@/routes";
+import { PlusCircle } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,6 +68,12 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <Link to={ROUTES.DASHBOARD_APPOINTMENT_CREATE}>
+          <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
+            <PlusCircle className="h-4 w-4 mr-2" />
+            New an appointment
+          </Button>
+        </Link>
       </div>
       <div className="rounded-md border">
         <Table>

@@ -67,6 +67,7 @@ export default function MembershipContainer() {
   const navigate = useNavigate();
   const userId = CookiesService.get();
   const [isExpired, setIsExpired] = useState<boolean>(false);
+  const [isMember, setIsMember] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
   const fetchUser = async () => {
@@ -79,11 +80,11 @@ export default function MembershipContainer() {
       );
       const fetchedUser = {
         ...response.data.resultObj,
-        role: response.data.resultObj.role?.name || null,
       };
       setIsExpired(
         new Date(fetchedUser.userMembershipResponses[0].endDate) < new Date()
       );
+      setIsMember(response.data.resultObj.userMembershipResponses.length > 0);
       setUser(fetchedUser);
     } catch (error) {
       console.error("Failed to fetch employee:", error);
@@ -161,7 +162,7 @@ export default function MembershipContainer() {
         <p className="mt-4 text-lg text-gray-600">
           Explore a range of packages designed to accompany your pregnancy
         </p>
-        {userId && !isExpired && (
+        {userId && !isExpired && isMember ? (
           <p className="mt-4 text-lg text-emerald-400 font-bold">
             You are currently using{" "}
             <span
@@ -174,6 +175,18 @@ export default function MembershipContainer() {
             , expired at :{" "}
             {formatDate(user?.userMembershipResponses[0].endDate || "")}
           </p>
+        ) : userId && isExpired && isMember ? (
+          <p className="mt-4 text-lg text-emerald-400 font-bold">
+            You are currently using{" "}
+            <span className="text-[#cd7f32] hover:text-[#cd7f32]">Bronze</span>
+          </p>
+        ) : userId && !isMember ? (
+          <p className="mt-4 text-lg text-emerald-400 font-bold">
+            You are currently using{" "}
+            <span className="text-[#cd7f32] hover:text-[#cd7f32]">Bronze</span>
+          </p>
+        ) : (
+          ""
         )}
 
         <div className="mt-16 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -353,7 +366,7 @@ export default function MembershipContainer() {
                     <Button
                       className={`w-full bg-gradient-to-r ${styles.gradient} text-white hover:opacity-90`}
                       onClick={() => handleSelect(pkg.id)}
-                      disabled={!isExpired && !!userId}
+                      disabled={!isExpired && !!userId && isMember}
                     >
                       Pick {pkg.packageLevel} Package
                     </Button>

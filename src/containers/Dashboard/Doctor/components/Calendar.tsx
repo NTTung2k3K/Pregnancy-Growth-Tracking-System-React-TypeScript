@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import {
   addMonths,
   subMonths,
@@ -10,6 +10,7 @@ import {
   isSameMonth,
   isSameDay,
   parseISO,
+  isBefore,
 } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -142,6 +143,7 @@ export function DoctorCalendar() {
           dayAppointments.sort((a, b) => a.appointmentSlot - b.appointmentSlot);
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isToday = isSameDay(day, today);
+          const isPast = isBefore(day, today);
 
           return (
             <HoverCard key={day.toString()} openDelay={200}>
@@ -152,7 +154,9 @@ export function DoctorCalendar() {
                   } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}
                   ${
                     isToday ? "border-2 border-emerald-400" : "" // Highlight today
-                  }`}
+                  }
+                  ${isPast && !isToday ? "opacity-50 cursor-default" : ""}
+                  `}
                 >
                   <div className="flex flex-col h-full">
                     <div className="flex items-start justify-between">
@@ -219,6 +223,20 @@ export function DoctorCalendar() {
                     <h4 className="text-sm font-semibold">
                       {format(day, "MMM d, yyyy")}
                     </h4>
+                    {(!isPast || isToday) && dayAppointments.length === 0 && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 bg-transparent"
+                        onClick={() => {
+                          window.location.href =
+                            ROUTES.DASHBOARD_APPOINTMENT_CREATE;
+                        }}
+                      >
+                        <Plus className="h-3 w-3 mr-1" />
+                        Booking
+                      </Button>
+                    )}
                   </div>
                   {dayAppointments.length > 0 ? (
                     <div className="space-y-1">

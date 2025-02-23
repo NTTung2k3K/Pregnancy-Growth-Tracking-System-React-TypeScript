@@ -28,7 +28,12 @@ import { getSlotString } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { AppointmentTemplate, Child } from "@/containers/Dashboard/Appointment";
 
-export const timeSlots = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+export const timeSlots = [
+  { id: 1, start: "07:00", end: "09:30" },
+  { id: 2, start: "09:30", end: "12:00" },
+  { id: 3, start: "12:00", end: "14:30" },
+  { id: 4, start: "14:30", end: "17:00" },
+];
 export const timeSlotsStartHours = [
   { id: 1, startHour: 7, label: "07:00 - 09:30" },
   { id: 2, startHour: 9.5, label: "09:30 - 12:00" },
@@ -184,14 +189,43 @@ export default function AppointmentBookingContainer() {
         Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
       );
       setSelectedDate(localDate);
+      setSelectedSlot("");
     }
   };
 
+  const isSlotDisabled = (
+    selectedDate: Date | undefined,
+    endTime: string
+  ): boolean => {
+    if (!selectedDate) return false; // No date selected yet
+
+    const now = new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+
+    const selected = new Date(selectedDate);
+    selected.setHours(0, 0, 0, 0); // Start of selected date
+
+    // If selected date is in the future, enable all slots
+    if (selected > today) return false;
+
+    // If selected date is today, check endTime
+    if (selected.getTime() === today.getTime()) {
+      const [hours, minutes] = endTime.split(":").map(Number);
+      const slotEndDateTime = new Date();
+      slotEndDateTime.setHours(hours, minutes, 0, 0);
+
+      return now > slotEndDateTime; // Disable if the slot's end time is in the past
+    }
+
+    return false;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
+    <div className="p-10">
       <Card className="mx-auto max-w-3xl">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">
+          <CardTitle className="text-2xl font-bold text-center text-sky-800">
             Book Development Tracking Appointment
           </CardTitle>
         </CardHeader>
@@ -199,14 +233,16 @@ export default function AppointmentBookingContainer() {
           {step === 1 && (
             <div className="space-y-6">
               <div>
-                <Label className="text-lg font-semibold">Select children</Label>
+                <Label className="flex items-center justify-center text-lg font-semibold text-sky-800">
+                  Select children
+                </Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                   {children.map((child) => (
                     <Button
                       key={child.id}
                       variant={
                         selectedChildren.includes(child.id)
-                          ? "default"
+                          ? "custom"
                           : "outline"
                       }
                       className="h-20 relative"
@@ -234,6 +270,7 @@ export default function AppointmentBookingContainer() {
               </div>
               <Button
                 className="w-full mt-6"
+                variant={selectedChildren.length === 0 ? "outline" : "custom"}
                 onClick={() => setStep(2)}
                 disabled={selectedChildren.length === 0 || isLoading}
               >
@@ -304,11 +341,9 @@ export default function AppointmentBookingContainer() {
                       mode="single"
                       selected={selectedDate}
                       onSelect={handleDateSelect}
-                      //   disabled={(date) =>
-                      //     date < new Date() ||
-                      //     date.getDay() === 0 ||
-                      //     date.getDay() === 6
-                      //   }
+                      disabled={(date) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -325,21 +360,30 @@ export default function AppointmentBookingContainer() {
                   onValueChange={setSelectedSlot}
                   disabled={isLoading}
                 >
-                  {timeSlots.map((slot) => (
-                    <div key={slot.id}>
-                      <RadioGroupItem
-                        value={slot.id.toString()}
-                        id={`slot-${slot.id}`}
-                        className="peer sr-only"
-                      />
-                      <Label
-                        htmlFor={`slot-${slot.id}`}
-                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-muted hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                  {timeSlots.map((slot) => {
+                    const isDisabled = isSlotDisabled(selectedDate, slot.end);
+                    return (
+                      <div
+                        key={slot.id}
+                        className={
+                          isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                        }
                       >
-                        {getSlotString(slot.id)}
-                      </Label>
-                    </div>
-                  ))}
+                        <RadioGroupItem
+                          value={slot.id.toString()}
+                          id={`slot-${slot.id}`}
+                          className="peer sr-only"
+                          disabled={isDisabled}
+                        />
+                        <Label
+                          htmlFor={`slot-${slot.id}`}
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-muted hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          {getSlotString(slot.id)}
+                        </Label>
+                      </div>
+                    );
+                  })}
                 </RadioGroup>
               </div>
 
@@ -387,6 +431,7 @@ export default function AppointmentBookingContainer() {
                     !notes.trim() ||
                     isLoading
                   }
+                  variant="custom"
                 >
                   {isLoading ? "Booking..." : "Confirm Appointment"}
                 </Button>

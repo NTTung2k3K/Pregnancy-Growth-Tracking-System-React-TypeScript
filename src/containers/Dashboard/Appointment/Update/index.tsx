@@ -650,7 +650,6 @@ const AppointmentUpdateContainer = () => {
                             }
                           )}
                           onChange={(e) => {
-                            fetchStandard(parseInt(e.target.value));
                             handleWeekChange(e);
                           }}
                         >

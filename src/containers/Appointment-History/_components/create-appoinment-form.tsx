@@ -155,17 +155,12 @@ export function CreateAppointmentForm({
                       selectedDate.setHours(0, 0, 0, 0);
                       field.onChange(selectedDate);
                     }}
-                    className="rounded-md border bg-[#1dd186]"
+                    className="rounded-md border bg-white"
                     disabled={(date) =>
                       date.setHours(0, 0, 0, 0) <
                       new Date().setHours(0, 0, 0, 0)
                     }
                     initialFocus
-                    footer={
-                      field.value
-                        ? `Selected: ${field.value.toLocaleDateString("vi-VN")}`
-                        : "Pick a day."
-                    }
                   />
                 </PopoverContent>
               </Popover>
