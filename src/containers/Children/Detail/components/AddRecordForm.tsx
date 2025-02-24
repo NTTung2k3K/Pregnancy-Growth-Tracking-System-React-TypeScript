@@ -21,7 +21,6 @@ import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
 
-
 // Define form types
 type ChildFormValues = {
   height: number;
@@ -46,6 +45,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
   });
 
   const [standard, setStandard] = useState<Standard>();
+  const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
 
   const fetchStandard = async (week: number) => {
     try {
@@ -139,7 +139,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               Week Of Pregnancy
             </Label>
             <select
-              className="col-span-3  shadow-sm  p-2 rounded-md"
+              className="col-span-3  border border-black  p-2 rounded-md"
               {...register(`weekOfPregnancy`, {
                 required: "Week is required",
               })}
@@ -161,7 +161,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
             </p>
           )}
           {/* Height */}
-          <div className="grid grid-cols-4 items-center gap-4 ">
+          <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="height" className="text-right">
               Height (cm)
             </Label>
@@ -172,28 +172,46 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               {...register("height", {
                 required: "Height is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
-                min: {
-                  value: standard?.minHeight ?? 0.25,
-                  message: `Height must be at least ${
-                    standard?.minHeight ?? 0.25
-                  } cm`,
-                },
-                max: {
-                  value: standard?.maxHeight ?? 0.3,
-                  message: `Height must be at most ${
-                    standard?.maxHeight ?? 0.3
-                  } cm`,
-                },
+                validate: (value) =>
+                  (value != null && value > 0) ||
+                  "Height must be a positive number",
               })}
-              className="col-span-3"
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+
+                if (value < 0) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    height: "Negative values are not allowed.",
+                  }));
+                } else if (
+                  standard?.minHeight !== undefined &&
+                  standard?.maxHeight !== undefined &&
+                  (value < standard.minHeight || value > standard.maxHeight)
+                ) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    height: `Height is out of range (${standard.minHeight} - ${standard.maxHeight} cm)`,
+                  }));
+                } else {
+                  setWarnings((prev) => ({ ...prev, height: "" }));
+                }
+              }}
+              className="border border-black col-span-3"
             />
           </div>
+          {/* Error Message (blocks submission) */}
           {errors.height && (
             <p className="text-red-500 flex items-center justify-center">
               {errors.height.message}
             </p>
           )}
-
+          {/* Warning Message (allows submission) */}
+          {warnings.height && (
+            <p className="text-yellow-500 flex items-center justify-center">
+              {warnings.height}
+            </p>
+          )}
           {/* Weight */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="weight" className="text-right">
@@ -206,28 +224,46 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               {...register("weight", {
                 required: "Weight is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
-                min: {
-                  value: standard?.minWeight ?? 1, // Default min weight to 1 kg if undefined
-                  message: `Weight must be at least ${
-                    standard?.minWeight ?? 1
-                  } kg`,
-                },
-                max: {
-                  value: standard?.maxWeight ?? 200, // Default max weight to 200 kg if undefined
-                  message: `Weight must be at most ${
-                    standard?.maxWeight ?? 200
-                  } kg`,
-                },
+                validate: (value) =>
+                  (value != null && value > 0) ||
+                  "Weight must be a positive number",
               })}
-              className="col-span-3"
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+
+                if (value < 0) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    weight: "Negative values are not allowed.",
+                  }));
+                } else if (
+                  standard?.minWeight !== undefined &&
+                  standard?.maxWeight !== undefined &&
+                  (value < standard.minWeight || value > standard.maxWeight)
+                ) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    weight: `Weight is out of range (${standard.minWeight} - ${standard.maxWeight} kg)`,
+                  }));
+                } else {
+                  setWarnings((prev) => ({ ...prev, weight: "" }));
+                }
+              }}
+              className="border border-black col-span-3"
             />
           </div>
+          {/* Error Message (blocks submission) */}
           {errors.weight && (
             <p className="text-red-500 flex items-center justify-center">
               {errors.weight.message}
             </p>
           )}
-
+          {/* Warning Message (allows submission) */}
+          {warnings.weight && (
+            <p className="text-yellow-500 flex items-center justify-center">
+              {warnings.weight}
+            </p>
+          )}
           {/* Head Circumference */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="headCircumference" className="text-right">
@@ -240,26 +276,45 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               {...register("headCircumference", {
                 required: "Head circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
-                min: {
-                  value: 0.2, // Default min to 30 cm
-                  message: `Head circumference must be at least 0.2 cm`,
-                },
-                max: {
-                  value: standard?.headCircumference ?? 60, // Default max to 60 cm
-                  message: `Head circumference must be at most ${
-                    standard?.headCircumference ?? 60
-                  } cm`,
-                },
+                validate: (value) =>
+                  (value != null && value > 0) ||
+                  "Head circumference must be a positive number",
               })}
-              className="col-span-3"
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+
+                if (value < 0) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    headCircumference: "Negative values are not allowed.",
+                  }));
+                } else if (
+                  standard?.headCircumference !== undefined &&
+                  (value < 0.15 || value > standard.headCircumference)
+                ) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    headCircumference: `Head circumference is out of range (0.15 - ${standard.headCircumference} cm)`,
+                  }));
+                } else {
+                  setWarnings((prev) => ({ ...prev, headCircumference: "" }));
+                }
+              }}
+              className="border border-black col-span-3"
             />
           </div>
+          {/* Error Message (blocks submission) */}
           {errors.headCircumference && (
             <p className="text-red-500 flex items-center justify-center">
               {errors.headCircumference.message}
             </p>
           )}
-
+          {/* Warning Message (allows submission) */}
+          {warnings.headCircumference && (
+            <p className="text-yellow-500 flex items-center justify-center">
+              {warnings.headCircumference}
+            </p>
+          )}
           {/* Abdominal Circumference */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="abdominalCircumference" className="text-right">
@@ -272,56 +327,105 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               {...register("abdominalCircumference", {
                 required: "Abdominal circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
-                min: {
-                  value: 0.15, // Default min: 20 cm
-                  message: `Abdominal circumference must be at least 0.15 cm`,
-                },
-                max: {
-                  value: standard?.abdominalCircumference ?? 100, // Default max: 100 cm
-                  message: `Abdominal circumference must be at most ${
-                    standard?.abdominalCircumference ?? 100
-                  } cm`,
-                },
+                validate: (value) =>
+                  (value != null && value > 0) ||
+                  "Abdominal circumference must be a positive number",
               })}
-              className="col-span-3"
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+
+                if (value < 0) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    abdominalCircumference: "Negative values are not allowed.",
+                  }));
+                } else if (
+                  standard?.abdominalCircumference !== undefined &&
+                  (value < 0.2 || value > standard.abdominalCircumference)
+                ) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    abdominalCircumference: `Abdominal circumference is out of range (0.2 - ${standard.abdominalCircumference} cm)`,
+                  }));
+                } else {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    abdominalCircumference: "",
+                  }));
+                }
+              }}
+              className="border border-black col-span-3"
             />
           </div>
+          {/* Error Message (blocks submission) */}
           {errors.abdominalCircumference && (
             <p className="text-red-500 flex items-center justify-center">
               {errors.abdominalCircumference.message}
             </p>
           )}
-
+          {/* Warning Message (allows submission) */}
+          {warnings.abdominalCircumference && (
+            <p className="text-yellow-500 flex items-center justify-center">
+              {warnings.abdominalCircumference}
+            </p>
+          )}
           {/* Fetal Heart Rate */}
-
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="fetalHeartRate" className="text-right">
               Fetal Heart Rate (bpm)
             </Label>
             <Input
               type="number"
-              disabled={!isWeekSelected || !standard?.fetalHeartRate}
+              step="any"
+              disabled={!isWeekSelected || standard?.fetalHeartRate === null}
+              placeholder="Enter fetal heart rate (optional)"
               {...register("fetalHeartRate", {
+                setValueAs: (value) => (value ? parseFloat(value) : null), // Convert to float, null if empty
                 validate: (value) => {
-                  if (standard?.fetalHeartRate === null) return true; // Allow null when standard is null
-                  if (!value) return "This field is required"; // Required if standard is not null
-                  if (value < 120) return "Value must be at least 120";
-                  if (value > (standard?.fetalHeartRate || 160))
-                    return `Value must not exceed  ${
-                      standard?.fetalHeartRate || 160
-                    }`;
+                  if (standard?.fetalHeartRate === null) return true; // Allow empty if FHR is not required
+                  if (value == null) return "Fetal heart rate is required"; // Required if standard is set
                   return true;
                 },
               })}
-              className="col-span-3"
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+
+                if (value < 0) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    fetalHeartRate: "Negative values are not allowed.",
+                  }));
+                } else if (
+                  standard?.fetalHeartRate !== undefined &&
+                  (value < 120 || value > (standard?.fetalHeartRate ?? 200))
+                ) {
+                  setWarnings((prev) => ({
+                    ...prev,
+                    fetalHeartRate: `Fetal heart rate is out of range (120 - ${standard.fetalHeartRate} bpm)`,
+                  }));
+                } else {
+                  setWarnings((prev) => ({ ...prev, fetalHeartRate: "" }));
+                }
+              }}
+              className="border border-black col-span-3"
             />
           </div>
+          {/* Error Message (blocks submission) */}
           {errors.fetalHeartRate && (
             <p className="text-red-500 flex items-center justify-center">
               {errors.fetalHeartRate.message}
             </p>
           )}
-
+          {warnings.fetalHeartRate && (
+            <p className="text-yellow-500 flex items-center justify-center">
+              {warnings.fetalHeartRate}
+            </p>
+          )}
+          {standard?.fetalHeartRate === null && (
+            <p className="text-sky-800 font-bold text-sm mt-1 text-center">
+              In weeks 1, 2, 3, fetal heart rate is not required.
+            </p>
+          )}
           {/* Health Condition */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="healthCondition" className="text-right">
@@ -332,7 +436,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               {...register("healthCondition", {
                 required: "Health condition is required",
               })}
-              className="col-span-3"
+              className="col-span-3 border border-black"
             />
           </div>
           {errors.healthCondition && (
@@ -340,7 +444,6 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               {errors.healthCondition.message}
             </p>
           )}
-
           <DialogFooter>
             <Button
               disabled={isLoading}

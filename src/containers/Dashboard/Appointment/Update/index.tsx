@@ -73,6 +73,8 @@ const AppointmentUpdateContainer = () => {
 
   const [isWeekSelected, setIsWeekSelected] = useState(false);
 
+  const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
+
   const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedWeek = e.target.value;
     setIsWeekSelected(!!selectedWeek); // Update the state based on selection
@@ -127,7 +129,6 @@ const AppointmentUpdateContainer = () => {
       const statusId = statusData.find(
         (x) => x.status === fetchedAppointment.status
       )?.id;
-
       setValue("status", statusId || 0);
       setDisplayValue(formatNumber(fetchedAppointment?.fee?.toString() ?? 0));
       setAppointment(fetchedAppointment);
@@ -207,7 +208,7 @@ const AppointmentUpdateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.DASHBOARD_APPOINTMENT}`;
+        window.location.reload();
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -686,30 +687,42 @@ const AppointmentUpdateContainer = () => {
                             required: "Height is required",
                             setValueAs: (value) =>
                               value ? parseFloat(value) : undefined,
-                            min: {
-                              value: standard?.minHeight ?? 0.25,
-                              message: `Height must be at least ${
-                                standard?.minHeight ?? 0.25
-                              } cm`,
-                            },
-                            max: {
-                              value: standard?.maxHeight ?? 0.3,
-                              message: `Height must be at most ${
-                                standard?.maxHeight ?? 0.3
-                              } cm`,
-                            },
+                            validate: (value) =>
+                              (value != null && value > 0) ||
+                              "Weight must be a positive number",
                           })}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+                            if (
+                              standard?.minHeight !== undefined &&
+                              standard?.maxHeight !== undefined &&
+                              (value < standard.minHeight ||
+                                value > standard.maxHeight)
+                            ) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                height: `Height is out of range (${standard.minHeight} - ${standard.maxHeight} cm)`,
+                              }));
+                            } else {
+                              setWarnings((prev) => ({ ...prev, height: "" }));
+                            }
+                          }}
                         />
                         {errors?.childsUpdated?.[index]?.height && (
                           <p className="text-red-500 text-sm mt-1">
                             {errors.childsUpdated[index].height?.message}
                           </p>
                         )}
+                        {warnings.height && (
+                          <p className="text-yellow-500 text-sm mt-1">
+                            {warnings.height}
+                          </p>
+                        )}
                       </div>
                     </div>
 
                     <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
-                      <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      <div className="font-medium flex items-center mr-10 w-1/6">
                         Weight (kg)
                       </div>
                       <div className="flex-1">
@@ -726,30 +739,43 @@ const AppointmentUpdateContainer = () => {
                           {...register(`childsUpdated.${index}.weight`, {
                             required: "Weight is required",
                             setValueAs: (value) =>
-                              value ? parseFloat(value) : undefined, // Convert input to float
-                            min: {
-                              value: standard?.minWeight ?? 1, // Default min weight to 1 kg if undefined
-                              message: `Weight must be at least ${
-                                standard?.minWeight ?? 1
-                              } kg`,
-                            },
-                            max: {
-                              value: standard?.maxWeight ?? 200, // Default max weight to 200 kg if undefined
-                              message: `Weight must be at most ${
-                                standard?.maxWeight ?? 200
-                              } kg`,
-                            },
+                              value ? parseFloat(value) : undefined,
+                            validate: (value) =>
+                              (value != null && value > 0) ||
+                              "Weight must be a positive number",
                           })}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+                            if (
+                              standard?.minWeight !== undefined &&
+                              standard?.maxWeight !== undefined &&
+                              (value < standard.minWeight ||
+                                value > standard.maxWeight)
+                            ) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                weight: `Weight is out of range (${standard.minWeight} - ${standard.maxWeight} kg)`,
+                              }));
+                            } else {
+                              setWarnings((prev) => ({ ...prev, weight: "" }));
+                            }
+                          }}
                         />
                         {errors?.childsUpdated?.[index]?.weight && (
                           <p className="text-red-500 text-sm mt-1">
                             {errors.childsUpdated[index].weight?.message}
                           </p>
                         )}
+                        {warnings.weight && (
+                          <p className="text-yellow-500 text-sm mt-1">
+                            {warnings.weight}
+                          </p>
+                        )}
                       </div>
                     </div>
+
                     <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
-                      <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      <div className="font-medium flex items-center mr-10 w-1/6">
                         Head Circumference (cm)
                       </div>
                       <div className="flex-1">
@@ -768,20 +794,40 @@ const AppointmentUpdateContainer = () => {
                             {
                               required: "Head circumference is required",
                               setValueAs: (value) =>
-                                value ? parseFloat(value) : undefined, // Convert input to float
-                              min: {
-                                value: 0.2, // Default min to 30 cm
-                                message: `Head circumference must be at least 0.2 cm`,
-                              },
-                              max: {
-                                value: standard?.headCircumference ?? 60, // Default max to 60 cm
-                                message: `Head circumference must be at most ${
-                                  standard?.headCircumference ?? 60
-                                } cm`,
-                              },
+                                value ? parseFloat(value) : undefined,
+                              validate: (value) =>
+                                (value != null && value > 0) ||
+                                "Head circumference must be a positive number", // ✅ Ensure positive value
                             }
                           )}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+
+                            if (value < 0) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                headCircumference:
+                                  "Negative values are not allowed.",
+                              }));
+                            } else if (
+                              standard?.headCircumference !== undefined &&
+                              (value < 0.15 ||
+                                value > standard.headCircumference)
+                            ) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                headCircumference: `Head circumference is out of range (0.15- ${standard.headCircumference} cm)`,
+                              }));
+                            } else {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                headCircumference: "",
+                              }));
+                            }
+                          }}
                         />
+
+                        {/* Error message (blocks submission) */}
                         {errors?.childsUpdated?.[index]?.headCircumference && (
                           <p className="text-red-500 text-sm mt-1">
                             {
@@ -790,10 +836,18 @@ const AppointmentUpdateContainer = () => {
                             }
                           </p>
                         )}
+
+                        {/* Warning message (allows submission) */}
+                        {warnings.headCircumference && (
+                          <p className="text-yellow-500 text-sm mt-1">
+                            {warnings.headCircumference}
+                          </p>
+                        )}
                       </div>
                     </div>
+
                     <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
-                      <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      <div className="font-medium flex items-center mr-10 w-1/6">
                         Abdominal Circumference (cm)
                       </div>
                       <div className="flex-1">
@@ -813,20 +867,40 @@ const AppointmentUpdateContainer = () => {
                             {
                               required: "Abdominal circumference is required",
                               setValueAs: (value) =>
-                                value ? parseFloat(value) : undefined, // Convert input to float
-                              min: {
-                                value: 0.15, // Default min: 20 cm
-                                message: `Abdominal circumference must be at least 0.15 cm`,
-                              },
-                              max: {
-                                value: standard?.abdominalCircumference ?? 100, // Default max: 100 cm
-                                message: `Abdominal circumference must be at most ${
-                                  standard?.abdominalCircumference ?? 100
-                                } cm`,
-                              },
+                                value ? parseFloat(value) : undefined,
+                              validate: (value) =>
+                                (value != null && value > 0) ||
+                                "Abdominal circumference must be a positive number", // ✅ Ensure positive value
                             }
                           )}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+
+                            if (value < 0) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                abdominalCircumference:
+                                  "Negative values are not allowed.",
+                              }));
+                            } else if (
+                              standard?.abdominalCircumference !== undefined &&
+                              (value < 0.2 ||
+                                value > standard.abdominalCircumference)
+                            ) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                abdominalCircumference: `Abdominal circumference is out of range (0.2 - ${standard.abdominalCircumference} cm)`,
+                              }));
+                            } else {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                abdominalCircumference: "",
+                              }));
+                            }
+                          }}
                         />
+
+                        {/* Error message (blocks submission) */}
                         {errors?.childsUpdated?.[index]
                           ?.abdominalCircumference && (
                           <p className="text-red-500 text-sm mt-1">
@@ -836,16 +910,24 @@ const AppointmentUpdateContainer = () => {
                             }
                           </p>
                         )}
+
+                        {/* Warning message (allows submission) */}
+                        {warnings.abdominalCircumference && (
+                          <p className="text-yellow-500 text-sm mt-1">
+                            {warnings.abdominalCircumference}
+                          </p>
+                        )}
                       </div>
                     </div>
+
                     <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
-                      <div className="font-medium flex items-center mr-10 w-1/6 ">
+                      <div className="font-medium flex items-center mr-10 w-1/6">
                         Fetal Heart Rate (bpm)
                       </div>
                       <div className="flex-1">
                         <input
                           disabled={
-                            !isWeekSelected || !standard?.fetalHeartRate
+                            !isWeekSelected || standard?.fetalHeartRate === null
                           }
                           className={`p-2 bg-white w-full ${
                             errors?.childsUpdated?.[index]?.fetalHeartRate
@@ -853,31 +935,50 @@ const AppointmentUpdateContainer = () => {
                               : ""
                           }`}
                           type="number"
+                          step="any"
                           placeholder="Enter fetal heart rate (optional)"
                           {...register(
                             `childsUpdated.${index}.fetalHeartRate`,
                             {
-                              setValueAs: (value) => {
-                                if (standard?.fetalHeartRate === null) {
-                                  return 0; // Set value as 0 when standard is null
-                                }
-                                return value ? parseFloat(value) : null; // Otherwise, use user input
-                              },
+                              setValueAs: (value) =>
+                                value ? parseFloat(value) : null, // Convert input to float, null if empty
                               validate: (value) => {
                                 if (standard?.fetalHeartRate === null)
-                                  return true; // Allow 0 when standard is null
-                                if (!value) return "This field is required"; // Required if standard is not null
-                                if (value < 120)
-                                  return "Value must be at least 120";
-                                if (value > (standard?.fetalHeartRate || 160))
-                                  return `Value must not exceed ${
-                                    standard?.fetalHeartRate || 160
-                                  }`;
+                                  return true; // ✅ Allow empty if not required
+                                if (value == null)
+                                  return "Fetal heart rate is required"; // ❌ Required only if standard is set
                                 return true;
                               },
                             }
                           )}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+
+                            if (value < 0) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                fetalHeartRate:
+                                  "Negative values are not allowed.",
+                              }));
+                            } else if (
+                              standard?.fetalHeartRate !== undefined &&
+                              (value < 120 ||
+                                value > (standard.fetalHeartRate ?? 200))
+                            ) {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                fetalHeartRate: `Fetal heart rate is out of range (120 - ${standard.fetalHeartRate} bpm)`,
+                              }));
+                            } else {
+                              setWarnings((prev) => ({
+                                ...prev,
+                                fetalHeartRate: "",
+                              }));
+                            }
+                          }}
                         />
+
+                        {/* Error Message (blocks submission) */}
                         {errors?.childsUpdated?.[index]?.fetalHeartRate && (
                           <p className="text-red-500 text-sm mt-1">
                             {
@@ -887,9 +988,17 @@ const AppointmentUpdateContainer = () => {
                           </p>
                         )}
 
-                        {!standard?.fetalHeartRate && (
+                        {/* Warning Message (allows submission) */}
+                        {warnings.fetalHeartRate && (
+                          <p className="text-yellow-500 text-sm mt-1">
+                            {warnings.fetalHeartRate}
+                          </p>
+                        )}
+
+                        {/* Info Message: If FHR is not required in early weeks */}
+                        {standard?.fetalHeartRate === null && (
                           <p className="text-sky-800 font-bold text-sm mt-1">
-                            In week 1,2,3 fetal heart rate is not required
+                            In weeks 1, 2, 3, fetal heart rate is not required.
                           </p>
                         )}
                       </div>
