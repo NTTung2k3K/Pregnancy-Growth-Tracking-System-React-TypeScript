@@ -56,9 +56,9 @@ const GrowthStandardCreateContainer = () => {
       );
       if (response.data.statusCode === 200) {
         window.location.href = `${ROUTES.DASHBOARD_GROWTH_STANDARDS}`;
-        toast.success(response.data.message.message);
+        toast.success(response.data.message);
       } else {
-        toast.error(response.data.message.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Failed to update data:", error);

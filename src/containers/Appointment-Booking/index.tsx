@@ -195,7 +195,7 @@ export default function AppointmentBookingContainer() {
 
   const isSlotDisabled = (
     selectedDate: Date | undefined,
-    endTime: string
+    startTime: string
   ): boolean => {
     if (!selectedDate) return false; // No date selected yet
 
@@ -209,13 +209,13 @@ export default function AppointmentBookingContainer() {
     // If selected date is in the future, enable all slots
     if (selected > today) return false;
 
-    // If selected date is today, check endTime
+    // If selected date is today, check startTime
     if (selected.getTime() === today.getTime()) {
-      const [hours, minutes] = endTime.split(":").map(Number);
-      const slotEndDateTime = new Date();
-      slotEndDateTime.setHours(hours, minutes, 0, 0);
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const slotStartDateTime = new Date();
+      slotStartDateTime.setHours(hours, minutes, 0, 0);
 
-      return now > slotEndDateTime; // Disable if the slot's end time is in the past
+      return now > slotStartDateTime; // Disable if the slot's start time has passed
     }
 
     return false;
@@ -361,7 +361,7 @@ export default function AppointmentBookingContainer() {
                   disabled={isLoading}
                 >
                   {timeSlots.map((slot) => {
-                    const isDisabled = isSlotDisabled(selectedDate, slot.end);
+                    const isDisabled = isSlotDisabled(selectedDate, slot.start);
                     return (
                       <div
                         key={slot.id}
