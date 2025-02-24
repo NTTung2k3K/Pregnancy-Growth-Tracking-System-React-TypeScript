@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Trash, UserPen } from "lucide-react";
+import {
+  ArrowUpDown,
+  Info,
+  MoreHorizontal,
+  Trash,
+  UserPen,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -17,7 +23,7 @@ import toast from "react-hot-toast";
 import { Standard } from "./IStandard";
 
 const columnFields: { key: keyof Standard; label: string }[] = [
-  { key: "gestationalAge", label: "Week" },
+  { key: "week", label: "Week" },
 ];
 
 export const columns: ColumnDef<Standard>[] = [
@@ -113,6 +119,18 @@ export const columns: ColumnDef<Standard>[] = [
               </DropdownMenuItem>
             </Link>
 
+            <DropdownMenuItem className="cursor-pointer font-semibold">
+              <Link
+                to={`${ROUTES.DASHBOARD_GROWTH_STANDARDS_DETAIL.replace(
+                  ":id",
+                  String(week)
+                )}`}
+                className="w-full flex items-center text-sky-800 hover:text-sky-900"
+              >
+                <Info className="h-4 w-4 mr-2" />
+                <p>Detail</p>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer font-semibold">
               <div
                 onClick={() => handleDelete(week)}

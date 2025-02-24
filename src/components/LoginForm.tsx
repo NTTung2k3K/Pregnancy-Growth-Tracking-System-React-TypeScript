@@ -10,7 +10,6 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-//import axios from "axios";
 import { useState } from "react";
 import { API_ROUTES } from "@/routes/api";
 import { useDispatch } from "react-redux";
@@ -18,6 +17,8 @@ import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { https } from "@/services/config";
+import { UserService } from "@/services/user.service";
+import { CookiesService } from "@/services/cookies.service";
 
 interface FormValues {
   email: string;
@@ -41,19 +42,21 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
 
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const handleLoading = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000000);
-  };
-
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      handleLoading();
-      dispatch({ type: `${API_ROUTES.LOGIN}`, payload: data });
+      setIsLoading(true);
+      const response = await UserService.login(data);
+      if (response.data.statusCode === 200) {
+        CookiesService.set(response.data.resultObj.id);
+        window.location.href = `/`;
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 
 import ActionRow from "@/containers/Dashboard/Payment/components/action-row";
 import { Payment } from "@/containers/Dashboard/Payment";
+import { formatDate } from "@/lib/text";
 
 const columnFields: { key: keyof Payment; label: string }[] = [
   { key: "paymentMethod", label: "Payment Method" },
-  { key: "paymentDate", label: "Payment Date" },
 ];
 
 export const columns: ColumnDef<Payment>[] = [
@@ -28,6 +28,23 @@ export const columns: ColumnDef<Payment>[] = [
       );
     },
   })),
+  {
+    accessorKey: "userMembership.paymentDate",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{formatDate(row.original.paymentDate)}</p>;
+    },
+  },
   {
     accessorKey: "userMembership.user.fullName",
     header: ({ column }) => {

@@ -50,7 +50,7 @@ const formatFieldName = (field: string): string => {
     .replace(/^./, (char) => char.toUpperCase()); // Capitalize first letter
 };
 
-const GrowthStandardUpdateContainer = () => {
+const GrowthStandardDetailContainer = () => {
   const {
     register,
     handleSubmit,
@@ -61,7 +61,6 @@ const GrowthStandardUpdateContainer = () => {
   });
 
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchStandardData = async () => {
     try {
@@ -81,35 +80,15 @@ const GrowthStandardUpdateContainer = () => {
     fetchStandardData();
   }, []);
 
-  const onSubmit = async (data: Standard) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.put(
-        `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_STANDARD_UPDATE}/${id}`,
-        { ...data }
-      );
-      if (response.data.message.statusCode === 200) {
-        window.location.reload();
-        toast.success(response.data.message.message);
-      } else {
-        toast.error(response.data.message.message);
-      }
-    } catch (error) {
-      console.error("Failed to update data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div>
       <div className="p-6 mt-20">
         <Link to={ROUTES.DASHBOARD_GROWTH_STANDARDS}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700 mb-10">
             <CircleArrowLeft /> Back
           </Button>
         </Link>
-        <h1 className="text-2xl font-medium">Update Standard</h1>
+        <h1 className="text-2xl font-medium">Standard Detail</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
           {fields.map((key) => (
             <div
@@ -120,6 +99,7 @@ const GrowthStandardUpdateContainer = () => {
                 {formatFieldName(key)}
               </div>
               <input
+                disabled
                 type={numberFields.includes(key) ? "number" : "text"}
                 className="flex-1 p-2 border rounded-md"
                 step="any"
@@ -138,18 +118,9 @@ const GrowthStandardUpdateContainer = () => {
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-end mt-10">
-          <Button
-            disabled={isLoading}
-            className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
-            type="submit"
-          >
-            {isLoading && <AiOutlineLoading className="animate-spin" />} Save
-          </Button>
-        </div>
       </div>
-    </form>
+    </div>
   );
 };
 
-export default GrowthStandardUpdateContainer;
+export default GrowthStandardDetailContainer;
