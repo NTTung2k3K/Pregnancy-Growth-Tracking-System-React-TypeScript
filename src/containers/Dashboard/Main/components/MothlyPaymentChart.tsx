@@ -60,22 +60,6 @@ const MonthlyPaymentChart = () => {
     }).format(value);
   };
 
-  const customTooltip = (value: any, name: any, props: any) => {
-    const monthIndex = props.payload?.[0]?.payload?.month; // Get month number
-    const monthLabel = monthIndex ? monthNames[monthIndex - 1] : ""; // Convert to month name
-
-    return (
-      <div>
-        <p>
-          <strong>{monthLabel}</strong>
-        </p>
-        <p>
-          {name}: {typeof value === "number" ? formatToVND(value) : value}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart

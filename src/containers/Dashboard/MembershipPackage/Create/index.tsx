@@ -1,4 +1,3 @@
-
 import { CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -64,9 +63,6 @@ const MembershipPackageCreateContainer = () => {
   } = useForm<MembershipPackageFormValues>({
     mode: "onChange",
   });
-
-  const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
-  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [status, setStatus] = useState<Status[]>([]);
@@ -102,7 +98,7 @@ const MembershipPackageCreateContainer = () => {
           packageLevel: data.packageLevel,
           discount: data.discount,
           showPriority: data.showPriority,
-          imageUrl: imageFile,
+          imageUrl: null,
           maxRecordAdded: data.maxRecordAdded,
           maxGrowthChartShares: data.maxGrowthChartShares,
           maxAppointmentCanBooking: data.maxAppointmentCanBooking,
@@ -129,17 +125,6 @@ const MembershipPackageCreateContainer = () => {
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (imageTemp) {
-        URL.revokeObjectURL(imageTemp);
-      }
-      const newImageUrl = URL.createObjectURL(file);
-      setImageTemp(newImageUrl);
-      setImageFile(file);
-    }
-  };
   const [displayValue, setDisplayValue] = useState(""); // Giá trị hiển thị trong input
 
   const formatNumber = (value: string) => {

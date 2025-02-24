@@ -1,5 +1,4 @@
-import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image } from "lucide-react";
+import { CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
@@ -7,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import { MembershipPackage } from "@/containers/Dashboard/MembershipPackage";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const MembershipPackageDetailContainer = () => {
   const { id } = useParams();

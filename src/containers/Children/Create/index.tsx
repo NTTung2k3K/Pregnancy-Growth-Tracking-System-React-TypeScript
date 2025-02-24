@@ -24,7 +24,6 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, addMonths, format } from "date-fns";
 import { formatDate } from "@/lib/text";
-import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
 
 interface ChildFormValues {
   id: string;
@@ -55,8 +54,6 @@ const ChildCreateContainer = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMember, setIsMember] = useState<boolean>(false);
-  const [standard, setStandard] = useState<Standard>();
-  const [isWeekSelected, setIsWeekSelected] = useState(false);
 
   const id = CookiesService.get();
 
@@ -129,25 +126,8 @@ const ChildCreateContainer = () => {
     }
   };
 
-  const fetchStandard = async (week: number) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
-        {
-          params: { week: week },
-        }
-      );
-      setStandard(response.data.resultObj);
-    } catch (error) {
-      console.error("Failed to fetch roles:", error);
-    }
-  };
 
-  const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedWeek = e.target.value;
-    setIsWeekSelected(!!selectedWeek); // Update the state based on selection
-    fetchStandard(parseInt(selectedWeek));
-  };
+
 
   return (
     <>
