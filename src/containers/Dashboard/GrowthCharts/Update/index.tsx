@@ -32,6 +32,7 @@ const GrowthChartUpdateContainer = () => {
   const { id } = useParams();
   const [chart, setChart] = useState<GrowthChart>();
   const [status, setStatus] = useState([]);
+  const [currentStatus, setCurrentStatus] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentUserId = CookiesEmployeeService.get();
   const isAdmin = localStorage.getItem("role") === "Admin";
@@ -68,6 +69,7 @@ const GrowthChartUpdateContainer = () => {
         }
       );
       const fetchedChart = response.data.resultObj;
+      setCurrentStatus(fetchedChart.status);
 
       setValue(
         "status",
@@ -77,7 +79,6 @@ const GrowthChartUpdateContainer = () => {
           ? 2
           : 3
       );
-
       setChart(fetchedChart);
     } catch (error) {
       console.error("Failed to fetch chart:", error);
@@ -103,7 +104,7 @@ const GrowthChartUpdateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.DASHBOARD_GROWTH_CHARTS}`;
+        window.location.reload();
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -168,7 +169,7 @@ const GrowthChartUpdateContainer = () => {
                     Status
                   </div>
                   <select
-                    disabled={!isAdmin}
+                    disabled={!isAdmin || currentStatus !== "Shared"}
                     className="flex-1 p-2"
                     {...register("status")}
                   >
@@ -233,7 +234,7 @@ const GrowthChartUpdateContainer = () => {
               </div>
             </div>
           </div>
-          {isAdmin && (
+          {(isAdmin && currentStatus === "Shared") && (
             <div className="flex items-center justify-end mt-10 mr-10">
               <Button
                 disabled={isLoading}

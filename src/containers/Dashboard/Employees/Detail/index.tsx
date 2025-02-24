@@ -70,10 +70,6 @@ const EmployeeDetailContainer = () => {
               </h2>
             </div>
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-              <div className="font-medium flex items-center mr-10">ID</div>
-              <p className="flex-1 p-2">{employee?.id}</p>
-            </div>
-            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
               <div className="font-medium flex items-center mr-10">
                 Full Name
               </div>

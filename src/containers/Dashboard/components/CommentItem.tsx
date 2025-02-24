@@ -155,7 +155,7 @@ export function CommentItem({
               </p>
             </div>
             <div className="flex">
-              {currentUserId && !["Answered", "BANNED"].includes(status) && (
+              {currentUserId && !["Answered"].includes(status) && feedback.status !== "BANNED" && (
                 <Button
                   variant="ghost"
                   size="sm"

@@ -232,7 +232,7 @@ export function LargeCalendar() {
                     </div>
                     {dayAppointments.length > 0 && (
                       <div className="mt-0.5">
-                        {dayAppointments.map((apt) => (
+                        {dayAppointments.slice(0, 2).map((apt) => (
                           <div
                             key={apt.id}
                             className="flex flex-col justify-center items-center text-[8px] truncate text-muted-foreground leading-tight my-1"
@@ -257,11 +257,11 @@ export function LargeCalendar() {
                             </span>
                           </div>
                         ))}
-                        {/* {dayAppointments.length > 1 && (
-                          <div className="text-[8px] text-muted-foreground leading-tight">
-                            +{dayAppointments.length - 1}
+                        {dayAppointments.length > 2 && (
+                          <div className="flex items-center justify-center text-emerald-400 text-[8px] font-bold leading-tight">
+                            +{dayAppointments.length - 2}
                           </div>
-                        )} */}
+                        )}
                       </div>
                     )}
                   </div>

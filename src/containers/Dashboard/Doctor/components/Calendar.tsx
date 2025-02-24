@@ -183,12 +183,12 @@ export function DoctorCalendar() {
                     </div>
                     {dayAppointments.length > 0 && (
                       <div className="mt-0.5">
-                        {dayAppointments.slice(0, 1).map((apt) => (
+                        {dayAppointments.slice(0, 2).map((apt) => (
                           <div
                             key={apt.id}
-                            className="text-[8px] truncate text-muted-foreground leading-tight"
+                            className="flex flex-col justify-center items-center my-1 text-[8px] truncate text-muted-foreground leading-tight"
                           >
-                            {apt.appointmentTemplate.name} |{" "}
+                            {apt.appointmentTemplate.name}
                             <span
                               className={cn({
                                 "text-green-500": apt.status === "Completed",
@@ -207,9 +207,9 @@ export function DoctorCalendar() {
                             </span>
                           </div>
                         ))}
-                        {dayAppointments.length > 1 && (
-                          <div className="text-[8px] text-muted-foreground leading-tight">
-                            +{dayAppointments.length - 1}
+                        {dayAppointments.length > 2 && (
+                          <div className="flex items-center justify-center text-emerald-400 text-[8px] font-bold leading-tight">
+                            +{dayAppointments.length - 2}
                           </div>
                         )}
                       </div>
@@ -244,7 +244,7 @@ export function DoctorCalendar() {
                         <div
                           onClick={() => {
                             navigate(
-                              ROUTES.DASHBOARD_APPOINTMENT_DETAIL.replace(
+                              ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(
                                 ":id",
                                 String(appointment.id)
                               )
@@ -269,7 +269,7 @@ export function DoctorCalendar() {
                             ))}
                           </div>
 
-                          <div className="flex text-[10px] text-muted-foreground">
+                          <div className="flex justify-between text-[10px] text-muted-foreground">
                             <span>Parent: {appointment.user.fullName}</span>
                             <Badge
                               className={cn({
