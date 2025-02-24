@@ -25,7 +25,6 @@ interface BlogFormValues {
   thumbnail: File;
   status: string;
   sources: string;
-  isFeatured: boolean;
 }
 
 const BlogCreateContainer = () => {
@@ -51,7 +50,7 @@ const BlogCreateContainer = () => {
     if (fetchedUserId !== null && fetchedUserId !== undefined) {
       setValue("authorId", fetchedUserId);
     }
-  
+
     const fetchBlogTypes = async () => {
       try {
         const response = await axios.get(
@@ -205,15 +204,6 @@ const BlogCreateContainer = () => {
                 <p className="text-red-500">{errors.blogTypeId.message}</p>
               )}
 
-              {/* Featured Field */}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Featured
-                </div>
-                <input type="checkbox" {...register("isFeatured")} />
-              </div>
-
-              {/* Week Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Week</div>
                 <input
@@ -222,9 +212,17 @@ const BlogCreateContainer = () => {
                   {...register("week", {
                     setValueAs: (value) =>
                       value === "" ? null : parseInt(value, 10),
+                    validate: (value) =>
+                      (value != null && value > 0) ||
+                      "Week must be a positive number",
                   })}
                 />
               </div>
+              {errors.week && (
+                <span className="text-red-500 text-sm">
+                  {errors.week.message}
+                </span>
+              )}
 
               {/* Status Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -238,7 +236,6 @@ const BlogCreateContainer = () => {
                   <option value="">Select status</option>
                   {statusOptions && statusOptions.length > 0 ? (
                     statusOptions.map((s: any) => (
-            
                       <option key={s.id} value={s.id}>
                         {s.status}
                       </option>

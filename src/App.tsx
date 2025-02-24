@@ -184,6 +184,9 @@ const GrowthStandardCreateContainer = lazy(
 const GrowthStandardUpdateContainer = lazy(
   () => import("./containers/Dashboard/Standard/Update")
 );
+const GrowthStandardDetailContainer = lazy(
+  () => import("./containers/Dashboard/Standard/Detail")
+);
 
 //------------------------------USERS
 const UsersContainer = lazy(() => import("./containers/Dashboard/Users"));
@@ -514,6 +517,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_GROWTH_STANDARDS_UPDATE,
     element: <DashboardLayout children={<GrowthStandardUpdateContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_GROWTH_STANDARDS_DETAIL,
+    element: <DashboardLayout children={<GrowthStandardDetailContainer />} />,
   },
 ]);
 
