@@ -158,24 +158,6 @@ const MembershipPackageDetailContainer = () => {
                 {membershipPackage?.hasViewGrowthChart ? "true" : "false"}
               </p>
             </div>
-            <div>
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={Image} />
-                <h2 className="text-xl text-sky-900 font-semibold">
-                  Thumbnail
-                </h2>
-              </div>
-              <div className="space-y-1">
-                <div className="flex justify-center">
-                  <Avatar className="h-52 w-52 border text-center">
-                    <AvatarImage src={membershipPackage?.imageUrl} />
-                    <AvatarFallback className="flex w-full h-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
-                      ?
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

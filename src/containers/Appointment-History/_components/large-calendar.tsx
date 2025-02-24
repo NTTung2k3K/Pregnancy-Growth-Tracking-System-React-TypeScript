@@ -179,23 +179,31 @@ export function LargeCalendar() {
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isToday = isSameDay(day, today);
           const isPast = isBefore(day, today);
+          console.log(dayAppointments);
 
           return (
             <HoverCard key={day.toString()} openDelay={200}>
               <HoverCardTrigger asChild>
                 <Card
-                  className={`aspect-square p-0.5 cursor-pointer transition-colors hover:bg-accent ${
+                  className={`aspect-square p-0.5 transition-colors hover:bg-accent ${
                     isCurrentMonth ? "bg-background" : "bg-muted/20"
                   } ${dayAppointments.length > 0 ? "ring-1 ring-primary" : ""}
                   ${
                     isToday ? "border-2 border-emerald-400" : "" // Highlight today
                   }
-                   ${isPast && !isToday ? "opacity-50 cursor-default" : ""}
+                   ${isPast && !isToday ? "opacity-50" : ""}
                   `}
                   onClick={() => {
-                    if (!isPast || isToday) {
-                      setSelectedDate(day);
-                      setIsCreateDialogOpen(true);
+                    if (isPast && !isToday) return;
+
+                    const pendingAppointment = dayAppointments.find(
+                      (appointment) => appointment.status === "Pending"
+                    );
+
+                    if (pendingAppointment?.appointmentDate) {
+                      setSelectedDate(
+                        new Date(pendingAppointment.appointmentDate)
+                      );
                     }
                   }}
                 >
@@ -224,21 +232,22 @@ export function LargeCalendar() {
                     </div>
                     {dayAppointments.length > 0 && (
                       <div className="mt-0.5">
-                        {dayAppointments.slice(0, 1).map((apt) => (
+                        {dayAppointments.map((apt) => (
                           <div
                             key={apt.id}
-                            className="text-[8px] truncate text-muted-foreground leading-tight"
+                            className="flex flex-col justify-center items-center text-[8px] truncate text-muted-foreground leading-tight my-1"
                           >
-                            {apt.appointmentTemplate.name} |{" "}
+                            {apt.appointmentTemplate.name}
                             <span
-                              className={cn({
+                              className={cn("font-bold", {
                                 "text-green-500": apt.status === "Completed",
                                 "text-yellow-500": apt.status === "Pending",
-                                "text-red-500":
-                                  apt.status === "NoShow" ||
-                                  apt.status === "Failed" ||
-                                  apt.status === "CancelledByUser" ||
-                                  apt.status === "CancelledByDoctor",
+                                "text-red-500": [
+                                  "NoShow",
+                                  "Failed",
+                                  "CancelledByUser",
+                                  "CancelledByDoctor",
+                                ].includes(apt.status),
                                 "text-blue-500": apt.status === "InProgress",
                                 "text-violet-500": apt.status === "Confirmed",
                                 "text-pink-500": apt.status === "Rescheduled",
@@ -248,11 +257,11 @@ export function LargeCalendar() {
                             </span>
                           </div>
                         ))}
-                        {dayAppointments.length > 1 && (
+                        {/* {dayAppointments.length > 1 && (
                           <div className="text-[8px] text-muted-foreground leading-tight">
                             +{dayAppointments.length - 1}
                           </div>
-                        )}
+                        )} */}
                       </div>
                     )}
                   </div>
@@ -297,8 +306,8 @@ export function LargeCalendar() {
                             {appointment.status === "Pending" ? (
                               <Button
                                 size="sm"
-                                variant="ghost"
-                                className="h-6 bg-transparent"
+                                variant="custom"
+                                className="h-6"
                                 onClick={() => {
                                   setSelectedAppointmentId(appointment.id);
                                   setSelectedDate(day);
@@ -353,28 +362,6 @@ export function LargeCalendar() {
                                 {appointment.status}
                               </Badge>
                             )}
-                            {/* <Badge
-                              className={cn({
-                                "bg-green-500/10 text-green-500":
-                                  appointment.status === "Completed",
-                                "bg-yellow-500/10 text-yellow-500":
-                                  appointment.status === "Pending",
-                                "bg-red-500/10 text-red-500": [
-                                  "NoShow",
-                                  "Failed",
-                                  "CancelledByUser",
-                                  "CancelledByDoctor",
-                                ].includes(appointment.status),
-                                "bg-blue-500/10 text-blue-500":
-                                  appointment.status === "InProgress",
-                                "bg-violet-500/10 text-violet-500":
-                                  appointment.status === "Confirmed",
-                                "bg-pink-500/10 text-pink-500":
-                                  appointment.status === "Rescheduled",
-                              })}
-                            >
-                              {appointment.status}
-                            </Badge> */}
                           </div>
                         </div>
                       ))}

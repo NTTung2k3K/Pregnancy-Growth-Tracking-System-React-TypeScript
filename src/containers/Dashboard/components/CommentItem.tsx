@@ -70,6 +70,31 @@ export function CommentItem({
     }
   };
 
+  const handleUnban = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL + API_ROUTES.DASHBOARD_FEEDBACKS_UNBAN}`,
+        {
+          id: feedback.id,
+        },
+        {
+          headers: configHeaders(),
+        }
+      );
+      if (response.data.statusCode === 200) {
+        window.location.href = `${ROUTES.DASHBOARD_GROWTH_CHARTS_UPDATE.replace(
+          ":id",
+          String(growthChartId)
+        )}`;
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Failed to unban feedback:", error);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
@@ -130,7 +155,7 @@ export function CommentItem({
               </p>
             </div>
             <div className="flex">
-              {currentUserId && status != "Answered" && (
+              {currentUserId && !["Answered", "BANNED"].includes(status) && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -159,7 +184,7 @@ export function CommentItem({
                     variant="ghost"
                     size="sm"
                     className="mr-2 bg-orange-400 text-white flex items-center gap-2"
-                    // onClick={() => handleBan()}
+                    onClick={() => handleUnban()}
                   >
                     <LockOpen className="w-4 h-4" />
                     Unban

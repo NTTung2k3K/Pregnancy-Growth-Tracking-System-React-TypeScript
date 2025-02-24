@@ -1,13 +1,11 @@
-import { IconBadge } from "@/components/IconBadge";
-import { CircleArrowLeft, Image } from "lucide-react";
+
+import { CircleArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AvatarOverlay } from "./components/AvatarOverlay";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -26,6 +24,7 @@ interface MembershipPackageFormValues {
   showPriority: number;
   maxRecordAdded: number;
   maxGrowthChartShares: number;
+  maxAppointmentCanBooking: number;
   hasGenerateAppointments: boolean;
   hasStandardDeviationAlerts: boolean;
   hasViewGrowthChart: boolean;
@@ -106,6 +105,7 @@ const MembershipPackageCreateContainer = () => {
           imageUrl: imageFile,
           maxRecordAdded: data.maxRecordAdded,
           maxGrowthChartShares: data.maxGrowthChartShares,
+          maxAppointmentCanBooking: data.maxAppointmentCanBooking,
           hasGenerateAppointments: data.hasGenerateAppointments,
           hasStandardDeviationAlerts: data.hasStandardDeviationAlerts,
           hasViewGrowthChart: data.hasViewGrowthChart,
@@ -320,6 +320,27 @@ const MembershipPackageCreateContainer = () => {
               <div className="space-y-6">
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                   <div className="font-medium flex items-center mr-10 w-1/6 ">
+                    Max Appointment Can Booking
+                  </div>
+                  <input
+                    type="number"
+                    className="flex-1 p-2 bg-white"
+                    {...register("maxAppointmentCanBooking", {
+                      required: "Max Appointment CanBooking is required",
+                      validate: (value) =>
+                        value > 0 ||
+                        "maxAppointmentCanBooking must be positive",
+                    })}
+                    min={1}
+                  />
+                </div>
+                {errors.maxAppointmentCanBooking && (
+                  <p className="text-red-500">
+                    {errors.maxAppointmentCanBooking.message}
+                  </p>
+                )}
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10 w-1/6 ">
                     Show priority
                   </div>
                   <input
@@ -406,26 +427,6 @@ const MembershipPackageCreateContainer = () => {
                   />
                   <div className="flex-1 font-medium flex items-center mr-10 w-1/6 ">
                     Has View Growth Chart
-                  </div>
-                </div>
-                {/* Image Upload */}
-                <div className="">
-                  <div className="flex items-center gap-x-2">
-                    <IconBadge icon={Image} />
-                    <h2 className="text-xl text-sky-900 font-semibold">
-                      Thumbnail
-                    </h2>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex justify-center ">
-                      <Avatar className="h-52 w-52 border text-center ">
-                        <AvatarImage src={imageTemp} />
-                        <AvatarFallback className="flex w-full h-full items-center justify-center bg-sky-800 text-8xl font-light text-emerald-400">
-                          ?
-                        </AvatarFallback>
-                        <AvatarOverlay onFileChange={handleFileChange} />
-                      </Avatar>
-                    </div>
                   </div>
                 </div>
               </div>
