@@ -1,5 +1,3 @@
-
-
 import * as React from "react";
 
 import {
@@ -57,6 +55,8 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const isAdmin = localStorage.getItem("role") === "Admin";
+
   return (
     <div className="">
       <div className="flex items-center justify-between py-4">
@@ -68,12 +68,14 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Link to={ROUTES.DASHBOARD_APPOINTMENT_CREATE}>
-          <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
-            <PlusCircle className="h-4 w-4 mr-2" />
-            New an appointment
-          </Button>
-        </Link>
+        {!isAdmin && (
+          <Link to={ROUTES.DASHBOARD_APPOINTMENT_CREATE}>
+            <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
+              <PlusCircle className="h-4 w-4 mr-2" />
+              New an appointment
+            </Button>
+          </Link>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

@@ -152,10 +152,12 @@ const AppointmentCreateContainer = () => {
         } else if (selectedDate.toDateString() === today.toDateString()) {
           const now = new Date();
           timeSlots = timeSlots.filter((slot) => {
-            const [hours, minutes] = slot.end.split(":").map(Number);
-            const slotEndTime = new Date();
-            slotEndTime.setHours(hours, minutes, 0, 0);
-            return slotEndTime > now;
+            const [hours, minutes] = slot.start.split(":").map(Number);
+            const slotStartTime = new Date();
+            slotStartTime.setHours(hours, minutes, 0, 0);
+
+            // Keep only slots that start in the future
+            return slotStartTime > now;
           });
         }
 
@@ -467,7 +469,7 @@ const AppointmentCreateContainer = () => {
                       disabled={selectedChildren.length >= childsOfUser.length}
                       className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
                     >
-                      Thêm trẻ em
+                      Add child
                     </button>
                   </div>
                 </div>
