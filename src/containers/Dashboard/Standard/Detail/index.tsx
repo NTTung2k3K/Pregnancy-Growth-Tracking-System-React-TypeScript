@@ -4,9 +4,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
-import { useEffect, useState } from "react";
-import { AiOutlineLoading } from "react-icons/ai";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 import { ROUTES } from "@/routes";
 import { Link, useParams } from "react-router-dom";
 import { Standard } from "../components/IStandard";
@@ -53,7 +51,6 @@ const formatFieldName = (field: string): string => {
 const GrowthStandardDetailContainer = () => {
   const {
     register,
-    handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<Standard>({
