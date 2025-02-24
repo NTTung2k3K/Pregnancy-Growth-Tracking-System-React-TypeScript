@@ -310,7 +310,7 @@ const BlogUpdateContainer = () => {
             <div className="font-medium flex items-center mr-10">Content</div>
             <div>
               <Editor
-                apiKey="rcdz0k6v268ooj7bboucuugdnfclrmjyhwihtuxuf7vz8ugk"
+                apiKey="0ycp3599xllenb0dwqqshl072a9cdz5qu7tak104urrsha1b"
                 value={editorContent}
                 init={{
                   plugins: [

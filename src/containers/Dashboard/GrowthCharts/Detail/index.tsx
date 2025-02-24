@@ -26,7 +26,7 @@ interface GrowthChartsFormValues {
   status: number;
 }
 
-const GrowthChartUpdateContainer = () => {
+const GrowthChartDetailContainer = () => {
   const { register, handleSubmit, setValue } =
     useForm<GrowthChartsFormValues>();
   const { id } = useParams();
@@ -263,4 +263,4 @@ const GrowthChartUpdateContainer = () => {
   );
 };
 
-export default GrowthChartUpdateContainer;
+export default GrowthChartDetailContainer;

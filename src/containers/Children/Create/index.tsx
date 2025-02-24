@@ -1,5 +1,5 @@
 import { IconBadge } from "@/components/IconBadge";
-import {  Image, UserPen } from "lucide-react";
+import { Image, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -24,7 +24,6 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, addMonths, format } from "date-fns";
 import { formatDate } from "@/lib/text";
-import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
 
 interface ChildFormValues {
   id: string;
@@ -32,14 +31,11 @@ interface ChildFormValues {
   name: string;
   fetalGender: string;
   pregnancyStage: string;
-  weightEstimate: number;
-  heightEstimate: number;
   dueDate: string;
   deliveryPlan: string;
   complications: string;
   photoUrl: string;
   bloodType: string;
-  pregnancyWeekAtBirth: number;
   isGenerateSampleAppointments: boolean;
 }
 
@@ -58,8 +54,6 @@ const ChildCreateContainer = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMember, setIsMember] = useState<boolean>(false);
-  const [standard, setStandard] = useState<Standard>();
-  const [isWeekSelected, setIsWeekSelected] = useState(false);
 
   const id = CookiesService.get();
 
@@ -89,14 +83,11 @@ const ChildCreateContainer = () => {
             Name: data.name,
             FetalGender: data.fetalGender,
             PregnancyStage: data.pregnancyStage,
-            WeightEstimate: data.weightEstimate,
-            HeightEstimate: data.heightEstimate,
             DueDate: data.dueDate,
             DeliveryPlan: data.deliveryPlan,
             Complications: data.complications,
             PhotoUrl: imageFile,
             BloodType: data.bloodType,
-            PregnancyWeekAtBirth: data.pregnancyWeekAtBirth,
             IsGenerateSampleAppointments: isMember
               ? data.isGenerateSampleAppointments
               : false,
@@ -135,25 +126,8 @@ const ChildCreateContainer = () => {
     }
   };
 
-  const fetchStandard = async (week: number) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
-        {
-          params: { week: week },
-        }
-      );
-      setStandard(response.data.resultObj);
-    } catch (error) {
-      console.error("Failed to fetch roles:", error);
-    }
-  };
 
-  const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedWeek = e.target.value;
-    setIsWeekSelected(!!selectedWeek); // Update the state based on selection
-    fetchStandard(parseInt(selectedWeek));
-  };
+
 
   return (
     <>
@@ -276,7 +250,6 @@ const ChildCreateContainer = () => {
               {errors.pregnancyStage && (
                 <p className="text-red-500">{errors.pregnancyStage.message}</p>
               )}
-
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   DeliveryPlan
@@ -291,6 +264,9 @@ const ChildCreateContainer = () => {
               {errors.deliveryPlan && (
                 <p className="text-red-500">{errors.deliveryPlan.message}</p>
               )}
+            </div>
+
+            <div className="space-y-6">
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   Complications
@@ -305,9 +281,6 @@ const ChildCreateContainer = () => {
               {errors.complications && (
                 <p className="text-red-500">{errors.complications.message}</p>
               )}
-            </div>
-
-            <div className="space-y-6">
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
                   Blood Type
@@ -333,95 +306,6 @@ const ChildCreateContainer = () => {
                 <span className="text-red-500 text-sm">
                   {errors.bloodType.message}
                 </span>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Pregnancy Week At Birth
-                </div>
-                <select
-                  className="flex-1 p-2"
-                  {...register("pregnancyWeekAtBirth", {
-                    required: "Pregnancy Week At Birth is required",
-                  })}
-                  onChange={(e) => {
-                    handleWeekChange(e);
-                  }}
-                >
-                  <option value="">Select week</option>
-                  {Array.from({ length: 42 }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {errors.pregnancyWeekAtBirth && (
-                <p className="text-red-500">
-                  {errors.pregnancyWeekAtBirth.message}
-                </p>
-              )}
-
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Weight Estimate
-                </div>
-                <input
-                  disabled={!isWeekSelected}
-                  type="number"
-                  step="any"
-                  className="flex-1 p-2"
-                  {...register("weightEstimate", {
-                    required: "Weight is required",
-                    setValueAs: (value) =>
-                      value ? parseFloat(value) : undefined,
-                    min: {
-                      value: standard?.minWeight ?? 1, // Default min weight to 1 kg if undefined
-                      message: `Weight must be at least ${
-                        standard?.minWeight ?? 1
-                      } kg`,
-                    },
-                    max: {
-                      value: standard?.maxWeight ?? 200, // Default max weight to 200 kg if undefined
-                      message: `Weight must be at most ${
-                        standard?.maxWeight ?? 200
-                      } kg`,
-                    },
-                  })}
-                />
-              </div>
-              {errors.weightEstimate && (
-                <p className="text-red-500">{errors.weightEstimate.message}</p>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Height Estimate
-                </div>
-                <input
-                  disabled={!isWeekSelected}
-                  type="number"
-                  step="any"
-                  className="flex-1 p-2"
-                  {...register("heightEstimate", {
-                    required: "Height is required",
-                    setValueAs: (value) =>
-                      value ? parseFloat(value) : undefined,
-                    min: {
-                      value: standard?.minHeight ?? 0.25,
-                      message: `Height must be at least ${
-                        standard?.minHeight ?? 0.25
-                      } cm`,
-                    },
-                    max: {
-                      value: standard?.maxHeight ?? 0.3,
-                      message: `Height must be at most ${
-                        standard?.maxHeight ?? 0.3
-                      } cm`,
-                    },
-                  })}
-                />
-              </div>
-              {errors.heightEstimate && (
-                <p className="text-red-500">{errors.heightEstimate.message}</p>
               )}
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">

@@ -108,6 +108,7 @@ export const API_ROUTES = {
   //----------------------FEEDBACK
   DASHBOARD_FEEDBACKS_ALL: "/feedback/get-feedback-pagination-admin",
   DASHBOARD_FEEDBACKS_BAN: "/feedback/ban-feedback",
+  DASHBOARD_FEEDBACKS_UNBAN: "/feedback/unban-feedback",
   DASHBOARD_FEEDBACKS_DELETE: "/feedback/delete",
 
   //-------------------DOCTOR CALENDAR
