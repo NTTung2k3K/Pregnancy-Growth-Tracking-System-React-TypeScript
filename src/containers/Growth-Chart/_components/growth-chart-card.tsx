@@ -48,7 +48,9 @@ export function GrowthChartCard({ chart }: GrowthChartCardProps) {
               src={chart.userViewModel.image}
               alt={chart.userViewModel.fullName}
             />
-            <AvatarFallback>{chart.userViewModel.fullName[0]}</AvatarFallback>
+            <AvatarFallback>
+              {chart.userViewModel.fullName[0] || ""}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center justify-between">

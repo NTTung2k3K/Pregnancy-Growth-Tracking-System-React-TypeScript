@@ -43,7 +43,9 @@ const UserProfileContainer = () => {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserFormValue>();
+  } = useForm<UserFormValue>({
+    mode: "onChange",
+  });
   const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -211,6 +213,22 @@ const UserProfileContainer = () => {
                   className="flex-1 p-2"
                   {...register("dateOfBirth", {
                     required: "Date of Birth is required",
+                    validate: (value) => {
+                      if (!value) return "Date of Birth is required"; // Ensure value is not null
+                      const birthDate = new Date(value);
+                      if (isNaN(birthDate.getTime())) return "Invalid date"; // Handle invalid dates
+
+                      const today = new Date();
+                      const age = today.getFullYear() - birthDate.getFullYear();
+                      const isBirthdayPassed =
+                        today.getMonth() > birthDate.getMonth() ||
+                        (today.getMonth() === birthDate.getMonth() &&
+                          today.getDate() >= birthDate.getDate());
+
+                      return age > 18 || (age === 18 && isBirthdayPassed)
+                        ? true
+                        : "You must be at least 18 years old";
+                    },
                   })}
                 />
               </div>

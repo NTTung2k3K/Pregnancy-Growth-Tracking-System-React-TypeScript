@@ -184,12 +184,33 @@ const EmployeeProfileContainer = () => {
               <input
                 type="date"
                 className="flex-1 p-2"
-                {...register("dateOfBirth", { required: true })}
+                {...register("dateOfBirth", {
+                  required: "Date of birth is required",
+                  validate: (value) => {
+                    if (!value) return "Date of birth is required"; // Ensure value is not null
+                    const birthDate = new Date(value);
+                    if (isNaN(birthDate.getTime())) return "Invalid date"; // Check for invalid dates
+
+                    const today = new Date();
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    const isBirthdayPassed =
+                      today.getMonth() > birthDate.getMonth() ||
+                      (today.getMonth() === birthDate.getMonth() &&
+                        today.getDate() >= birthDate.getDate());
+
+                    return (
+                      age > 18 ||
+                      (age === 18 && isBirthdayPassed) ||
+                      "You must be at least 18 years old"
+                    );
+                  },
+                })}
               />
             </div>
             {errors.dateOfBirth && (
-              <span className="text-red-500">Date of birth is required</span>
+              <span className="text-red-500">{errors.dateOfBirth.message}</span>
             )}
+
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
               <div className="font-medium flex items-center mr-10">Address</div>
               <input
