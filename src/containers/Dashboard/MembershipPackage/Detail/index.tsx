@@ -104,6 +104,14 @@ const MembershipPackageDetailContainer = () => {
                 {membershipPackage?.maxGrowthChartShares}
               </p>
             </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Max Appointment Can Booking
+              </div>
+              <p className="flex-1 p-2">
+                {membershipPackage?.maxAppointmentCanBooking}
+              </p>
+            </div>
           </div>
 
           <div className="space-y-6">

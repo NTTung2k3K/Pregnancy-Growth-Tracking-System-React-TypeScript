@@ -97,6 +97,9 @@ const AppointmentTemplatesCreateContainer = lazy(
 const AppointmentTemplatesUpdateContainer = lazy(
   () => import("./containers/Dashboard/AppoinmentTemplates/Update")
 );
+const AppointmentTemplatesDetailContainer = lazy(
+  () => import("./containers/Dashboard/AppoinmentTemplates/Detail")
+);
 
 //------------------------------EMPLOYEES
 const DoctorContainer = lazy(() => import("./containers/Dashboard/Doctor"));
@@ -483,6 +486,12 @@ const router = createBrowserRouter([
     path: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE,
     element: (
       <DashboardLayout children={<AppointmentTemplatesUpdateContainer />} />
+    ),
+  },
+  {
+    path: ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL,
+    element: (
+      <DashboardLayout children={<AppointmentTemplatesDetailContainer />} />
     ),
   },
 

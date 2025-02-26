@@ -59,29 +59,6 @@ export const columns: ColumnDef<MembershipPackage>[] = [
     },
   },
   {
-    accessorKey: "imageUrl",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Image
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const isImageUrl = row.getValue("imageUrl") || false;
-      return isImageUrl ? (
-        <img width={120} src={row.getValue("imageUrl")} alt="Image" />
-      ) : (
-        <p>No image</p>
-      );
-    },
-  },
-
-  {
     accessorKey: "status",
     header: ({ column }) => {
       return (

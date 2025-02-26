@@ -29,7 +29,7 @@ interface ChildFormValues {
   id: string;
   userId: string;
   name: string;
-  fetalGender: string;
+  fetalGender: number;
   pregnancyStage: string;
   dueDate: string;
   deliveryPlan: string;
@@ -81,7 +81,7 @@ const ChildCreateContainer = () => {
           {
             UserId: id,
             Name: data.name,
-            FetalGender: data.fetalGender,
+            FetalGender: Number(data.fetalGender),
             PregnancyStage: data.pregnancyStage,
             DueDate: data.dueDate,
             DeliveryPlan: data.deliveryPlan,
@@ -125,9 +125,6 @@ const ChildCreateContainer = () => {
       setImageFile(file);
     }
   };
-
-
-
 
   return (
     <>
