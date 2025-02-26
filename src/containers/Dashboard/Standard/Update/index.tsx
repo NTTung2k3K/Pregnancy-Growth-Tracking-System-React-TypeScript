@@ -8,31 +8,17 @@ import { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Standard } from "../components/IStandard";
 
 const fields: Array<keyof Standard> = [
   "week",
-  "gestationalAge",
-  "minWeight",
-  "maxWeight",
   "averageWeight",
+  "averageHeight",
+  "maxWeight",
+  "minWeight",
   "minHeight",
   "maxHeight",
-  "averageHeight",
-  "headCircumference",
-  "abdominalCircumference",
-  "fetalHeartRate",
-];
-
-const numberFields: Array<keyof Standard> = [
-  "week",
-  "minWeight",
-  "maxWeight",
-  "averageWeight",
-  "minHeight",
-  "maxHeight",
-  "averageHeight",
   "headCircumference",
   "abdominalCircumference",
   "fetalHeartRate",
@@ -61,6 +47,7 @@ const GrowthStandardUpdateContainer = () => {
   });
 
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchStandardData = async () => {
@@ -89,7 +76,13 @@ const GrowthStandardUpdateContainer = () => {
         { ...data }
       );
       if (response.data.message.statusCode === 200) {
-        window.location.reload();
+        if (!id) {
+          console.error("ID is undefined or null");
+          return;
+        }
+        navigate(
+          ROUTES.DASHBOARD_GROWTH_STANDARDS_DETAIL.replace(":id", id.toString())
+        );
         toast.success(response.data.message.message);
       } else {
         toast.error(response.data.message.message);
@@ -103,7 +96,7 @@ const GrowthStandardUpdateContainer = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="p-6 mt-20">
+      <div className="p-6">
         <Link to={ROUTES.DASHBOARD_GROWTH_STANDARDS}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700 mb-10">
             <CircleArrowLeft /> Back
@@ -112,30 +105,34 @@ const GrowthStandardUpdateContainer = () => {
         <h1 className="text-2xl font-medium">Update Standard</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
           {fields.map((key) => (
-            <div
-              key={key}
-              className="flex mt-4 border bg-slate-100 rounded-md p-4"
-            >
-              <div className="font-medium flex items-center mr-10">
-                {formatFieldName(key)}
+            <>
+              <div className="">
+                <div
+                  key={key}
+                  className="flex border bg-slate-100 rounded-md p-4"
+                >
+                  <div className="font-medium flex items-center mr-10">
+                    {formatFieldName(key)}
+                  </div>
+                  <input
+                    type="number"
+                    className="flex-1 p-2 border rounded-md"
+                    step="any"
+                    min="0"
+                    {...register(key, {
+                      required: `${key} is required`,
+                      valueAsNumber: true, // Ensures numbers are stored correctly
+                      min: { value: 0, message: `${key} must be positive` }, // Ensure value is >= 0
+                    })}
+                  />
+                </div>
+                {errors[key] && (
+                  <p className="text-red-500 mt-2 mx-4">
+                    {errors[key]?.message}
+                  </p>
+                )}
               </div>
-              <input
-                type={numberFields.includes(key) ? "number" : "text"}
-                className="flex-1 p-2 border rounded-md"
-                step="any"
-                min="0"
-                {...register(key, {
-                  required: `${key} is required`,
-                  ...(numberFields.includes(key) && {
-                    valueAsNumber: true, // Ensures numbers are stored correctly
-                    min: { value: 0, message: `${key} must be positive` },
-                  }),
-                })}
-              />
-              {errors[key] && (
-                <p className="text-red-500">{errors[key]?.message}</p>
-              )}
-            </div>
+            </>
           ))}
         </div>
         <div className="flex items-center justify-end mt-10">

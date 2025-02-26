@@ -18,6 +18,7 @@ export interface MembershipPackage {
   showPriority: number;
   maxRecordAdded: number;
   maxGrowthChartShares: number;
+  maxAppointmentCanBooking: number;
   hasGenerateAppointments: boolean;
   hasStandardDeviationAlerts: boolean;
   hasViewGrowthChart: boolean;

@@ -243,7 +243,7 @@ const MembershipPackageCreateContainer = () => {
                   <p className="text-red-500">{errors.discount.message}</p>
                 )}
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10 w-1/6 ">
+                  <div className="font-medium flex items-center mr-10 w-1/6">
                     Duration
                   </div>
                   <input
@@ -251,15 +251,21 @@ const MembershipPackageCreateContainer = () => {
                     className="flex-1 p-2 bg-white"
                     {...register("duration", {
                       required: "Duration is required",
-                      validate: (value) =>
-                        value > 0 || "Duration must be positive",
+                      validate: (value) => {
+                        const numValue = Number(value);
+                        return (
+                          numValue === -1 ||
+                          numValue > 0 ||
+                          "Only -1 or a positive number is allowed"
+                        );
+                      },
                     })}
-                    min={1}
                   />
                 </div>
                 {errors.duration && (
                   <p className="text-red-500">{errors.duration.message}</p>
                 )}
+
                 <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                   <div className="font-medium flex items-center mr-10 w-1/6 ">
                     Max Record Added
@@ -269,8 +275,14 @@ const MembershipPackageCreateContainer = () => {
                     className="flex-1 p-2 bg-white"
                     {...register("maxRecordAdded", {
                       required: "maxRecordAdded is required",
-                      validate: (value) =>
-                        value > 0 || "maxRecordAdded must be positive",
+                      validate: (value) => {
+                        const numValue = Number(value);
+                        return (
+                          numValue === -1 ||
+                          numValue > 0 ||
+                          "Only -1 or a positive number is allowed"
+                        );
+                      },
                     })}
                     min={1}
                   />
@@ -289,8 +301,14 @@ const MembershipPackageCreateContainer = () => {
                     className="flex-1 p-2 bg-white"
                     {...register("maxGrowthChartShares", {
                       required: "maxGrowthChartShares is required",
-                      validate: (value) =>
-                        value > 0 || "maxGrowthChartShares must be positive",
+                      validate: (value) => {
+                        const numValue = Number(value);
+                        return (
+                          numValue === -1 ||
+                          numValue > 0 ||
+                          "Only -1 or a positive number is allowed"
+                        );
+                      },
                     })}
                     min={1}
                   />
@@ -312,9 +330,14 @@ const MembershipPackageCreateContainer = () => {
                     className="flex-1 p-2 bg-white"
                     {...register("maxAppointmentCanBooking", {
                       required: "Max Appointment CanBooking is required",
-                      validate: (value) =>
-                        value > 0 ||
-                        "maxAppointmentCanBooking must be positive",
+                      validate: (value) => {
+                        const numValue = Number(value);
+                        return (
+                          numValue === -1 ||
+                          numValue > 0 ||
+                          "Only -1 or a positive number is allowed"
+                        );
+                      },
                     })}
                     min={1}
                   />

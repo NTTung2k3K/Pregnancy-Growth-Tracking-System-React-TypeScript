@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
@@ -76,6 +76,7 @@ const MembershipPackageUpdateContainer = () => {
 
   const [status, setStatus] = useState<Status[]>([]);
   const [packageLevel, setPackageLevel] = useState<PackageLevel[]>([]);
+  const navigate = useNavigate();
 
   const fetchStatus = async () => {
     try {
@@ -220,7 +221,16 @@ const MembershipPackageUpdateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.reload();
+        if (!id) {
+          console.error("ID is undefined or null");
+          return;
+        }
+        navigate(
+          ROUTES.DASHBOARD_MEMBERSHIPPACKAGE_DETAIL.replace(
+            ":id",
+            id.toString()
+          )
+        );
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -336,10 +346,15 @@ const MembershipPackageUpdateContainer = () => {
                   className="flex-1 p-2 bg-white"
                   {...register("duration", {
                     required: "Duration is required",
-                    validate: (value) =>
-                      value > 0 || "Duration must be positive",
+                    validate: (value) => {
+                      const numValue = Number(value);
+                      return (
+                        numValue === -1 ||
+                        numValue > 0 ||
+                        "Only -1 or a positive number is allowed"
+                      );
+                    },
                   })}
-                  min={1}
                 />
               </div>
               {errors.duration && (
@@ -354,10 +369,15 @@ const MembershipPackageUpdateContainer = () => {
                   className="flex-1 p-2 bg-white"
                   {...register("maxRecordAdded", {
                     required: "maxRecordAdded is required",
-                    validate: (value) =>
-                      value > 0 || "maxRecordAdded must be positive",
+                    validate: (value) => {
+                      const numValue = Number(value);
+                      return (
+                        numValue === -1 ||
+                        numValue >= 0 ||
+                        "Only -1 or a positive number is allowed"
+                      );
+                    },
                   })}
-                  min={1}
                 />
               </div>
               {errors.maxRecordAdded && (
@@ -372,10 +392,15 @@ const MembershipPackageUpdateContainer = () => {
                   className="flex-1 p-2 bg-white"
                   {...register("maxGrowthChartShares", {
                     required: "maxGrowthChartShares is required",
-                    validate: (value) =>
-                      value > 0 || "maxGrowthChartShares must be positive",
+                    validate: (value) => {
+                      const numValue = Number(value);
+                      return (
+                        numValue === -1 ||
+                        numValue >= 0 ||
+                        "Only -1 or a positive number is allowed"
+                      );
+                    },
                   })}
-                  min={1}
                 />
               </div>
               {errors.maxGrowthChartShares && (
@@ -395,10 +420,15 @@ const MembershipPackageUpdateContainer = () => {
                   className="flex-1 p-2 bg-white"
                   {...register("maxAppointmentCanBooking", {
                     required: "maxAppointmentCanBooking is required",
-                    validate: (value) =>
-                      value > 0 || "maxRecordAdded must be positive",
+                    validate: (value) => {
+                      const numValue = Number(value);
+                      return (
+                        numValue === -1 ||
+                        numValue >= 0 ||
+                        "Only -1 or a positive number is allowed"
+                      );
+                    },
                   })}
-                  min={1}
                 />
               </div>
               {errors.maxAppointmentCanBooking && (
@@ -418,7 +448,6 @@ const MembershipPackageUpdateContainer = () => {
                     validate: (value) =>
                       value > 0 || "Show priority must be greater than 0",
                   })}
-                  min={1}
                 />
               </div>
               {errors.showPriority && (

@@ -85,7 +85,8 @@ export const ROUTES = {
 
   //-----------------APPOINTMENT TEMPLATES
   DASHBOARD_APPOINTMENT_TEMPLATES: "/dashboard/appointmenttemplates",
-  DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE: "/dashboard/appointmenttemplates/:id",
+  DASHBOARD_APPOINTMENT_TEMPLATES_UPDATE: "/dashboard/appointmenttemplates/update/:id",
+  DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL: "/dashboard/appointmenttemplates/detail/:id",
   DASHBOARD_APPOINTMENT_TEMPLATES_CREATE:
     "/dashboard/appointmenttemplates/create",
 

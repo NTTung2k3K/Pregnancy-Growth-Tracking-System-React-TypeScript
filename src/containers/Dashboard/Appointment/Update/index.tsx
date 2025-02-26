@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL, configHeaders } from "@/services/config";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
@@ -58,6 +58,7 @@ const AppointmentUpdateContainer = () => {
     mode: "onChange",
   });
   const [displayValue, setDisplayValue] = useState(""); // Giá trị hiển thị trong input
+  const navigate = useNavigate();
 
   const { id } = useParams();
   const [appointment, setAppointment] = useState<Appointment>();
@@ -74,6 +75,8 @@ const AppointmentUpdateContainer = () => {
   const [isWeekSelected, setIsWeekSelected] = useState(false);
 
   const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
+  const [maxStandard, setMaxStandard] = useState<Standard>();
+  const [minStandard, setMinStandard] = useState<Standard>();
 
   const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedWeek = e.target.value;
@@ -101,6 +104,36 @@ const AppointmentUpdateContainer = () => {
         }
       );
       setStandard(response.data.resultObj);
+
+      console.log(response.data.resultObj);
+    } catch (error) {
+      console.error("Failed to fetch roles:", error);
+    }
+  };
+  const fetchMinStandard = async (week: number) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
+        {
+          params: { week: week },
+        }
+      );
+      setMinStandard(response.data.resultObj);
+
+      console.log(response.data.resultObj);
+    } catch (error) {
+      console.error("Failed to fetch roles:", error);
+    }
+  };
+  const fetchMaxStandard = async (week: number) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
+        {
+          params: { week: week },
+        }
+      );
+      setMaxStandard(response.data.resultObj);
 
       console.log(response.data.resultObj);
     } catch (error) {
@@ -154,6 +187,8 @@ const AppointmentUpdateContainer = () => {
       const statusData = await fetchStatus(); // Lấy dữ liệu status
       if (statusData) {
         await fetchAppointment(statusData); // Truyền dữ liệu status vào
+        await fetchMinStandard(1);
+        await fetchMaxStandard(41);
       }
       fetchDoctor();
     };
@@ -236,7 +271,13 @@ const AppointmentUpdateContainer = () => {
           }
         );
         if (response.data.statusCode === 200) {
-          window.location.href = `${ROUTES.DASHBOARD_APPOINTMENT}`;
+          if (!id) {
+            console.error("ID is undefined or null");
+            return;
+          }
+          navigate(
+            ROUTES.DASHBOARD_APPOINTMENT_DETAIL.replace(":id", id.toString())
+          );
           toast.success(response.data.message);
         } else {
           toast.error(response.data.message);
@@ -283,7 +324,6 @@ const AppointmentUpdateContainer = () => {
                   Appointment Name
                 </div>
                 <input
-                  disabled={isAdmin}
                   className="flex-1 p-2 bg-white"
                   {...register("name", {
                     required: "Appointment name is required",
@@ -687,9 +727,17 @@ const AppointmentUpdateContainer = () => {
                             required: "Height is required",
                             setValueAs: (value) =>
                               value ? parseFloat(value) : undefined,
-                            validate: (value) =>
-                              (value != null && value > 0) ||
-                              "Weight must be a positive number",
+                            validate: (value) => {
+                              const minHeight = minStandard?.minHeight ?? 0;
+                              const maxHeight = maxStandard?.maxHeight ?? 100;
+
+                              return (
+                                (value != null &&
+                                  value > minHeight &&
+                                  value <= maxHeight) ||
+                                `Height must be greater than ${minHeight} and not exceed ${maxHeight}`
+                              );
+                            },
                           })}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
@@ -740,9 +788,17 @@ const AppointmentUpdateContainer = () => {
                             required: "Weight is required",
                             setValueAs: (value) =>
                               value ? parseFloat(value) : undefined,
-                            validate: (value) =>
-                              (value != null && value > 0) ||
-                              "Weight must be a positive number",
+                            validate: (value) => {
+                              const minWeight = minStandard?.minWeight ?? 0; // Default to 0 if undefined
+                              const maxWeight = maxStandard?.maxWeight ?? 12.6; // Default to 12.6 if undefined
+
+                              return (
+                                (value != null &&
+                                  value > minWeight &&
+                                  value <= maxWeight) ||
+                                `Weight must be greater than ${minWeight} and not exceed ${maxWeight}`
+                              );
+                            },
                           })}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
@@ -795,9 +851,18 @@ const AppointmentUpdateContainer = () => {
                               required: "Head circumference is required",
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : undefined,
-                              validate: (value) =>
-                                (value != null && value > 0) ||
-                                "Head circumference must be a positive number", // ✅ Ensure positive value
+                              validate: (value) => {
+                                const minCircumference = 0; // Minimum is fixed at 0
+                                const maxCircumference =
+                                  maxStandard?.headCircumference ?? 4.1; // Default to 4.1 if undefined
+
+                                return (
+                                  (value != null &&
+                                    value > minCircumference &&
+                                    value <= maxCircumference) ||
+                                  `Head circumference must be greater than ${minCircumference} and not exceed ${maxCircumference}`
+                                );
+                              },
                             }
                           )}
                           onChange={(e) => {
@@ -868,9 +933,18 @@ const AppointmentUpdateContainer = () => {
                               required: "Abdominal circumference is required",
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : undefined,
-                              validate: (value) =>
-                                (value != null && value > 0) ||
-                                "Abdominal circumference must be a positive number", // ✅ Ensure positive value
+                              validate: (value) => {
+                                const minCircumference = 0; // Minimum is fixed at 0
+                                const maxCircumference =
+                                  maxStandard?.abdominalCircumference ?? 3.5; // Default to 3.5 if undefined
+
+                                return (
+                                  (value != null &&
+                                    value > minCircumference &&
+                                    value <= maxCircumference) ||
+                                  `Abdominal circumference must be greater than ${minCircumference} and not exceed ${maxCircumference}`
+                                );
+                              },
                             }
                           )}
                           onChange={(e) => {
@@ -947,6 +1021,11 @@ const AppointmentUpdateContainer = () => {
                                   return true; // ✅ Allow empty if not required
                                 if (value == null)
                                   return "Fetal heart rate is required"; // ❌ Required only if standard is set
+                                if (value < 120)
+                                  return "Fetal heart rate must be at least 120"; // ❌ Enforce min limit
+                                if (value > 170)
+                                  return "Fetal heart rate must not exceed 170"; // ❌ Enforce max limit
+
                                 return true;
                               },
                             }

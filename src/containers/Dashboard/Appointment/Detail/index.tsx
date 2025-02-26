@@ -8,6 +8,7 @@ import {
   CircleHelp,
   FileUser,
   History,
+  Pen,
   SquareMousePointer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const AppointmentDetailContainer = () => {
   const role = localStorage.getItem("role");
   const isAdmin = role === "Admin";
   const [history, setHistory] = useState([]);
+  const [status, setStatus] = useState<string>();
 
   const apiLink = isAdmin
     ? API_ROUTES.DASHBOARD_APPOINTMENT_ADMIN_DETAIL
@@ -43,6 +45,7 @@ const AppointmentDetailContainer = () => {
         ...response.data.resultObj,
       };
       setAppointment(fetchedAppointment);
+      setStatus(fetchedAppointment.status);
       const sortedAppointments = response.data.resultObj.appoinmentUsers
         ?.slice() // Create a copy to avoid mutating the original array
         .sort(
@@ -63,13 +66,24 @@ const AppointmentDetailContainer = () => {
 
   return (
     <div>
-      <div className="mt-10">
+      <div className=" flex items-center justify-between mt-10">
         <Link className="p-6" to={ROUTES.DASHBOARD_APPOINTMENT}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
             <CircleArrowLeft className="mr-2" />
             Back
           </Button>
         </Link>
+        {status === "Confirmed" && (
+          <Link
+            className="p-6"
+            to={ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(":id", String(id))}
+          >
+            <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700">
+              <Pen className="mr-2" />
+              Examination
+            </Button>
+          </Link>
+        )}
       </div>
 
       <div className="p-6">

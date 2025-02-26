@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { Appointment } from "@/containers/Dashboard/Appointment";
 import ActionRow from "@/containers/Dashboard/Appointment/components/action-row";
-import { getSlotString } from "@/lib/utils";
+import { cn, getSlotString } from "@/lib/utils";
 
 const columnFields: { key: keyof Appointment; label: string }[] = [];
 
@@ -138,7 +138,25 @@ export const columns: ColumnDef<Appointment>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
 
-      return <Badge>{status}</Badge>;
+      return (
+        <Badge
+          className={cn("font-bold", {
+            "bg-green-500": row.getValue("status") === "Completed",
+            "bg-yellow-500": row.getValue("status") === "Pending",
+            "bg-red-500": [
+              "NoShow",
+              "Failed",
+              "CancelledByUser",
+              "CancelledByDoctor",
+            ].includes(row.getValue("status")),
+            "bg-blue-500": row.getValue("status") === "InProgress",
+            "bg-violet-500": row.getValue("status") === "Confirmed",
+            "bg-pink-500": row.getValue("status") === "Rescheduled",
+          })}
+        >
+          {status}
+        </Badge>
+      );
     },
   },
   {

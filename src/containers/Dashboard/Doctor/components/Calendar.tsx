@@ -244,7 +244,7 @@ export function DoctorCalendar() {
                         <div
                           onClick={() => {
                             navigate(
-                              ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(
+                              ROUTES.DASHBOARD_APPOINTMENT_DETAIL.replace(
                                 ":id",
                                 String(appointment.id)
                               )

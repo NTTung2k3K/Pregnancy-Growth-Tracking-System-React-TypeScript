@@ -7,11 +7,10 @@ import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
 import { AvatarOverlay } from "@/components/AvatarOverlay";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AppointmentTemplates } from "../components/IAppointmentTemplates";
 
 interface AppointmentTemplatesFormValues {
@@ -23,7 +22,7 @@ interface AppointmentTemplatesFormValues {
   dueDateStatus: string;
 }
 
-const AppointmentTemplatesUpdateContainer = () => {
+const AppointmentTemplatesDetailContainer = () => {
   const {
     register,
     handleSubmit,
@@ -34,14 +33,13 @@ const AppointmentTemplatesUpdateContainer = () => {
   });
 
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [imageTemp, setImageTemp] = useState<string | undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setIsLoading] = useState<boolean>(false);
 
   const [template, setTemplate] = useState<AppointmentTemplates>();
-  const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
+  const [isEditingImg] = useState<boolean>(false);
 
   const [dueDateStatus, setDueDateStatus] = useState<string | undefined>(
     undefined
@@ -116,16 +114,7 @@ const AppointmentTemplatesUpdateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        if (!id) {
-          console.error("ID is undefined or null");
-          return;
-        }
-        navigate(
-          ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL.replace(
-            ":id",
-            id.toString()
-          )
-        );
+        window.location.href = `${ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES}`;
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -149,19 +138,10 @@ const AppointmentTemplatesUpdateContainer = () => {
     }
   };
 
-  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsEditingImg(true);
-  };
-  const handleUndoClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsEditingImg(false);
-  };
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-6 ">
+        <div className="p-6">
           <Link to={ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES}>
             <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700 mb-10">
               <CircleArrowLeft />
@@ -171,7 +151,7 @@ const AppointmentTemplatesUpdateContainer = () => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-y-2">
               <h1 className="text-2xl font-medium">
-                Update Appoinment Template
+                 Appoinment Template Detail
               </h1>
             </div>
           </div>
@@ -202,6 +182,7 @@ const AppointmentTemplatesUpdateContainer = () => {
                   Due date
                 </div>
                 <select
+                  disabled
                   className="flex-1 p-2"
                   {...register("dueDateStatus")}
                   value={dueDateStatus}
@@ -215,6 +196,7 @@ const AppointmentTemplatesUpdateContainer = () => {
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Week</div>
                 <input
+                  disabled
                   type="number"
                   className="flex-1 p-2"
                   {...register("daysFromBirth", {
@@ -239,6 +221,7 @@ const AppointmentTemplatesUpdateContainer = () => {
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Fee</div>
                 <input
+                  disabled
                   type="number"
                   step="1000"
                   className="flex-1 p-2"
@@ -266,6 +249,7 @@ const AppointmentTemplatesUpdateContainer = () => {
                   Description
                 </div>
                 <input
+                  disabled
                   className="flex-1 p-2"
                   {...register("description", {
                     required: "Description is required",
@@ -287,25 +271,6 @@ const AppointmentTemplatesUpdateContainer = () => {
                       Image
                     </h2>
                   </div>
-                  {isEditingImg ? (
-                    <div className="">
-                      <Button
-                        onClick={handleUndoClick}
-                        className="bg-sky-900 hover:bg-sky-700 text-emerald-400 "
-                      >
-                        Undo
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="">
-                      <Button
-                        onClick={handleEditClick}
-                        className="bg-sky-900 hover:bg-sky-700 text-emerald-400 "
-                      >
-                        Edit
-                      </Button>
-                    </div>
-                  )}
                 </div>
                 {template?.image && !isEditingImg ? (
                   <div className="flex items-center justify-center mt-4 border bg-slate-100 rounded-md p-4">
@@ -336,6 +301,7 @@ const AppointmentTemplatesUpdateContainer = () => {
                     Status
                   </div>
                   <select
+                    disabled
                     className="flex-1 p-2"
                     {...register("status", {
                       required: "Status is required",
@@ -352,20 +318,10 @@ const AppointmentTemplatesUpdateContainer = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-end mt-10 mr-10">
-            <Button
-              disabled={isLoading}
-              className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
-              type="submit"
-            >
-              {isLoading && <AiOutlineLoading className="animate-spin" />}
-              Save
-            </Button>
-          </div>
         </div>
       </form>
     </>
   );
 };
 
-export default AppointmentTemplatesUpdateContainer;
+export default AppointmentTemplatesDetailContainer;

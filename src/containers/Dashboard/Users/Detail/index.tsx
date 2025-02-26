@@ -174,7 +174,7 @@ const UserDetailContainer = () => {
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Role</div>
-                {/* <p className="flex-1 p-2">{employee?.role}</p> */}
+                User
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">

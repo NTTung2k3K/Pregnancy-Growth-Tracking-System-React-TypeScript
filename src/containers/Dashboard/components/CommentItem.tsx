@@ -155,18 +155,20 @@ export function CommentItem({
               </p>
             </div>
             <div className="flex">
-              {currentUserId && !["Answered"].includes(status) && feedback.status !== "BANNED" && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="bg-slate-200 mr-2 flex items-center gap-2"
-                  onClick={() => setIsReplying(!isReplying)}
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  Reply
-                </Button>
-              )}
-              {role === "Admin" ? (
+              {currentUserId &&
+                !["Answered"].includes(status) &&
+                feedback.status !== "BANNED" && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="bg-slate-200 mr-2 flex items-center gap-2"
+                    onClick={() => setIsReplying(!isReplying)}
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    Reply
+                  </Button>
+                )}
+              {role === "Admin" && status !== "Answered" ? (
                 feedback.status !== "BANNED" &&
                 currentUserId &&
                 status != "Answered" ? (

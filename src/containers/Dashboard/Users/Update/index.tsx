@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
@@ -22,6 +22,7 @@ const UserUpdateContainer = () => {
   const { id } = useParams();
   const [employee, setEmployee] = useState<User>();
   const [status, setStatus] = useState([]);
+  const navigate = useNavigate();
 
   const fetchStatus = async () => {
     try {
@@ -77,7 +78,16 @@ const UserUpdateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.DASHBOARD_USERS}`;
+        if (!id) {
+          console.error("ID is undefined or null");
+          return;
+        }
+        navigate(
+          ROUTES.DASHBOARD_USER_DETAIL.replace(
+            ":id",
+            id.toString()
+          )
+        );
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);

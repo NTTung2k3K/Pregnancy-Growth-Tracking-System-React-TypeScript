@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Trash, UserPen } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Pen, Trash, UserPen } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -156,8 +156,20 @@ export const columns: ColumnDef<AppointmentTemplates>[] = [
               )}`}
             >
               <DropdownMenuItem className="cursor-pointer">
-                <UserPen className="h-4 w-4 mr-2" />
+                <Pen className="h-4 w-4 mr-2" />
                 Edit
+              </DropdownMenuItem>
+            </Link>
+            <Link
+              className="text-sky-800"
+              to={`${ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_DETAIL.replace(
+                ":id",
+                String(id)
+              )}`}
+            >
+              <DropdownMenuItem className="cursor-pointer">
+                <UserPen className="h-4 w-4 mr-2" />
+                Detail
               </DropdownMenuItem>
             </Link>
             <DropdownMenuItem className="cursor-pointer font-semibold">

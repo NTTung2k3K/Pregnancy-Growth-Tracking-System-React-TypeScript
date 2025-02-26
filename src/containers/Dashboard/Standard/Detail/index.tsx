@@ -11,31 +11,16 @@ import { Standard } from "../components/IStandard";
 
 const fields: Array<keyof Standard> = [
   "week",
-  "gestationalAge",
-  "minWeight",
-  "maxWeight",
   "averageWeight",
+  "averageHeight",
+  "maxWeight",
+  "minWeight",
   "minHeight",
   "maxHeight",
-  "averageHeight",
   "headCircumference",
   "abdominalCircumference",
   "fetalHeartRate",
 ];
-
-const numberFields: Array<keyof Standard> = [
-  "week",
-  "minWeight",
-  "maxWeight",
-  "averageWeight",
-  "minHeight",
-  "maxHeight",
-  "averageHeight",
-  "headCircumference",
-  "abdominalCircumference",
-  "fetalHeartRate",
-];
-
 const formatFieldName = (field: string): string => {
   return field
     .replace(/\bminWeight\b/gi, "Min Height") // Convert "minWeight" to "Min Height"
@@ -79,7 +64,7 @@ const GrowthStandardDetailContainer = () => {
 
   return (
     <div>
-      <div className="p-6 mt-20">
+      <div className="p-6">
         <Link to={ROUTES.DASHBOARD_GROWTH_STANDARDS}>
           <Button className="bg-sky-900 text-emerald-400 hover:bg-sky-700 mb-10">
             <CircleArrowLeft /> Back
@@ -97,16 +82,14 @@ const GrowthStandardDetailContainer = () => {
               </div>
               <input
                 disabled
-                type={numberFields.includes(key) ? "number" : "text"}
+                type="number"
                 className="flex-1 p-2 border rounded-md"
                 step="any"
                 min="0"
                 {...register(key, {
                   required: `${key} is required`,
-                  ...(numberFields.includes(key) && {
-                    valueAsNumber: true, // Ensures numbers are stored correctly
-                    min: { value: 0, message: `${key} must be positive` },
-                  }),
+                  valueAsNumber: true, // Ensures numbers are stored correctly
+                  min: { value: 0, message: `${key} must be positive` }, // Ensure value is >= 0
                 })}
               />
               {errors[key] && (
