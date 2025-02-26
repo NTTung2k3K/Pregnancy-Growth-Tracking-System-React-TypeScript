@@ -2,7 +2,6 @@
 import { IconBadge } from "@/components/IconBadge";
 import {
   CircleArrowLeft,
-  ClipboardPlus,
   Image,
   Trash,
   UserPen,
