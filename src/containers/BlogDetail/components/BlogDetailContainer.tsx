@@ -74,7 +74,9 @@ const BlogDetailContent = () => {
             isUpdateLiked: false,
           });
           // Tăng viewCount hiển thị thêm 1
-          setBlog((prev) => (prev ? { ...prev, viewCount: prev.viewCount + 1 } : prev));
+          setBlog((prev) =>
+            prev ? { ...prev, viewCount: prev.viewCount + 1 } : prev
+          );
           setHasUpdatedViewCount(true);
         } catch (error) {
           console.error("Error updating view count", error);
@@ -84,14 +86,22 @@ const BlogDetailContent = () => {
     }
   }, [blog, hasUpdatedViewCount]);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!blog) return;
-    if (liked) {
-      setBlog((prev) => (prev ? { ...prev, likesCount: prev.likesCount - 1 } : prev));
-      setLiked(false);
-    } else {
-      setBlog((prev) => (prev ? { ...prev, likesCount: prev.likesCount + 1 } : prev));
-      setLiked(true);
+
+    const updatedLikesCount = liked ? blog.likesCount - 1 : blog.likesCount + 1;
+    setBlog((prev) =>
+      prev ? { ...prev, likesCount: updatedLikesCount } : prev
+    );
+    setLiked(!liked);
+
+    try {
+      await axios.post(`${BASE_URL}/blog/update-quantity`, {
+        id: blog.id,
+        isUpdateLiked: true, // Now updating likes in DB
+      });
+    } catch (error) {
+      console.error("Error updating likes count", error);
     }
   };
 
@@ -103,21 +113,6 @@ const BlogDetailContent = () => {
   useEffect(() => {
     blogRef.current = blog;
   }, [blog]);
-
-  useEffect(() => {
-    return () => {
-      if (likedRef.current && blogRef.current) {
-        axios
-          .post(`${BASE_URL}/blog/update-quantity`, {
-            id: blogRef.current.id,
-            isUpdateLiked: true,
-          })
-          .catch((error) => {
-            console.error("Error updating likes count on unmount", error);
-          });
-      }
-    };
-  }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -157,7 +152,9 @@ const BlogDetailContent = () => {
                   onClick={handleLike}
                 >
                   <span className="mr-3">
-                    <IoThumbsUp className={liked ? "text-blue-500" : "text-gray-500"} />
+                    <IoThumbsUp
+                      className={liked ? "text-blue-500" : "text-gray-500"}
+                    />
                   </span>
                   {blog.likesCount}
                 </p>

@@ -1,40 +1,62 @@
-import { FaSearch } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import NewsLatterBox from "./NewsLatterBox";
 import RelatedPost from "./RelatedPost";
 import { Link } from "react-router-dom";
+import { BlogMainDashboard } from "@/containers/Dashboard/Main/components/IBlog";
+import axios from "axios";
+import { BASE_URL } from "@/services/config";
+import { API_ROUTES } from "@/routes/api";
+import { ROUTES } from "@/routes";
+import { BlogType } from "@/containers/Blog";
 
 const BlogDetailSidebar = () => {
+  const [mostView, setMostView] = useState<BlogMainDashboard[]>([]);
+  const [blogTypes, setBlogTypes] = useState<BlogType[]>([]);
+
+  const fetchBlogMostView = async () => {
+    const response = await axios.get(
+      `${BASE_URL + API_ROUTES.BLOG_MOST_VIEW}`,
+      {
+        params: {
+          quantity: 5,
+        },
+      }
+    );
+    setMostView(response.data.resultObj);
+  };
+  const fetchBlogTypes = async () => {
+    try {
+      // Gọi API lấy tất cả Blog Types
+      const response = await axios.get(`${BASE_URL}/blogtype/all`);
+      // Giả sử API trả về kết quả ở resultObj.items
+      const items = response.data.resultObj.items;
+      setBlogTypes(items);
+    } catch (error) {
+      console.error("Error fetching blog types:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogTypes();
+    fetchBlogMostView();
+  }, []);
+
   return (
     <>
       {" "}
       <div className="w-full px-4 lg:w-4/12">
-        <div className="shadow-three dark:bg-gray-dark mb-10 mt-12 rounded-sm bg-white p-6 dark:shadow-none lg:mt-0">
-          <div className="flex items-center justify-between">
-            <input
-              type="text"
-              placeholder="Search here..."
-              className="border-stroke dark:text-body-color-dark dark:shadow-two mr-4 w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
-            />
-            <button
-              aria-label="search button"
-              className="flex h-[50px] w-full max-w-[50px] items-center justify-center rounded-sm bg-sky-700 text-emerald-400"
-            >
-              <FaSearch />
-            </button>
-          </div>
-        </div>
         <div className="shadow-three dark:bg-gray-dark mb-10 rounded-sm bg-[#F3F2F2] dark:shadow-none">
           <h3 className="border-b border-body-color border-opacity-10 px-8 py-4 text-lg font-semibold text-sky-900 dark:border-white dark:border-opacity-10 dark:text-white">
             Related Posts
           </h3>
           <ul className="p-8">
-            {Array.from({ length: 3 }).map((_) => (
+            {mostView.map((item) => (
               <li className="mb-6 border-b border-body-color border-opacity-10 pb-6 dark:border-white dark:border-opacity-10">
                 <RelatedPost
-                  title="Best way to boost your online sales."
-                  image="/assets/images/Home/BlogDetail/post-01.webp"
-                  slug="#"
-                  date="12 Feb 2025"
+                  title={item.title}
+                  image={item.thumbnail}
+                  slug={ROUTES.BLOG_DETAIL.replace(":id", item.id.toString())}
+                  date={item.createdTime}
                 />
               </li>
             ))}
@@ -45,13 +67,13 @@ const BlogDetailSidebar = () => {
             Popular Category
           </h3>
           <ul className="px-8 py-6">
-            {Array.from({ length: 5 }).map((_) => (
+            {blogTypes.map((item) => (
               <li>
                 <Link
-                  to="#0"
+                  to={`/blog/${item.id}`}
                   className="mb-3 inline-block text-base font-medium text-sky-900/60 hover:text-primary"
                 >
-                  Tailwind Templates
+                  {item.name}
                 </Link>
               </li>
             ))}

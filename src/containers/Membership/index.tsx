@@ -162,31 +162,30 @@ export default function MembershipContainer() {
         <p className="mt-4 text-lg text-gray-600">
           Explore a range of packages designed to accompany your pregnancy
         </p>
-        {userId && !isExpired && isMember ? (
+        {userId && (
           <p className="mt-4 text-lg text-emerald-400 font-bold">
             You are currently using{" "}
             <span
-              className={`${getColor(
-                user?.userMembershipResponses[0].package.packageLevel || ""
-              )}`}
+              className={
+                isMember && !isExpired
+                  ? getColor(
+                      user?.userMembershipResponses[0]?.package.packageLevel ||
+                        ""
+                    )
+                  : "text-[#cd7f32] hover:text-[#cd7f32]"
+              }
             >
-              {user?.userMembershipResponses[0].package.packageName}
-            </span>{" "}
-            , expired at :{" "}
-            {formatDate(user?.userMembershipResponses[0].endDate || "")}
+              {isMember && !isExpired
+                ? user?.userMembershipResponses[0]?.package.packageName
+                : "Bronze"}
+            </span>
+            {isMember && !isExpired && (
+              <>
+                , expired at :{" "}
+                {formatDate(user?.userMembershipResponses[0]?.endDate || "")}
+              </>
+            )}
           </p>
-        ) : userId && isExpired && isMember ? (
-          <p className="mt-4 text-lg text-emerald-400 font-bold">
-            You are currently using{" "}
-            <span className="text-[#cd7f32] hover:text-[#cd7f32]">Bronze</span>
-          </p>
-        ) : userId && !isMember ? (
-          <p className="mt-4 text-lg text-emerald-400 font-bold">
-            You are currently using{" "}
-            <span className="text-[#cd7f32] hover:text-[#cd7f32]">Bronze</span>
-          </p>
-        ) : (
-          ""
         )}
 
         <div className="mt-16 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
