@@ -63,6 +63,7 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
   const login = useGoogleLogin({
     onSuccess: async (response) => {
       try {
+        setIsLoading(true);
         // Gọi API userinfo của Google để lấy thông tin chi tiết người dùng
         const res = await https.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -76,10 +77,12 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
           type: `${API_ROUTES.LOGIN_WITH_GOOGLE}`,
           payload: res.data,
         });
-        toast.success("Successfully logged in with Google!");
+        // toast.success("Successfully logged in with Google!");
       } catch (err) {
         console.error("Login with Google failed:", err);
         toast.error("Failed to login with Google. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     },
     onError: (error) => {

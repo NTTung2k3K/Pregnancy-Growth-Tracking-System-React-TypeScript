@@ -50,6 +50,7 @@ function* loginWithGoogle(action: any): Generator<any, void, any> {
   if (response.data.statusCode === 200) {
     CookiesService.set(response.data.resultObj.id);
     window.location.href = `/`;
+    toast.success(response.data.message);
   } else {
     toast.error(response.data.message);
   }

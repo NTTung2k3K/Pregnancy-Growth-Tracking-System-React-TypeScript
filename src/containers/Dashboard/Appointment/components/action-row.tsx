@@ -42,7 +42,7 @@ export default function ActionRow({
               {isAdmin ? (
                 <DropdownMenuItem className="cursor-pointer">
                   <Pen className="h-4 w-4 mr-2" />
-                  Edit
+                  Change Doctor
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem className="cursor-pointer">

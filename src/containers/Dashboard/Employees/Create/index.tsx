@@ -70,8 +70,6 @@ const EmployeeCreateContainer = () => {
     fetchRoles();
   }, []);
 
-
-
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
       setIsLoading(true);
@@ -104,9 +102,8 @@ const EmployeeCreateContainer = () => {
       }
     } catch (error) {
       console.error("Failed to create employee:", error);
-    }finally{
+    } finally {
       setIsLoading(false);
-      
     }
   };
 
@@ -218,9 +215,22 @@ const EmployeeCreateContainer = () => {
                   className="flex-1 p-2"
                   {...register("dob", {
                     required: "Date of Birth is required",
-                    validate: (value) =>
-                      new Date(value) <= new Date() ||
-                      "Date of Birth cannot be in the future",
+                    validate: (value) => {
+                      if (!value) return "Date of Birth is required"; // Ensure value is not null
+                      const birthDate = new Date(value);
+                      if (isNaN(birthDate.getTime())) return "Invalid date"; // Handle invalid dates
+
+                      const today = new Date();
+                      const age = today.getFullYear() - birthDate.getFullYear();
+                      const isBirthdayPassed =
+                        today.getMonth() > birthDate.getMonth() ||
+                        (today.getMonth() === birthDate.getMonth() &&
+                          today.getDate() >= birthDate.getDate());
+
+                      return age > 18 || (age === 18 && isBirthdayPassed)
+                        ? true
+                        : "You must be at least 18 years old";
+                    },
                   })}
                 />
               </div>

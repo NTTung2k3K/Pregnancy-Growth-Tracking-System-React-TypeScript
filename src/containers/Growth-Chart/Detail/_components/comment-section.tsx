@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -74,7 +72,17 @@ export function CommentsSection({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Comments ({feedbacks.length})</CardTitle>
+        <CardTitle className="flex items-center">
+          Comments ({feedbacks.length})
+          {status === "Answered" && (
+            <>
+              <p className="text-sky-400 ml-2">
+                - The comments section will be closed as the question has been
+                answered.
+              </p>
+            </>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <CommentForm

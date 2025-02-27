@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Link } from "react-router-dom";
+import { IoThumbsUp } from "react-icons/io5";
 
 interface BlogCardProps {
   blog: {
@@ -32,7 +33,9 @@ export function BlogCard({ blog }: BlogCardProps) {
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">{blog.title}</CardTitle>
-              <Badge variant={blog.status === "Published" ? "outline" : "secondary"}>
+              <Badge
+                variant={blog.status === "Published" ? "outline" : "secondary"}
+              >
                 {blog.status}
               </Badge>
             </div>
@@ -45,7 +48,7 @@ export function BlogCard({ blog }: BlogCardProps) {
         </CardHeader>
         <CardContent>
           <div className="flex items-center text-sm text-muted-foreground">
-            <Heart className="w-4 h-4 mr-1" />
+            <IoThumbsUp className="w-4 h-4 mr-1" />
             {blog.likesCount}
             <span className="mx-2">•</span>
             <Eye className="w-4 h-4 mr-1" />

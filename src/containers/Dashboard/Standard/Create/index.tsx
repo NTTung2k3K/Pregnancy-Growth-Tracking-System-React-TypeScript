@@ -8,7 +8,7 @@ import { useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { ROUTES } from "@/routes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Standard } from "../components/IStandard";
 
 const fields: Array<keyof Standard> = [
@@ -44,7 +44,7 @@ const GrowthStandardCreateContainer = () => {
   } = useForm<Standard>({
     mode: "onChange",
   });
-
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onSubmit = async (data: Standard) => {
@@ -55,7 +55,7 @@ const GrowthStandardCreateContainer = () => {
         { ...data, gestationalAge: data.week.toString() }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = `${ROUTES.DASHBOARD_GROWTH_STANDARDS}`;
+        navigate(ROUTES.DASHBOARD_GROWTH_STANDARDS);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
