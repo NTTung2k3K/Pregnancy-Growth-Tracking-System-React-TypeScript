@@ -307,7 +307,9 @@ const AppointmentUpdateContainer = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-y-2">
-              <h1 className="text-2xl font-medium">Update appointment</h1>
+              <h1 className="text-2xl font-medium">
+                {isAdmin ? "Change Doctor" : "Examination Child"}
+              </h1>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-3">

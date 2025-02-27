@@ -12,6 +12,7 @@ import MonthlyPaymentChart from "./components/MothlyPaymentChart";
 import { columnsLike } from "./components/Blog/Like/Columns";
 import { columnsPayment } from "./components/Payment/Columns";
 import { PaymentMainDashboard } from "./components/IPayment";
+import { Receipt } from "lucide-react";
 
 interface NewUserData {
   inMonth: number;
@@ -83,7 +84,19 @@ const DashboardMainContainer = () => {
         Welcome, {admin.fullName} 🙌
       </h1>
       <div className="flex items-center justify-around">
-        <CardData data={revenue} description={"Revenue"} currency={"VND"} />
+        <div className="w-64 bg-slate-100 flex flex-col border p-6 rounded-lg">
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+            <Receipt />
+          </div>
+          <p className="text-xl font-bold">
+            {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(revenue ?? 0)}
+          </p>
+          <p className="text-muted-foreground">Revenue</p>
+        </div>
+
         <CardData
           data={data?.inDay}
           description={"In Day"}

@@ -5,7 +5,6 @@ import { formatDate } from "@/lib/text";
 
 const columnFields: { key: keyof PaymentMainDashboard; label: string }[] = [
   { key: "paymentMethod", label: "Payment Method" },
-  { key: "amount", label: "Total" },
 ];
 
 export const columnsPayment: ColumnDef<PaymentMainDashboard>[] = [
@@ -22,6 +21,22 @@ export const columnsPayment: ColumnDef<PaymentMainDashboard>[] = [
     },
     cell: ({ row }) => {
       return <p>{formatDate(row.original.paymentDate)}</p>;
+    },
+  },
+  {
+    accessorKey: "total",
+    header: () => {
+      return <Button variant="ghost">Total</Button>;
+    },
+    cell: ({ row }) => {
+      return (
+        <p>
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(row.original.amount ?? 0)}
+        </p>
+      );
     },
   },
   {

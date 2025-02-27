@@ -16,7 +16,7 @@ import axios from "axios";
 import { BASE_URL } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { Child } from "@/containers/Dashboard/Children/components/IChild";
-import { ROUTES } from "@/routes";
+
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Standard } from "@/containers/Dashboard/Standard/components/IStandard";
@@ -139,11 +139,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.href = ROUTES.CHILDREN_DETAIL.replace(
-          ":id",
-          String(child.id)
-        );
-        toast.success(response.data.message);
+        window.location.reload();
       } else {
         toast.error(response.data.message);
       }
