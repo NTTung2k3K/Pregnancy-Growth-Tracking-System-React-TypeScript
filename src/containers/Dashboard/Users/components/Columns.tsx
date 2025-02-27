@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  MoreHorizontal,
-  Pencil,
-  UserPen,
-} from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Pencil, UserPen } from "lucide-react";
 
 import {
   DropdownMenu,
