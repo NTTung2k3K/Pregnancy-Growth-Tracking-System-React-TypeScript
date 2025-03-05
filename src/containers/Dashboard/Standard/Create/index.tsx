@@ -52,7 +52,11 @@ const GrowthStandardCreateContainer = () => {
       setIsLoading(true);
       const response = await axios.post(
         `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_STANDARD_CREATE}`,
-        { ...data, gestationalAge: data.week.toString() }
+        {
+          ...data,
+          gestationalAge: `${data.week.toString()} weeks`,
+          gender: data.gender,
+        }
       );
       if (response.data.statusCode === 200) {
         navigate(ROUTES.DASHBOARD_GROWTH_STANDARDS);
@@ -77,6 +81,22 @@ const GrowthStandardCreateContainer = () => {
         </Link>
         <h1 className="text-2xl font-medium">Create Standard</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          <div>
+            <div className="flex border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10">Gender</div>
+              <select
+                className="flex-1 p-2 border rounded-md"
+                {...register("gender", { required: "Gender is required" })}
+              >
+                <option value="">Select Gender</option>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+              </select>
+            </div>
+            {errors.gender && (
+              <p className="text-red-500 mt-2 mx-4">{errors.gender?.message}</p>
+            )}
+          </div>
           {fields.map((key) => (
             <>
               <div className="">

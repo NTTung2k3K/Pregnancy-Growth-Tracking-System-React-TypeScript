@@ -1,4 +1,5 @@
 export interface Standard {
+  id: number;
   week: number;
   gestationalAge: string;
   minWeight: number;
@@ -10,4 +11,5 @@ export interface Standard {
   headCircumference: number;
   abdominalCircumference: number;
   fetalHeartRate: number | null;
+  gender: number | null;
 }

@@ -70,18 +70,27 @@ const AppointmentUpdateContainer = () => {
   const isAdmin = role === "Admin";
   const [reason, setReason] = useState<string>();
   const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(null);
-  const [standard, setStandard] = useState<Standard>();
+  // const [standard, setStandard] = useState<Standard>();
+  const [standards, setStandards] = useState<{
+    [key: number]: Standard | null;
+  }>({});
 
   const [isWeekSelected, setIsWeekSelected] = useState(false);
 
   const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
-  const [maxStandard, setMaxStandard] = useState<Standard>();
-  const [minStandard, setMinStandard] = useState<Standard>();
+  const [maxStandard, setMaxStandard] = useState<Standard | null>(null);
+  const [minStandard, setMinStandard] = useState<Standard | null>(null);
 
-  const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedWeek = e.target.value;
-    setIsWeekSelected(!!selectedWeek); // Update the state based on selection
-    fetchStandard(parseInt(selectedWeek));
+  const loadStandard = async (
+    selectedWeek: string,
+    gender: number,
+    index: number
+  ) => {
+    const result = await fetchStandard(parseInt(selectedWeek), gender);
+    setStandards((prev) => ({
+      ...prev,
+      [index]: result, // Store standard for this specific child
+    }));
   };
 
   const fetchStatus = async () => {
@@ -95,49 +104,53 @@ const AppointmentUpdateContainer = () => {
       console.error("Failed to fetch roles:", error);
     }
   };
-  const fetchStandard = async (week: number) => {
+  const fetchStandard = async (
+    week: number,
+    gender: number
+  ): Promise<Standard> => {
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
         {
-          params: { week: week },
+          params: { week: week, gender: gender },
         }
       );
-      setStandard(response.data.resultObj);
-
-      console.log(response.data.resultObj);
+      return response.data.resultObj;
     } catch (error) {
-      console.error("Failed to fetch roles:", error);
+      console.error("Failed to fetch standard:", error);
+      throw error; // Ensure errors are caught properly
     }
   };
-  const fetchMinStandard = async (week: number) => {
+
+  const fetchMinMaxStandard = async (
+    week: number,
+    gender: number,
+    type: "min" | "max"
+  ) => {
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
-        {
-          params: { week: week },
-        }
+        { params: { week, gender } }
       );
-      setMinStandard(response.data.resultObj);
 
-      console.log(response.data.resultObj);
-    } catch (error) {
-      console.error("Failed to fetch roles:", error);
-    }
-  };
-  const fetchMaxStandard = async (week: number) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
-        {
-          params: { week: week },
+      if (response.data?.resultObj) {
+        if (type === "min") {
+          setMinStandard(response.data.resultObj);
+        } else {
+          setMaxStandard(response.data.resultObj);
         }
-      );
-      setMaxStandard(response.data.resultObj);
-
-      console.log(response.data.resultObj);
+      } else {
+        console.warn(`No standard data found for week: ${week}`);
+        if (type === "min") setMinStandard(null);
+        else setMaxStandard(null);
+      }
     } catch (error) {
-      console.error("Failed to fetch roles:", error);
+      console.error(
+        `Failed to fetch ${type} standard for week ${week}:`,
+        error
+      );
+      if (type === "min") setMinStandard(null);
+      else setMaxStandard(null);
     }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -187,8 +200,8 @@ const AppointmentUpdateContainer = () => {
       const statusData = await fetchStatus(); // Lấy dữ liệu status
       if (statusData) {
         await fetchAppointment(statusData); // Truyền dữ liệu status vào
-        await fetchMinStandard(1);
-        await fetchMaxStandard(41);
+        await fetchMinMaxStandard(1, 1, "min");
+        await fetchMinMaxStandard(41, 1, "max");
       }
       fetchDoctor();
     };
@@ -609,6 +622,8 @@ const AppointmentUpdateContainer = () => {
           </div>
           {!isAdmin &&
             appointment?.childs.map((child, index) => {
+              // const [gender, setGender] = useState<number>(0);
+
               const maxWeekRecord = child.fetalGrowthRecordModelViews.reduce(
                 (max, record) =>
                   record.weekOfPregnancy > max ? record.weekOfPregnancy : max,
@@ -620,7 +635,6 @@ const AppointmentUpdateContainer = () => {
                 { length: 41 - (maxWeekRecord + 1) + 1 },
                 (_, i) => maxWeekRecord + 1 + i
               );
-
               return (
                 <div className="w-full">
                   <input
@@ -693,7 +707,13 @@ const AppointmentUpdateContainer = () => {
                             }
                           )}
                           onChange={(e) => {
-                            handleWeekChange(e);
+                            const selectedWeek = e.target.value;
+                            setIsWeekSelected(!!selectedWeek);
+                            loadStandard(
+                              selectedWeek,
+                              Number(child.fetalGender),
+                              index
+                            );
                           }}
                         >
                           <option value="">Select week</option>
@@ -733,25 +753,23 @@ const AppointmentUpdateContainer = () => {
                               const minHeight = minStandard?.minHeight ?? 0;
                               const maxHeight = maxStandard?.maxHeight ?? 100;
 
-                              return (
-                                (value != null &&
-                                  value > minHeight &&
-                                  value <= maxHeight) ||
-                                `Height must be greater than ${minHeight} and not exceed ${maxHeight}`
-                              );
+                              if (value == null) return "Height is required";
+                              if (value < minHeight || value > maxHeight)
+                                return `Height must be between ${minHeight} and ${maxHeight} cm`;
+
+                              return true;
                             },
                           })}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
-                            if (
-                              standard?.minHeight !== undefined &&
-                              standard?.maxHeight !== undefined &&
-                              (value < standard.minHeight ||
-                                value > standard.maxHeight)
-                            ) {
+                            const minHeight = standards[index]?.minHeight ?? 0;
+                            const maxHeight =
+                              standards[index]?.maxHeight ?? 100;
+
+                            if (value < minHeight || value > maxHeight) {
                               setWarnings((prev) => ({
                                 ...prev,
-                                height: `Height is out of range (${standard.minHeight} - ${standard.maxHeight} cm)`,
+                                height: `Height is out of range (${minHeight} - ${maxHeight} cm)`,
                               }));
                             } else {
                               setWarnings((prev) => ({ ...prev, height: "" }));
@@ -773,7 +791,7 @@ const AppointmentUpdateContainer = () => {
 
                     <div className="flex mt-4 border items-center bg-slate-100 rounded-md p-4">
                       <div className="font-medium flex items-center mr-10 w-1/6">
-                        Weight (kg)
+                        Weight (g)
                       </div>
                       <div className="flex-1">
                         <input
@@ -791,28 +809,26 @@ const AppointmentUpdateContainer = () => {
                             setValueAs: (value) =>
                               value ? parseFloat(value) : undefined,
                             validate: (value) => {
-                              const minWeight = minStandard?.minWeight ?? 0; // Default to 0 if undefined
-                              const maxWeight = maxStandard?.maxWeight ?? 12.6; // Default to 12.6 if undefined
+                              const minWeight = minStandard?.minWeight ?? 0;
+                              const maxWeight = maxStandard?.maxWeight ?? 100;
 
-                              return (
-                                (value != null &&
-                                  value > minWeight &&
-                                  value <= maxWeight) ||
-                                `Weight must be greater than ${minWeight} and not exceed ${maxWeight}`
-                              );
+                              if (value == null) return "Weight is required";
+                              if (value < minWeight || value > maxWeight)
+                                return `Weight must be between ${minWeight} and ${maxWeight} g`;
+
+                              return true;
                             },
                           })}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
-                            if (
-                              standard?.minWeight !== undefined &&
-                              standard?.maxWeight !== undefined &&
-                              (value < standard.minWeight ||
-                                value > standard.maxWeight)
-                            ) {
+                            const minWeight = standards[index]?.minWeight ?? 0;
+                            const maxWeight =
+                              standards[index]?.maxWeight ?? 12.6;
+
+                            if (value < minWeight || value > maxWeight) {
                               setWarnings((prev) => ({
                                 ...prev,
-                                weight: `Weight is out of range (${standard.minWeight} - ${standard.maxWeight} kg)`,
+                                weight: `Weight is out of range (${minWeight} - ${maxWeight} g)`,
                               }));
                             } else {
                               setWarnings((prev) => ({ ...prev, weight: "" }));
@@ -854,36 +870,35 @@ const AppointmentUpdateContainer = () => {
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : undefined,
                               validate: (value) => {
-                                const minCircumference = 0; // Minimum is fixed at 0
+                                const minCircumference = 0.15; // Minimum allowed value
                                 const maxCircumference =
-                                  maxStandard?.headCircumference ?? 4.1; // Default to 4.1 if undefined
+                                  maxStandard?.headCircumference ?? 4.1;
 
-                                return (
-                                  (value != null &&
-                                    value > minCircumference &&
-                                    value <= maxCircumference) ||
-                                  `Head circumference must be greater than ${minCircumference} and not exceed ${maxCircumference}`
-                                );
+                                if (value == null)
+                                  return "Head circumference is required";
+                                if (
+                                  value < minCircumference ||
+                                  value > maxCircumference
+                                )
+                                  return `Head circumference must be between ${minCircumference} and ${maxCircumference} cm`;
+
+                                return true;
                               },
                             }
                           )}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
+                            const minCircumference = 0.15;
+                            const maxCircumference =
+                              maxStandard?.headCircumference ?? 4.1;
 
-                            if (value < 0) {
-                              setWarnings((prev) => ({
-                                ...prev,
-                                headCircumference:
-                                  "Negative values are not allowed.",
-                              }));
-                            } else if (
-                              standard?.headCircumference !== undefined &&
-                              (value < 0.15 ||
-                                value > standard.headCircumference)
+                            if (
+                              value < minCircumference ||
+                              value > maxCircumference
                             ) {
                               setWarnings((prev) => ({
                                 ...prev,
-                                headCircumference: `Head circumference is out of range (0.15- ${standard.headCircumference} cm)`,
+                                headCircumference: `Head circumference is out of range (${minCircumference} - ${maxCircumference} cm)`,
                               }));
                             } else {
                               setWarnings((prev) => ({
@@ -936,36 +951,35 @@ const AppointmentUpdateContainer = () => {
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : undefined,
                               validate: (value) => {
-                                const minCircumference = 0; // Minimum is fixed at 0
+                                const minCircumference = 0.2; // Minimum valid value
                                 const maxCircumference =
-                                  maxStandard?.abdominalCircumference ?? 3.5; // Default to 3.5 if undefined
+                                  maxStandard?.abdominalCircumference ?? 3.5;
 
-                                return (
-                                  (value != null &&
-                                    value > minCircumference &&
-                                    value <= maxCircumference) ||
-                                  `Abdominal circumference must be greater than ${minCircumference} and not exceed ${maxCircumference}`
-                                );
+                                if (value == null)
+                                  return "Abdominal circumference is required";
+                                if (
+                                  value < minCircumference ||
+                                  value > maxCircumference
+                                )
+                                  return `Abdominal circumference must be between ${minCircumference} and ${maxCircumference} cm`;
+
+                                return true;
                               },
                             }
                           )}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
+                            const minCircumference = 0.2;
+                            const maxCircumference =
+                              standards[index]?.abdominalCircumference ?? 3.5;
 
-                            if (value < 0) {
-                              setWarnings((prev) => ({
-                                ...prev,
-                                abdominalCircumference:
-                                  "Negative values are not allowed.",
-                              }));
-                            } else if (
-                              standard?.abdominalCircumference !== undefined &&
-                              (value < 0.2 ||
-                                value > standard.abdominalCircumference)
+                            if (
+                              value < minCircumference ||
+                              value > maxCircumference
                             ) {
                               setWarnings((prev) => ({
                                 ...prev,
-                                abdominalCircumference: `Abdominal circumference is out of range (0.2 - ${standard.abdominalCircumference} cm)`,
+                                abdominalCircumference: `Abdominal circumference is out of range (${minCircumference} - ${maxCircumference} cm)`,
                               }));
                             } else {
                               setWarnings((prev) => ({
@@ -1003,7 +1017,8 @@ const AppointmentUpdateContainer = () => {
                       <div className="flex-1">
                         <input
                           disabled={
-                            !isWeekSelected || standard?.fetalHeartRate === null
+                            !isWeekSelected ||
+                            standards[index]?.fetalHeartRate === null
                           }
                           className={`p-2 bg-white w-full ${
                             errors?.childsUpdated?.[index]?.fetalHeartRate
@@ -1017,16 +1032,20 @@ const AppointmentUpdateContainer = () => {
                             `childsUpdated.${index}.fetalHeartRate`,
                             {
                               setValueAs: (value) =>
-                                value ? parseFloat(value) : null, // Convert input to float, null if empty
+                                value ? parseFloat(value) : null,
                               validate: (value) => {
-                                if (standard?.fetalHeartRate === null)
+                                const minRate = 120;
+                                const maxRate =
+                                  maxStandard?.fetalHeartRate ?? 170;
+
+                                if (standards[index]?.fetalHeartRate === null)
                                   return true; // ✅ Allow empty if not required
                                 if (value == null)
                                   return "Fetal heart rate is required"; // ❌ Required only if standard is set
-                                if (value < 120)
-                                  return "Fetal heart rate must be at least 120"; // ❌ Enforce min limit
-                                if (value > 170)
-                                  return "Fetal heart rate must not exceed 170"; // ❌ Enforce max limit
+                                if (value < minRate)
+                                  return `Fetal heart rate must be at least ${minRate} bpm`; // ❌ Enforce min limit
+                                if (value > maxRate)
+                                  return `Fetal heart rate must not exceed ${maxRate} bpm`; // ❌ Enforce max limit
 
                                 return true;
                               },
@@ -1034,6 +1053,9 @@ const AppointmentUpdateContainer = () => {
                           )}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
+                            const minRate = 120;
+                            const maxRate =
+                              standards[index]?.fetalHeartRate ?? 170;
 
                             if (value < 0) {
                               setWarnings((prev) => ({
@@ -1041,14 +1063,10 @@ const AppointmentUpdateContainer = () => {
                                 fetalHeartRate:
                                   "Negative values are not allowed.",
                               }));
-                            } else if (
-                              standard?.fetalHeartRate !== undefined &&
-                              (value < 120 ||
-                                value > (standard.fetalHeartRate ?? 200))
-                            ) {
+                            } else if (value < minRate || value > maxRate) {
                               setWarnings((prev) => ({
                                 ...prev,
-                                fetalHeartRate: `Fetal heart rate is out of range (120 - ${standard.fetalHeartRate} bpm)`,
+                                fetalHeartRate: `Fetal heart rate is out of range (${minRate} - ${maxRate} bpm)`,
                               }));
                             } else {
                               setWarnings((prev) => ({
@@ -1077,9 +1095,10 @@ const AppointmentUpdateContainer = () => {
                         )}
 
                         {/* Info Message: If FHR is not required in early weeks */}
-                        {standard?.fetalHeartRate === null && (
+                        {standards[index]?.fetalHeartRate === null && (
                           <p className="text-sky-800 font-bold text-sm mt-1">
-                            In weeks 1, 2, 3, fetal heart rate is not required.
+                            In early pregnancy weeks, fetal heart rate is not
+                            required.
                           </p>
                         )}
                       </div>
