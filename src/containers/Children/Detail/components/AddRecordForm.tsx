@@ -45,17 +45,17 @@ const AddRecordForm = ({ child }: { child: Child }) => {
   });
 
   const [standard, setStandard] = useState<Standard>();
-  const [maxStandard, setMaxStandard] = useState<Standard>();
-  const [minStandard, setMinStandard] = useState<Standard>();
+  const [maxStandard, setMaxStandard] = useState<Standard | null>(null);
+  const [minStandard, setMinStandard] = useState<Standard | null>(null);
   const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
   const [isWeekSelected, setIsWeekSelected] = useState(false);
 
-  const fetchStandard = async (week: number) => {
+  const fetchStandard = async (week: number, gender: number) => {
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
         {
-          params: { week: week },
+          params: { week: week, gender: gender },
         }
       );
       setStandard(response.data.resultObj);
@@ -66,46 +66,53 @@ const AddRecordForm = ({ child }: { child: Child }) => {
     }
   };
 
-  const fetchMinStandard = async (week: number) => {
+  const fetchMinMaxStandard = async (
+    week: number,
+    gender: number,
+    type: "min" | "max"
+  ) => {
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
-        {
-          params: { week: week },
-        }
+        { params: { week, gender } }
       );
-      setMinStandard(response.data.resultObj);
 
-      console.log(response.data.resultObj);
-    } catch (error) {
-      console.error("Failed to fetch standard:", error);
-    }
-  };
-  const fetchMaxStandard = async (week: number) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_DOCTOR_APPOINTMENT_STANDARD_WEEK}`,
-        {
-          params: { week: week },
+      if (response.data?.resultObj) {
+        if (type === "min") {
+          setMinStandard(response.data.resultObj);
+        } else {
+          setMaxStandard(response.data.resultObj);
         }
-      );
-      setMaxStandard(response.data.resultObj);
-
-      console.log(response.data.resultObj);
+      } else {
+        console.warn(`No standard data found for week: ${week}`);
+        if (type === "min") setMinStandard(null);
+        else setMaxStandard(null);
+      }
     } catch (error) {
-      console.error("Failed to fetch standard:", error);
+      console.error(
+        `Failed to fetch ${type} standard for week ${week}:`,
+        error
+      );
+      if (type === "min") setMinStandard(null);
+      else setMaxStandard(null);
     }
   };
 
   useEffect(() => {
-    fetchMinStandard(1);
-    fetchMaxStandard(41);
+    const fetchData = async () => {
+      await fetchMinMaxStandard(1, 1, "min");
+      await fetchMinMaxStandard(41, 1, "max");
+    };
+    fetchData();
   }, []);
 
-  const handleWeekChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleWeekChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    gender: number
+  ) => {
     const selectedWeek = e.target.value;
     setIsWeekSelected(!!selectedWeek); // Update the state based on selection
-    fetchStandard(parseInt(selectedWeek));
+    fetchStandard(parseInt(selectedWeek), gender);
   };
 
   const maxWeekRecord =
@@ -177,7 +184,10 @@ const AddRecordForm = ({ child }: { child: Child }) => {
                 required: "Week is required",
               })}
               onChange={(e) => {
-                handleWeekChange(e);
+                handleWeekChange(
+                  e,
+                  Number(child.fetalGender === "Male" ? 1 : 0)
+                );
               }}
             >
               <option value="">Select week</option>

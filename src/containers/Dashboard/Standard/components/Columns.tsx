@@ -23,7 +23,7 @@ import toast from "react-hot-toast";
 import { Standard } from "./IStandard";
 
 const columnFields: { key: keyof Standard; label: string }[] = [
-  { key: "week", label: "Week" },
+  { key: "gestationalAge", label: "Week" },
 ];
 
 export const columns: ColumnDef<Standard>[] = [
@@ -42,6 +42,23 @@ export const columns: ColumnDef<Standard>[] = [
     },
   })),
   {
+    accessorKey: "gender",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Gender
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <p>{row.getValue("gender") === 1 ? "Male" : "Female"}</p>;
+    },
+  },
+  {
     accessorKey: "averageWeight",
     header: ({ column }) => {
       return (
@@ -55,9 +72,10 @@ export const columns: ColumnDef<Standard>[] = [
       );
     },
     cell: ({ row }) => {
-      return <p>{row.getValue("averageWeight")} kg</p>;
+      return <p>{row.getValue("averageWeight")} g</p>;
     },
   },
+
   {
     accessorKey: "averageHeight",
     header: ({ column }) => {
@@ -96,7 +114,7 @@ export const columns: ColumnDef<Standard>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { week } = row.original;
+      const { id } = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -110,7 +128,7 @@ export const columns: ColumnDef<Standard>[] = [
               className="text-sky-800"
               to={`${ROUTES.DASHBOARD_GROWTH_STANDARDS_UPDATE.replace(
                 ":id",
-                String(week)
+                String(id)
               )}`}
             >
               <DropdownMenuItem className="cursor-pointer">
@@ -123,7 +141,7 @@ export const columns: ColumnDef<Standard>[] = [
               <Link
                 to={`${ROUTES.DASHBOARD_GROWTH_STANDARDS_DETAIL.replace(
                   ":id",
-                  String(week)
+                  String(id)
                 )}`}
                 className="w-full flex items-center text-sky-800 hover:text-sky-900"
               >
@@ -133,7 +151,7 @@ export const columns: ColumnDef<Standard>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer font-semibold">
               <div
-                onClick={() => handleDelete(week)}
+                onClick={() => handleDelete(id)}
                 className="w-full flex items-center"
               >
                 <Trash className="h-4 w-4 mr-2" />

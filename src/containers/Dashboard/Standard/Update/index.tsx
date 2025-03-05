@@ -73,7 +73,11 @@ const GrowthStandardUpdateContainer = () => {
       setIsLoading(true);
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_STANDARD_UPDATE}/${id}`,
-        { ...data }
+        {
+          ...data,
+          gestationalAge: `${data.week.toString()} weeks`,
+          gender: data.gender,
+        }
       );
       if (response.data.message.statusCode === 200) {
         if (!id) {
@@ -104,6 +108,22 @@ const GrowthStandardUpdateContainer = () => {
         </Link>
         <h1 className="text-2xl font-medium">Update Standard</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+            <div className="font-medium flex items-center mr-10">Gender</div>
+            <select
+              className="flex-1 p-2 border rounded-md"
+              {...register("gender", {
+                required: "Gender is required",
+              })}
+            >
+              <option value="">Select Gender</option>
+              <option value="1">Male</option>
+              <option value="0">Female</option>
+            </select>
+            {errors.gender && (
+              <p className="text-red-500">{errors.gender?.message}</p>
+            )}
+          </div>
           {fields.map((key) => (
             <>
               <div className="">
