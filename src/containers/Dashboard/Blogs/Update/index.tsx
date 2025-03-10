@@ -37,7 +37,9 @@ const BlogUpdateContainer = () => {
     setValue,
   } = useForm<BlogFormValues>({ mode: "onChange" });
 
-  const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [imagePreview, setImagePreview] = useState<string | undefined>(
+    undefined
+  );
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [blogTypes, setBlogTypes] = useState<any[]>([]);
@@ -84,7 +86,9 @@ const BlogUpdateContainer = () => {
   // Lấy danh sách blog types từ API
   const fetchBlogTypes = async () => {
     try {
-      const response = await axios.get(`${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPES}`);
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_BLOGTYPES}`
+      );
       setBlogTypes(response.data.resultObj.items);
     } catch (error) {
       console.error("Error fetching blog types:", error);
@@ -117,28 +121,28 @@ const BlogUpdateContainer = () => {
   const onSubmit = async (data: BlogFormValues) => {
     try {
       handleLoading();
-  
+
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("content", editorContent); // dùng giá trị của Editor
       formData.append("authorId", data.authorId);
-  
+
       // Nếu người dùng đã thay đổi week (dirty), mới append trường này
       if (dirtyFields.week) {
         formData.append("week", data.week !== null ? data.week.toString() : "");
       }
-      
+
       formData.append("blogTypeId", data.blogTypeId.toString());
       formData.append("status", data.status);
       formData.append("sources", data.sources);
-  
+
       // Nếu có file mới, gửi file, nếu không thì gửi URL cũ (nếu có)
       if (imageFile) {
         formData.append("thumbnail", imageFile);
       } else if (data.thumbnail) {
         formData.append("thumbnail", data.thumbnail);
       }
-  
+
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_BLOG_UPDATE}/${id}`,
         formData,
@@ -148,8 +152,11 @@ const BlogUpdateContainer = () => {
           },
         }
       );
-  
-      if (response.data.isSuccessed || response.data.message === "Blog updated successfully.") {
+
+      if (
+        response.data.isSuccessed ||
+        response.data.message === "Blog updated successfully."
+      ) {
         toast.success(response.data.message);
         navigate(ROUTES.DASHBOARD_BLOGS);
       } else {
@@ -162,8 +169,7 @@ const BlogUpdateContainer = () => {
       setIsLoading(false);
     }
   };
-  
-  
+
   // Xử lý thay đổi file ảnh (thumbnail)
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -196,7 +202,9 @@ const BlogUpdateContainer = () => {
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={FileText} />
-                <h2 className="text-xl text-sky-900 font-semibold">Blog Details</h2>
+                <h2 className="text-xl text-sky-900 font-semibold">
+                  Blog Details
+                </h2>
               </div>
 
               {/* Title Field */}
@@ -207,7 +215,9 @@ const BlogUpdateContainer = () => {
                   {...register("title", { required: "Title is required" })}
                 />
               </div>
-              {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+              {errors.title && (
+                <p className="text-red-500">{errors.title.message}</p>
+              )}
 
               {/* Author Field (ẩn hoàn toàn) */}
               <input
@@ -217,7 +227,9 @@ const BlogUpdateContainer = () => {
 
               {/* Blog Type Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Blog Type</div>
+                <div className="font-medium flex items-center mr-10">
+                  Blog Type
+                </div>
                 <select
                   className="flex-1 p-2"
                   {...register("blogTypeId", {
@@ -237,7 +249,9 @@ const BlogUpdateContainer = () => {
                   )}
                 </select>
               </div>
-              {errors.blogTypeId && <p className="text-red-500">{errors.blogTypeId.message}</p>}
+              {errors.blogTypeId && (
+                <p className="text-red-500">{errors.blogTypeId.message}</p>
+              )}
 
               {/* Week Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
@@ -246,14 +260,17 @@ const BlogUpdateContainer = () => {
                   type="number"
                   className="flex-1 p-2"
                   {...register("week", {
-                    setValueAs: (value) => (value === "" ? null : parseInt(value, 10)),
+                    setValueAs: (value) =>
+                      value === "" ? null : parseInt(value, 10),
                   })}
                 />
               </div>
 
               {/* Status Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Status</div>
+                <div className="font-medium flex items-center mr-10">
+                  Status
+                </div>
                 <select
                   className="flex-1 p-2"
                   {...register("status", { required: "Status is required" })}
@@ -270,17 +287,23 @@ const BlogUpdateContainer = () => {
                   )}
                 </select>
               </div>
-              {errors.status && <p className="text-red-500">{errors.status.message}</p>}
+              {errors.status && (
+                <p className="text-red-500">{errors.status.message}</p>
+              )}
 
               {/* Sources Field */}
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Sources</div>
+                <div className="font-medium flex items-center mr-10">
+                  Sources
+                </div>
                 <textarea
                   className="flex-1 p-2"
                   {...register("sources", { required: "Sources are required" })}
                 />
               </div>
-              {errors.sources && <p className="text-red-500">{errors.sources.message}</p>}
+              {errors.sources && (
+                <p className="text-red-500">{errors.sources.message}</p>
+              )}
             </div>
 
             {/* Thumbnail Upload */}
@@ -288,7 +311,9 @@ const BlogUpdateContainer = () => {
               <div>
                 <div className="flex items-center gap-x-2">
                   <IconBadge icon={Image} />
-                  <h2 className="text-xl text-sky-900 font-semibold">Thumbnail</h2>
+                  <h2 className="text-xl text-sky-900 font-semibold">
+                    Thumbnail
+                  </h2>
                 </div>
                 <div className="flex justify-center">
                   <Avatar className="h-32 w-32 border text-center">
@@ -310,7 +335,7 @@ const BlogUpdateContainer = () => {
             <div className="font-medium flex items-center mr-10">Content</div>
             <div>
               <Editor
-                apiKey="0ycp3599xllenb0dwqqshl072a9cdz5qu7tak104urrsha1b"
+                apiKey="l9ld25hhisp2urw4o17zzc2y3nre42t6xpxlcfqgme6tnv9z"
                 value={editorContent}
                 init={{
                   plugins: [
@@ -363,36 +388,42 @@ const BlogUpdateContainer = () => {
                     respondWith.string(() =>
                       Promise.reject("See docs to implement AI Assistant")
                     ),
-                    images_upload_handler: async (blobInfo) => {
-                      const file = blobInfo.blob();
-                      const formData = new FormData();
-                      formData.append("Image", file, blobInfo.filename());
-                      try {
-                        const response = await axios.post(`${BASE_URL}/users/upload-image`, formData, {
+                  images_upload_handler: async (blobInfo) => {
+                    const file = blobInfo.blob();
+                    const formData = new FormData();
+                    formData.append("Image", file, blobInfo.filename());
+                    try {
+                      const response = await axios.post(
+                        `${BASE_URL}/users/upload-image`,
+                        formData,
+                        {
                           headers: {
                             "Content-Type": "multipart/form-data",
                           },
-                        });
-                        if (
-                          response.data &&
-                          response.data.resultObj &&
-                          response.data.resultObj.imageUrl
-                        ) {
-                          return response.data.resultObj.imageUrl;
-                        } else {
-                          throw new Error("Upload failed: Invalid response");
                         }
-                      } catch (error: any) {
-                        console.error("Image upload error:", error);
-                        throw error;
+                      );
+                      if (
+                        response.data &&
+                        response.data.resultObj &&
+                        response.data.resultObj.imageUrl
+                      ) {
+                        return response.data.resultObj.imageUrl;
+                      } else {
+                        throw new Error("Upload failed: Invalid response");
                       }
-                    },
+                    } catch (error: any) {
+                      console.error("Image upload error:", error);
+                      throw error;
+                    }
+                  },
                 }}
                 onEditorChange={onEditorChange}
               />
             </div>
           </div>
-          {errors.content && <p className="text-red-500">{errors.content.message}</p>}
+          {errors.content && (
+            <p className="text-red-500">{errors.content.message}</p>
+          )}
         </div>
 
         <div className="flex items-center justify-center mt-10 mr-10">
@@ -401,7 +432,11 @@ const BlogUpdateContainer = () => {
             disabled={isLoading}
             className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
           >
-            {isLoading ? <AiOutlineLoading className="animate-spin" /> : "Submit"}
+            {isLoading ? (
+              <AiOutlineLoading className="animate-spin" />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </div>
       </form>

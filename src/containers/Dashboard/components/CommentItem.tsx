@@ -156,7 +156,7 @@ export function CommentItem({
             </div>
             <div className="flex">
               {currentUserId &&
-                !["Answered"].includes(status) &&
+                !["Answered", "Blocked"].includes(status) &&
                 feedback.status !== "BANNED" && (
                   <Button
                     variant="ghost"
@@ -168,7 +168,9 @@ export function CommentItem({
                     Reply
                   </Button>
                 )}
-              {role === "Admin" && status !== "Answered" ? (
+              {!["Answered", "Blocked"].includes(status) &&
+              role === "Admin" &&
+              status !== "Answered" ? (
                 feedback.status !== "BANNED" &&
                 currentUserId &&
                 status != "Answered" ? (
@@ -196,17 +198,20 @@ export function CommentItem({
                 ""
               )}
 
-              {role === "Admin" && currentUserId && status != "Answered" && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="bg-red-400 text-white flex items-center gap-2"
-                  onClick={() => handleDelete()}
-                >
-                  <Trash className="w-4 h-4" />
-                  Delete
-                </Button>
-              )}
+              {!["Answered", "Blocked"].includes(status) &&
+                role === "Admin" &&
+                currentUserId &&
+                status != "Answered" && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="bg-red-400 text-white flex items-center gap-2"
+                    onClick={() => handleDelete()}
+                  >
+                    <Trash className="w-4 h-4" />
+                    Delete
+                  </Button>
+                )}
             </div>
           </div>
           <p className="text-sm">{feedback.description}</p>

@@ -20,7 +20,7 @@ const Banner = () => {
       buttonTitle: "Making an appointment",
       link: ROUTES.APPOINTMENT_BOOKING,
       imageUrl: "/assets/images/Home/Banner/carousel-1.png",
-      isAuth: false,
+      isAuth: true,
     },
     {
       title: "What does your baby look like now ?",
@@ -78,7 +78,7 @@ const Banner = () => {
                       </p>
                       <div
                         onClick={() => handleNavigate(item.isAuth, item.link)}
-                        className="bg-sky-800 hover:bg-sky-900 text-emerald-400 p-4 rounded-full font-bold"
+                        className="bg-sky-800 hover:bg-sky-900 text-emerald-400 p-4 rounded-full font-bold cursor-pointer"
                       >
                         {item.buttonTitle}
                       </div>

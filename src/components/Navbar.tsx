@@ -55,7 +55,7 @@ const Navbar = () => {
       })),
       isAuth: false,
     },
-    { name: "Growth Chart", link: ROUTES.MY_GROWTH_CHART, isAuth: true },
+    { name: "Growth Chart", link: ROUTES.GROWTH_CHART, isAuth: false },
     { name: "Appointments", link: ROUTES.APPOINTMENT_HISTORY, isAuth: true },
     { name: " My calendar", link: ROUTES.APPOINTMENT_CALENDAR, isAuth: true },
     { name: "Children", link: ROUTES.CHILDREN, isAuth: true },
@@ -95,7 +95,7 @@ const Navbar = () => {
             <Baby className="w-8 h-8" />
           </div>
           <div
-            onClick={() => handleNavigate(ROUTES.GROWTH_CHART, true)}
+            onClick={() => handleNavigate(ROUTES.MY_GROWTH_CHART, true)}
             className="mx-2 rounded-full hover:bg-slate-200 p-2 cursor-pointer"
           >
             <ChartLine className="w-8 h-8" />

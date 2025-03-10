@@ -186,7 +186,13 @@ const ChildCreateContainer = () => {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>Due Date Calculator</DialogTitle>
+                    <DialogTitle>
+                      Due Date Calculator
+                      <p className="text-sm text-emerald-400">
+                        {" "}
+                        Select first day of your last period
+                      </p>
+                    </DialogTitle>
                   </DialogHeader>
 
                   {/* Date Picker */}

@@ -72,10 +72,6 @@ export const columns: ColumnDef<Appointment>[] = [
         </Button>
       );
     },
-    // cell: ({ row }) => {
-    //   const price = Number(row.getValue("appointmentTemplate.name")) || 0;
-    //   return <p>{`${Math.round(price).toLocaleString()} VND`}</p>;
-    // },
   },
   {
     accessorKey: "childs",

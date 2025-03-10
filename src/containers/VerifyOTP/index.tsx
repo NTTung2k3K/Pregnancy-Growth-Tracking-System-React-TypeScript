@@ -95,19 +95,6 @@ const VerifyOTPContainer = () => {
             onChange={(otp) => setValue("otp", otp)}
           />
 
-          <div className="mt-4 w-full flex justify-end mr-16">
-            {!isCounting && (
-              <button
-                type="button"
-                className=" text-sky-900 font-semibold border-none"
-                // onClick={handleResend}
-              >
-                Resend
-              </button>
-            )}
-            {isCounting && <span>{formatTime(time)}</span>}
-          </div>
-
           <Button
             disabled={isLoading}
             type="submit"

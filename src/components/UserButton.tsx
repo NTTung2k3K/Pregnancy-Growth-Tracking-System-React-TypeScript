@@ -97,6 +97,14 @@ const UserButton = () => {
               Profile
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link
+              className="text-black font-normal w-full"
+              to={ROUTES.MY_GROWTH_CHART}
+            >
+              My charts
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

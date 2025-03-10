@@ -64,6 +64,21 @@ const AppointmentDetailContainer = () => {
     fetchAppointment();
   }, []);
 
+  const isToday = (dateString?: string): boolean => {
+    if (!dateString) return false; // Handle undefined case
+
+    const givenDate = new Date(dateString);
+    if (isNaN(givenDate.getTime())) return false; // Handle invalid date case
+
+    const today = new Date();
+
+    return (
+      givenDate.getFullYear() === today.getFullYear() &&
+      givenDate.getMonth() === today.getMonth() &&
+      givenDate.getDate() === today.getDate()
+    );
+  };
+
   return (
     <div>
       <div className=" flex items-center justify-between mt-10">
@@ -73,7 +88,7 @@ const AppointmentDetailContainer = () => {
             Back
           </Button>
         </Link>
-        {status === "Confirmed" && (
+        {isToday(appointment?.appointmentDate) && status === "Confirmed" && (
           <Link
             className="p-6"
             to={ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(":id", String(id))}

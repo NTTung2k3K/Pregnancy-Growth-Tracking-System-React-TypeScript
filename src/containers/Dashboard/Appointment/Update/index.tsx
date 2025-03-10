@@ -256,7 +256,7 @@ const AppointmentUpdateContainer = () => {
         }
       );
       if (response.data.statusCode === 200) {
-        window.location.reload();
+        window.location.href = ROUTES.DASHBOARD_APPOINTMENT;
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -675,16 +675,6 @@ const AppointmentUpdateContainer = () => {
                     </div>
                     <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                       <div className="font-medium flex items-center mr-10 w-1/6 ">
-                        Pregnancy week at birth
-                      </div>
-                      <input
-                        className="flex-1 p-2 bg-gray-100"
-                        value={child.pregnancyWeekAtBirth}
-                        disabled
-                      />
-                    </div>
-                    <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                      <div className="font-medium flex items-center mr-10 w-1/6 ">
                         BloodType
                       </div>
                       <input
@@ -870,7 +860,7 @@ const AppointmentUpdateContainer = () => {
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : undefined,
                               validate: (value) => {
-                                const minCircumference = 0.15; // Minimum allowed value
+                                const minCircumference = 0.2; // Minimum allowed value
                                 const maxCircumference =
                                   maxStandard?.headCircumference ?? 4.1;
 
@@ -888,9 +878,9 @@ const AppointmentUpdateContainer = () => {
                           )}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
-                            const minCircumference = 0.15;
+                            const minCircumference = 0.2;
                             const maxCircumference =
-                              maxStandard?.headCircumference ?? 4.1;
+                              standards[index]?.headCircumference ?? 4.1;
 
                             if (
                               value < minCircumference ||
@@ -951,7 +941,7 @@ const AppointmentUpdateContainer = () => {
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : undefined,
                               validate: (value) => {
-                                const minCircumference = 0.2; // Minimum valid value
+                                const minCircumference = 0.15; // Minimum valid value
                                 const maxCircumference =
                                   maxStandard?.abdominalCircumference ?? 3.5;
 
@@ -969,7 +959,7 @@ const AppointmentUpdateContainer = () => {
                           )}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
-                            const minCircumference = 0.2;
+                            const minCircumference = 0.15;
                             const maxCircumference =
                               standards[index]?.abdominalCircumference ?? 3.5;
 
@@ -1034,7 +1024,7 @@ const AppointmentUpdateContainer = () => {
                               setValueAs: (value) =>
                                 value ? parseFloat(value) : null,
                               validate: (value) => {
-                                const minRate = 120;
+                                const minRate = 115;
                                 const maxRate =
                                   maxStandard?.fetalHeartRate ?? 170;
 
@@ -1053,7 +1043,7 @@ const AppointmentUpdateContainer = () => {
                           )}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
-                            const minRate = 120;
+                            const minRate = 115;
                             const maxRate =
                               standards[index]?.fetalHeartRate ?? 170;
 
@@ -1139,7 +1129,7 @@ const AppointmentUpdateContainer = () => {
                 </div>
               );
             })}
-          {!isAdmin && (
+          {!isAdmin && appointment?.status === "Confirmed" && (
             <div className="flex items-center justify-end mt-10 mr-10">
               <Button
                 disabled={isLoading}

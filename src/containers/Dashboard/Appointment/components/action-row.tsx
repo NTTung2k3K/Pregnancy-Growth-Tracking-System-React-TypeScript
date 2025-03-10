@@ -39,15 +39,10 @@ export default function ActionRow({
                 id.toString()
               )}`}
             >
-              {isAdmin ? (
+              {isAdmin && (
                 <DropdownMenuItem className="cursor-pointer">
                   <Pen className="h-4 w-4 mr-2" />
                   Change Doctor
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem className="cursor-pointer">
-                  <FaUserDoctor className="h-4 w-4 mr-2" />
-                  Examination
                 </DropdownMenuItem>
               )}
             </Link>

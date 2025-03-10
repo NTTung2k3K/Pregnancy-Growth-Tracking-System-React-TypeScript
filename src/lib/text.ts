@@ -16,7 +16,7 @@ export function textConvert(input: string): string {
   }
 }
 
-export function formatDate(inputDate: string | null): string {
+export function formatDate(inputDate: string | null | undefined): string {
   // Check if the input is null or empty
   if (!inputDate) {
     return ""; // Return an empty string for null or empty input
