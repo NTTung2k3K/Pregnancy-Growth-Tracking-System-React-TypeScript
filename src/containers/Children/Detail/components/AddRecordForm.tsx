@@ -281,7 +281,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
 
                   return (
                     (value != null &&
-                      value > minWeight &&
+                      value >= minWeight &&
                       value <= maxWeight) ||
                     `Weight must be greater than ${minWeight} and not exceed ${maxWeight}`
                   );
@@ -396,7 +396,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
                 required: "Abdominal circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
                 validate: (value) => {
-                  const minCircumference = 0.2; // Minimum is fixed at 0
+                  const minCircumference = 0.14; // Minimum is fixed at 0
                   const maxCircumference =
                     maxStandard?.abdominalCircumference ?? 3.5; // Default to 3.5 if undefined
 
@@ -418,11 +418,11 @@ const AddRecordForm = ({ child }: { child: Child }) => {
                   }));
                 } else if (
                   standard?.abdominalCircumference !== undefined &&
-                  (value < 0.2 || value > standard.abdominalCircumference)
+                  (value < 0.15 || value > standard.abdominalCircumference)
                 ) {
                   setWarnings((prev) => ({
                     ...prev,
-                    abdominalCircumference: `Abdominal circumference is out of range (0.2 - ${standard.abdominalCircumference} cm)`,
+                    abdominalCircumference: `Abdominal circumference is out of range (0.15 - ${standard.abdominalCircumference} cm)`,
                   }));
                 } else {
                   setWarnings((prev) => ({

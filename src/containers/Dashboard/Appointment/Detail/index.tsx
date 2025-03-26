@@ -64,20 +64,20 @@ const AppointmentDetailContainer = () => {
     fetchAppointment();
   }, []);
 
-  const isToday = (dateString?: string): boolean => {
-    if (!dateString) return false; // Handle undefined case
+  // const isToday = (dateString?: string): boolean => {
+  //   if (!dateString) return false; // Handle undefined case
 
-    const givenDate = new Date(dateString);
-    if (isNaN(givenDate.getTime())) return false; // Handle invalid date case
+  //   const givenDate = new Date(dateString);
+  //   if (isNaN(givenDate.getTime())) return false; // Handle invalid date case
 
-    const today = new Date();
+  //   const today = new Date();
 
-    return (
-      givenDate.getFullYear() === today.getFullYear() &&
-      givenDate.getMonth() === today.getMonth() &&
-      givenDate.getDate() === today.getDate()
-    );
-  };
+  //   return (
+  //     givenDate.getFullYear() === today.getFullYear() &&
+  //     givenDate.getMonth() === today.getMonth() &&
+  //     givenDate.getDate() === today.getDate()
+  //   );
+  // };
 
   return (
     <div>
@@ -88,7 +88,7 @@ const AppointmentDetailContainer = () => {
             Back
           </Button>
         </Link>
-        {isToday(appointment?.appointmentDate) && status === "Confirmed" && (
+        {status === "Confirmed" && (
           <Link
             className="p-6"
             to={ROUTES.DASHBOARD_APPOINTMENT_UPDATE.replace(":id", String(id))}
