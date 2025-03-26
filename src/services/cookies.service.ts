@@ -43,6 +43,7 @@ export const CookiesEmployee2Service = {
   remove: (): void => {
     Cookies.remove("EMPLOYEE");
   },
+
 };
 
 
