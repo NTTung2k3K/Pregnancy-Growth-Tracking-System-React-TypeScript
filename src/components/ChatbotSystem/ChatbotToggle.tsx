@@ -17,7 +17,7 @@ const ChatbotToggle: React.FC = () => {
 
       {/* Chatbot Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-20">
+        <div className="fixed bottom-2 right-28">
           <ChatbotComponent />
         </div>
       )}

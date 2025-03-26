@@ -25,17 +25,27 @@ export interface MembershipPackage {
 }
 
 const MembershipPackageContainer = () => {
-  const [MembershipPackage, setMembershipPackage] = useState<
+  const [membershipPackage, setMembershipPackage] = useState<
     MembershipPackage[]
   >([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchMembershipPackage = async () => {
-    const response = await axios.get(`${BASE_URL}/membershippackages/get-all`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedResult = response.data.resultObj.map((item: any) => ({
-      ...item,
-    }));
-    setMembershipPackage(formattedResult || []);
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/membershippackages/get-all`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const formattedResult = response.data.resultObj.map((item: any) => ({
+        ...item,
+      }));
+      setMembershipPackage(formattedResult || []);
+    } catch (error) {
+      console.error("Error fetching membership packages:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -44,7 +54,11 @@ const MembershipPackageContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={MembershipPackage} />
+      {loading ? (
+        <div className="text-center text-gray-500">Loading membership packages...</div>
+      ) : (
+        <DataTable columns={columns} data={membershipPackage} />
+      )}
     </div>
   );
 };

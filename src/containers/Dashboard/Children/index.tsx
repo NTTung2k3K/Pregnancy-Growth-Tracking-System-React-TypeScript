@@ -8,12 +8,20 @@ import { columns } from "./components/Colums";
 
 const ChildrenDashboardContainer = () => {
   const [children, setChildren] = useState<Child[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchChildren = async () => {
-    const response = await axios.get(
-      `${BASE_URL + API_ROUTES.DASHBOARD_CHILDREN_ALL}`
-    );
-    setChildren(response.data.resultObj.items || []);
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_CHILDREN_ALL}`
+      );
+      setChildren(response.data.resultObj.items || []);
+    } catch (error) {
+      console.error("Failed to fetch children data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -22,7 +30,11 @@ const ChildrenDashboardContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={children} />
+      {loading ? (
+        <p className="text-center text-gray-500">Loading children data...</p>
+      ) : (
+        <DataTable columns={columns} data={children} />
+      )}
     </div>
   );
 };

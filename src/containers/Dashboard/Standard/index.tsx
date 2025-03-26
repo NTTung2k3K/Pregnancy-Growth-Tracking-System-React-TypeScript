@@ -8,26 +8,39 @@ import { columns } from "./components/Columns";
 
 const GrowthStandardContainer = () => {
   const [standards, setStandards] = useState<Standard[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchStandards = async () => {
-    const response = await axios.get(
-      `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_STANDARD_ALL}`,
-      {
-        params: {
-          pageNumber: 1,
-          pageSize: 100,
-        },
-      }
-    );
-    setStandards(response.data.resultObj.items || []);
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_STANDARD_ALL}`,
+        {
+          params: {
+            pageNumber: 1,
+            pageSize: 100,
+          },
+        }
+      );
+      setStandards(response.data.resultObj.items || []);
+    } catch (error) {
+      console.error("Failed to fetch growth standards:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchStandards();
   }, []);
+
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={standards} />
+      {loading ? (
+        <div className="text-center text-gray-500">Loading growth standards...</div>
+      ) : (
+        <DataTable columns={columns} data={standards} />
+      )}
     </div>
   );
 };

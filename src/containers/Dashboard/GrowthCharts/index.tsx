@@ -8,12 +8,20 @@ import { columns } from "./components/Columns";
 
 const GrowthChartsContainer = () => {
   const [charts, setCharts] = useState<GrowthChart[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchCharts = async () => {
-    const response = await axios.get(
-      `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_CHARTS_ALL}`
-    );
-    setCharts(response.data.resultObj || []);
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_CHARTS_ALL}`
+      );
+      setCharts(response.data.resultObj || []);
+    } catch (error) {
+      console.error("Failed to fetch growth charts:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -22,7 +30,11 @@ const GrowthChartsContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={charts} />
+      {loading ? (
+        <div className="text-center text-gray-500">Loading growth charts...</div>
+      ) : (
+        <DataTable columns={columns} data={charts} />
+      )}
     </div>
   );
 };

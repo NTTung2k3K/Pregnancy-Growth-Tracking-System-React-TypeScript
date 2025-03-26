@@ -32,7 +32,6 @@ export interface User {
   email: string;
   fullName: string;
   image: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dateOfBirth: any;
   address: string;
   phoneNumber: string;
@@ -46,7 +45,6 @@ export interface Doctor {
   id: string;
   fullName: string;
   image: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dateOfBirth: any;
   address: string;
   gender: string;
@@ -90,32 +88,37 @@ export interface Child {
 
 const AppointmentAdminContainer = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const dotorId = CookiesEmployeeService.get();
-
   const role = localStorage.getItem("role");
 
   const fetchAppointment = async () => {
-    let response;
-    if (role === "Admin") {
-      response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_ADMIN_ALL}`
-      );
-    } else {
-      response = await axios.get(
-        `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_DOCTOR_BY_ID}`,
-        {
-          params: { doctorId: dotorId },
-        }
-      );
+    try {
+      setLoading(true);
+      let response;
+      if (role === "Admin") {
+        response = await axios.get(
+          `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_ADMIN_ALL}`
+        );
+      } else {
+        response = await axios.get(
+          `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_DOCTOR_BY_ID}`,
+          {
+            params: { doctorId: dotorId },
+          }
+        );
+      }
+      const formattedResult = response.data.resultObj.map((item: any) => ({
+        ...item,
+      }));
+      setAppointments(formattedResult || []);
+    } catch (error) {
+      console.error("Failed to fetch appointments:", error);
+    } finally {
+      setLoading(false);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedResult = response.data.resultObj.map((item: any) => ({
-      ...item,
-    }));
-    setAppointments(formattedResult || []);
   };
-
 
   useEffect(() => {
     fetchAppointment();
@@ -123,7 +126,11 @@ const AppointmentAdminContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={appointments} />
+      {loading ? (
+        <p className="text-center text-gray-500">Loading appointments...</p>
+      ) : (
+        <DataTable columns={columns} data={appointments} />
+      )}
     </div>
   );
 };

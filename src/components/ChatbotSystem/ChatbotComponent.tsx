@@ -9,11 +9,11 @@ import { BASE_URL } from "@/services/config";
 const APIResponse = ({ steps, triggerNextStep }: any) => {
   const userMessage = steps["2"]?.value;
   const [response, setResponse] = useState<string | null>(null);
-  const hasFetched = useRef(false); 
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (!userMessage || hasFetched.current) return; 
-    hasFetched.current = true; 
+    if (!userMessage || hasFetched.current) return;
+    hasFetched.current = true;
 
     const fetchResponse = async () => {
       try {
@@ -103,7 +103,7 @@ const ChatbotComponent: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ChatBot steps={steps} />;
+      <ChatBot steps={steps} />
     </ThemeProvider>
   );
 };

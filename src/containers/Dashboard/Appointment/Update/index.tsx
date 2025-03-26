@@ -305,6 +305,8 @@ const AppointmentUpdateContainer = () => {
     }
   };
 
+  console.log(doctors);
+
   return (
     <div>
       <div className="mt-10">
@@ -339,7 +341,8 @@ const AppointmentUpdateContainer = () => {
                   Appointment Name
                 </div>
                 <input
-                  className="flex-1 p-2 bg-white"
+                  disabled
+                  className="flex-1 p-2 bg-gray-100"
                   {...register("name", {
                     required: "Appointment name is required",
                     minLength: {
@@ -359,7 +362,7 @@ const AppointmentUpdateContainer = () => {
                 </div>
                 <textarea
                   disabled={isAdmin}
-                  className="flex-1 p-2 bg-white h-40"
+                  className="flex-1 p-2 bg-gray-100 h-40"
                   {...register("description", {
                     minLength: {
                       value: 2,
@@ -377,7 +380,7 @@ const AppointmentUpdateContainer = () => {
                 </div>
                 <textarea
                   disabled={isAdmin}
-                  className="flex-1 p-2 bg-white h-40"
+                  className="flex-1 p-2 bg-gray-100 h-40"
                   {...register("notes", {
                     minLength: {
                       value: 2,
@@ -395,7 +398,9 @@ const AppointmentUpdateContainer = () => {
                 </div>
                 <textarea
                   disabled={isAdmin}
-                  className="flex-1 p-2 bg-white h-40"
+                  className={`flex-1 p-2 bg-white h-40 ${
+                    isAdmin ? "!bg-gray-100" : ""
+                  }`}
                   {...register("result", {
                     required: "Result is required",
                     minLength: {
@@ -440,7 +445,9 @@ const AppointmentUpdateContainer = () => {
                 </div>
                 <select
                   disabled={isAdmin}
-                  className="flex-1 p-2 bg-white"
+                  className={`flex-1 bg-white h-40 ${
+                    isAdmin ? "!bg-gray-100" : ""
+                  }`}
                   {...register("status", {
                     required: "Status is required",
                   })}
@@ -481,7 +488,7 @@ const AppointmentUpdateContainer = () => {
                   {...register("fee", {
                     required: "Fee is required",
                   })}
-                  className="flex-1 p-2 bg-white"
+                  className="flex-1 p-2 bg-gray-100"
                   value={displayValue} // Hiển thị giá trị định dạng
                   onChange={handleInputChange} // Xử lý khi người dùng nhập
                   onBlur={
@@ -527,47 +534,60 @@ const AppointmentUpdateContainer = () => {
                         <div className="font-medium flex items-center mr-10 w-1/6 ">
                           Other Doctor
                         </div>
-                        <select
-                          className="flex-1 p-2 bg-white border rounded-md"
-                          value={selectedDoctorId || ""}
-                          onChange={(event) =>
-                            setSelectedDoctorId(event.target.value)
-                          }
-                        >
-                          <option value="" disabled>
-                            Select a doctor
-                          </option>
-                          {doctors.map((item: any) => (
-                            <option key={item.id} value={item.id}>
-                              {item.fullName}
+                        {doctors.length === 0 ? (
+                          <div className="flex items-center justify-center">
+                            All doctor is not available
+                          </div>
+                        ) : (
+                          <select
+                            className="flex-1 p-2 bg-white border rounded-md"
+                            value={selectedDoctorId || ""}
+                            onChange={(event) =>
+                              setSelectedDoctorId(event.target.value)
+                            }
+                          >
+                            <option value="" disabled>
+                              Select a doctor
                             </option>
-                          ))}
-                        </select>
+                            {doctors.map((item: any) => (
+                              <option key={item.id} value={item.id}>
+                                {item.fullName}
+                              </option>
+                            ))}
+                          </select>
+                        )}
                       </div>
-                      <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                        <div className="font-medium flex items-center mr-10 w-1/6">
-                          Reason
-                        </div>
-                        <input
-                          className="flex-1 p-2 bg-white border rounded-md"
-                          value={reason}
-                          onChange={(event) => setReason(event.target.value)}
-                        />
-                      </div>
-                      <div className="flex items-center justify-end mt-10 mr-10">
-                        <Button
-                          disabled={isLoading}
-                          className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
-                          onClick={(e) => {
-                            onUpdateDoctor(e);
-                          }}
-                        >
-                          {isLoading && (
-                            <AiOutlineLoading className="animate-spin" />
-                          )}
-                          Save
-                        </Button>
-                      </div>
+                      {doctors.length === 0 ? (
+                        <> </>
+                      ) : (
+                        <>
+                          <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                            <div className="font-medium flex items-center mr-10 w-1/6">
+                              Reason
+                            </div>
+                            <input
+                              className="flex-1 p-2 bg-white border rounded-md"
+                              onChange={(event) =>
+                                setReason(event.target.value)
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-end mt-10 mr-10">
+                            <Button
+                              disabled={isLoading}
+                              className="bg-sky-900 hover:bg-sky-700 text-emerald-400 px-10 py-6 text-xl"
+                              onClick={(e) => {
+                                onUpdateDoctor(e);
+                              }}
+                            >
+                              {isLoading && (
+                                <AiOutlineLoading className="animate-spin" />
+                              )}
+                              Save
+                            </Button>
+                          </div>
+                        </>
+                      )}
                     </>
                   )}
                 </>

@@ -50,20 +50,25 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
         CookiesService.set(response.data.resultObj.id);
         window.location.href = `/`;
         toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
       }
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (e) {
+      toast.error("Email hoặc mật khẩu không đúng.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleLoading = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 100000);
+  };
+
   const login = useGoogleLogin({
     onSuccess: async (response) => {
       try {
-        setIsLoading(true);
+        handleLoading();
         // Gọi API userinfo của Google để lấy thông tin chi tiết người dùng
         const res = await https.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -81,8 +86,6 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
       } catch (err) {
         console.error("Login with Google failed:", err);
         toast.error("Failed to login with Google. Please try again.");
-      } finally {
-        setIsLoading(false);
       }
     },
     onError: (error) => {
@@ -137,15 +140,6 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
                 type={showPassword ? "text" : "password"}
                 {...register("password", {
                   required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters long",
-                  },
-                  pattern: {
-                    value: /^(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/,
-                    message:
-                      "Password must include at least one uppercase letter, one digit, and one non-alphanumeric character.",
-                  },
                 })}
                 className=" bg-white p-6 rounded-none border-2 border-slate-300 "
                 placeholder="Password:"

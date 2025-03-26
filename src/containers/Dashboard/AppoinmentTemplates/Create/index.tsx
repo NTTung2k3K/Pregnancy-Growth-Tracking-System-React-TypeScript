@@ -160,7 +160,7 @@ const AppointmentTemplatesCreateContainer = () => {
               )}
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Name</div>
+                <div className="font-medium flex items-center mr-10">Fee</div>
                 <input
                   type="number"
                   step="1000"
