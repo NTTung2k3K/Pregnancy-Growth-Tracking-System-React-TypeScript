@@ -117,6 +117,7 @@ const LoginForm = ({ isOpen, onClose, onSwitchToSignup }: LoginFormProps) => {
               Enter your email address to log in to your BabyCenter account
             </DialogDescription>
           </DialogHeader>
+
           <form onSubmit={handleSubmit(onSubmit)} className="px-6">
             <div className="my-2">
               <Input
