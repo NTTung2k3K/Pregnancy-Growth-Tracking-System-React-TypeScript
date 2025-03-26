@@ -5,18 +5,24 @@ import ChatBot from "react-simple-chatbot";
 import { ThemeProvider } from "styled-components";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
+import { useParams } from "react-router-dom";
+import { CookiesService } from "@/services/cookies.service";
 
-const APIResponse = ({ steps, triggerNextStep }: any) => {
+const APIResponse: React.FC = ({ steps, triggerNextStep }: any) => {
   const userMessage = steps["2"].value;
   const [, setResponse] = useState("");
+  const { id } = useParams();
+  const userId = CookiesService.get();
 
   useEffect(() => {
     const fetchResponse = async () => {
       try {
-        const { data } = await axios.get(
-          `${BASE_URL}/ai-web/get-website-response`,
+        const { data } = await axios.post(
+          `${BASE_URL}/ai-child/get-answer-child`,
           {
-            params: { question: userMessage },
+            question: userMessage,
+            userId,
+            childId: id,
           }
         );
 
@@ -31,7 +37,9 @@ const APIResponse = ({ steps, triggerNextStep }: any) => {
 
     fetchResponse();
   }, [userMessage, triggerNextStep]);
-  return <div className="text-sky-800 font-semibold">BabyCare AI</div>;
+  return (
+    <div className="text-sky-800 font-semibold">BabyCare AI for Child</div>
+  );
 };
 
 const theme = {
@@ -89,9 +97,19 @@ const ChatbotComponentChild: React.FC = () => {
   ];
 
   return (
-    <ThemeProvider theme={theme}>
-      <ChatBot steps={steps} />;
-    </ThemeProvider>
+    <div>
+      <ThemeProvider theme={theme}>
+        <ChatBot
+          steps={steps}
+          style={{
+            width: "100%",
+            padding: "0",
+            borderRadius: "0px",
+            overflow: "hidden",
+          }}
+        />
+      </ThemeProvider>
+    </div>
   );
 };
 

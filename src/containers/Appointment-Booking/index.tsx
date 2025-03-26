@@ -54,6 +54,10 @@ export default function AppointmentBookingContainer() {
     AppointmentTemplate[]
   >([]);
   const [name, setName] = useState("");
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<
+    { id: number; start: string; end: string }[]
+  >([]);
+  const [isLoadingSlot, setIsLoadingSlot] = useState(false);
 
   const fetchChilds = async () => {
     try {
@@ -77,8 +81,8 @@ export default function AppointmentBookingContainer() {
       } else {
         toast.error("Failed to fetch children");
       }
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to fetch children");
+    } catch (error) {
+      toast.error("Failed to fetch children");
     } finally {
       setIsLoading(false);
     }
@@ -96,11 +100,8 @@ export default function AppointmentBookingContainer() {
       } else {
         toast.error("Failed to fetch appointment templates");
       }
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message ||
-          "Failed to fetch appointment templates"
-      );
+    } catch (error) {
+      toast.error("Failed to fetch appointment templates");
     } finally {
       setIsLoading(false);
     }
@@ -175,10 +176,8 @@ export default function AppointmentBookingContainer() {
       } else {
         toast.error(response.data.message || "Failed to book appointment");
       }
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message || "Failed to book appointment"
-      );
+    } catch (error) {
+      toast.error("Failed to book appointment");
     } finally {
       setIsLoading(false);
     }
@@ -189,7 +188,32 @@ export default function AppointmentBookingContainer() {
         Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
       );
       setSelectedDate(localDate);
+      handleDoctorFullSlot(localDate);
       setSelectedSlot("");
+    }
+  };
+
+  const handleDoctorFullSlot = async (date: Date | undefined) => {
+    setIsLoadingSlot(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/appointments/get-available-slot-user`,
+        {
+          params: { date: date },
+        }
+      );
+
+      const availableSlotIds = response.data; // Example: [2, 3, 4]
+
+      const availableTimeSlots = timeSlots.filter((slot) =>
+        availableSlotIds.includes(slot.id)
+      );
+
+      setAvailableTimeSlots(availableTimeSlots);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoadingSlot(false); // Stop loading after fetching
     }
   };
 
@@ -354,37 +378,46 @@ export default function AppointmentBookingContainer() {
                 <Label className="text-lg font-semibold">
                   Time slot <span className="text-red-500">*</span>
                 </Label>
-                <RadioGroup
-                  className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3"
-                  value={selectedSlot}
-                  onValueChange={setSelectedSlot}
-                  disabled={isLoading}
-                >
-                  {timeSlots.map((slot) => {
-                    const isDisabled = isSlotDisabled(selectedDate, slot.start);
-                    return (
-                      <div
-                        key={slot.id}
-                        className={
-                          isDisabled ? "opacity-50 cursor-not-allowed" : ""
-                        }
-                      >
-                        <RadioGroupItem
-                          value={slot.id.toString()}
-                          id={`slot-${slot.id}`}
-                          className="peer sr-only"
-                          disabled={isDisabled}
-                        />
-                        <Label
-                          htmlFor={`slot-${slot.id}`}
-                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-muted hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                {isLoadingSlot ? (
+                  <div className="text-center text-blue-500 font-semibold mt-3">
+                    Loading available slots...
+                  </div>
+                ) : (
+                  <RadioGroup
+                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3"
+                    value={selectedSlot}
+                    onValueChange={setSelectedSlot}
+                    disabled={isLoading}
+                  >
+                    {availableTimeSlots.map((slot) => {
+                      const isDisabled = isSlotDisabled(
+                        selectedDate,
+                        slot.start
+                      );
+                      return (
+                        <div
+                          key={slot.id}
+                          className={
+                            isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                          }
                         >
-                          {getSlotString(slot.id)}
-                        </Label>
-                      </div>
-                    );
-                  })}
-                </RadioGroup>
+                          <RadioGroupItem
+                            value={slot.id.toString()}
+                            id={`slot-${slot.id}`}
+                            className="peer sr-only"
+                            disabled={isDisabled}
+                          />
+                          <Label
+                            htmlFor={`slot-${slot.id}`}
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-muted hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            {getSlotString(slot.id)}
+                          </Label>
+                        </div>
+                      );
+                    })}
+                  </RadioGroup>
+                )}
               </div>
 
               <div className="space-y-4">
