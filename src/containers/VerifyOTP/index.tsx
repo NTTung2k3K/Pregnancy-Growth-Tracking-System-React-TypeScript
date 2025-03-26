@@ -20,11 +20,6 @@ const VerifyOTPContainer = () => {
   const [time, setTime] = useState<number>(300);
   const [isCounting, setIsCounting] = useState<boolean>(false);
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
-  };
 
   useEffect(() => {
     if (isCounting && time > 0) {

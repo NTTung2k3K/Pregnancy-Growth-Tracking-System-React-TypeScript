@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pen, UserPen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
-import { FaUserDoctor } from "react-icons/fa6";
 export default function ActionRow({
   id,
   status,
