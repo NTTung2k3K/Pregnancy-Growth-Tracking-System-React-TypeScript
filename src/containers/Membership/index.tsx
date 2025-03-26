@@ -55,7 +55,6 @@ const PACKAGE_STYLES = {
 
 const BRONZE_FEATURES = [
   "Add children",
-  "Create appointments",
   "View blogs",
   "View and comment on growth charts",
 ];
