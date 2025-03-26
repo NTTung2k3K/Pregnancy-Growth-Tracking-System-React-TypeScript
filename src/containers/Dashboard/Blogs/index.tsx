@@ -35,31 +35,32 @@ export interface Blog {
   };
 }
 
-  
 const BlogsContainer = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchBlogs = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${BASE_URL}/blog/all-admin`);
-
       const formattedResult = Array.isArray(response.data.resultObj.items)
-      ? response.data.resultObj.items.map((item: any) => ({
-          id: item.id,
-          title: item.title,
-          thumbnail: item.thumbnail,
-          status: item.status,
-          week: item.week,
-          blogTypeModelView: item.blogTypeModelView,
-          authorResponseModel: item.authorResponseModel,
-        }))
-      : [];    
+        ? response.data.resultObj.items.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            thumbnail: item.thumbnail,
+            status: item.status,
+            week: item.week,
+            blogTypeModelView: item.blogTypeModelView,
+            authorResponseModel: item.authorResponseModel,
+          }))
+        : [];
       setBlogs(formattedResult || []);
     } catch (error) {
       console.error("Failed to fetch blogs:", error);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchBlogs();
@@ -67,7 +68,11 @@ const BlogsContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={blogs} />
+      {loading ? (
+        <div className="text-center text-gray-500">Loading blogs...</div>
+      ) : (
+        <DataTable columns={columns} data={blogs} />
+      )}
     </div>
   );
 };

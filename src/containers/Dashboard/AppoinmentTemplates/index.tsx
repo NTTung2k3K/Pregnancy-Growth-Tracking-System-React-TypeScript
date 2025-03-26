@@ -8,12 +8,20 @@ import { columns } from "./components/Columns";
 
 const AppointmentTemplatesDashboardContainer = () => {
   const [templates, setTemplates] = useState<AppointmentTemplates[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchTemplates = async () => {
-    const response = await axios.get(
-      `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_ALL}`
-    );
-    setTemplates(response.data.resultObj || []);
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_ALL}`
+      );
+      setTemplates(response.data.resultObj || []);
+    } catch (error) {
+      console.error("Error fetching appointment templates:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -22,7 +30,11 @@ const AppointmentTemplatesDashboardContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={templates} />
+      {loading ? (
+        <div className="text-center text-gray-500">Loading appointment templates...</div>
+      ) : (
+        <DataTable columns={columns} data={templates} />
+      )}
     </div>
   );
 };

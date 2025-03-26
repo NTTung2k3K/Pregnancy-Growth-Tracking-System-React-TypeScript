@@ -186,7 +186,13 @@ const AddRecordForm = ({ child }: { child: Child }) => {
               onChange={(e) => {
                 handleWeekChange(
                   e,
-                  Number(child.fetalGender === "Male" ? 1 : 0)
+                  Number(
+                    child.fetalGender === "Male"
+                      ? 1
+                      : child.fetalGender === "Female"
+                      ? 0
+                      : 2
+                  )
                 );
               }}
             >

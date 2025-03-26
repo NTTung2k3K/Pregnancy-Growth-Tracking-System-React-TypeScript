@@ -121,7 +121,7 @@ const Navbar = () => {
       </div>
 
       {/* Thanh categories với dropdown */}
-      <div className="flex justify-between h-10 mt-40 px-32 bg-white z-40">
+      <div className="flex justify-between h-10 mt-40 px-32 bg-white z-30">
         {categories.map((category, index) => (
           <div key={index} className="relative group cursor-pointer">
             <div

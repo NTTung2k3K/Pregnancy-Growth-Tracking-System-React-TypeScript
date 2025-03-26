@@ -52,13 +52,7 @@ const MonthlyPaymentChart = () => {
     fetchMonthlyPayments();
   }, []);
 
-  // Function to format currency to VND
-  const formatToVND = (value: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(value);
-  };
+
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -68,7 +62,8 @@ const MonthlyPaymentChart = () => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" tickFormatter={(tick) => monthNames[tick - 1]} />
-        <YAxis tickFormatter={formatToVND} />
+        <YAxis tickFormatter={(value) => new Intl.NumberFormat("vi-VN").format(value)} />
+
         <Tooltip content={<CustomTooltip />} />
         <Legend />
         <Bar dataKey="transactionCount" fill="#8884d8" name="Transactions" />

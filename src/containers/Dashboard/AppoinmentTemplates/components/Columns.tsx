@@ -193,15 +193,20 @@ const handleDelete = async (id: number) => {
   if (!confirm) return;
 
   try {
-    await axios.delete(
+    const res = await axios.delete(
       `${BASE_URL + API_ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES_DELETE}`,
       {
         params: { Id: id },
         headers: configHeaders(),
       }
     );
-    window.location.href = `${ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES}`;
-    toast.success("Deleted successfully");
+    if(res.data.statusCode === 200) {
+
+      window.location.href = `${ROUTES.DASHBOARD_APPOINTMENT_TEMPLATES}`;
+      toast.success("Deleted successfully");
+    }else{
+      toast.error(res.data.message);
+    }
   } catch (error) {
     console.error("Failed to delete template:", error);
     toast.error("Please login again to refresh token");

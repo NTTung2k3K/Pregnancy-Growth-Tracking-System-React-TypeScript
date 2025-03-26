@@ -54,7 +54,6 @@ const ChildCreateContainer = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMember, setIsMember] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const id = CookiesService.get();
 
@@ -143,25 +142,6 @@ const ChildCreateContainer = () => {
               </div>
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Week of Pernancy
-                </div>
-                <select
-                  id="numberSelect"
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                  onChange={(e) => {
-                    setIsOpen(Number(e.target.value) > 9);
-                    localStorage.setItem("week", e.target.value);
-                  }}
-                >
-                  {Array.from({ length: 41 }, (_, i) => i + 1).map((num) => (
-                    <option key={num} value={num}>
-                      {num}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">Name</div>
                 <input
                   className="flex-1 p-2"
@@ -232,62 +212,56 @@ const ChildCreateContainer = () => {
                 </DialogContent>
               </Dialog>
 
-              {isOpen && (
-                <>
-                  <div>
-                    <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                      <div className="font-medium flex items-center mr-10">
-                        Gender
-                      </div>
-                      <select
-                        className="flex-1 p-2"
-                        {...register("fetalGender", {
-                          required: "Gender is required",
-                        })}
-                      >
-                        <option value="">Select Gender</option>
-                        <option value="1">Male</option>
-                        <option value="0">Female</option>
-                      </select>
-                    </div>
+              <div>
+                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                  <div className="font-medium flex items-center mr-10">
+                    Gender
                   </div>
-                  {errors.fetalGender && (
-                    <p className="text-red-500">{errors.fetalGender.message}</p>
-                  )}
-                </>
+                  <select
+                    className="flex-1 p-2"
+                    {...register("fetalGender", {
+                      required: "Gender is required",
+                    })}
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                    <option value="2">Unknown</option>
+                  </select>
+                </div>
+              </div>
+              {errors.fetalGender && (
+                <p className="text-red-500">{errors.fetalGender.message}</p>
               )}
             </div>
 
             <div className="space-y-6">
-              {isOpen && (
-                <>
-                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                    <div className="font-medium flex items-center mr-10">
-                      Blood Type
-                    </div>
-                    <select
-                      className="flex-1 p-2"
-                      {...register("bloodType", {
-                        required: "Blood Type is required",
-                      })}
-                    >
-                      <option value="">Select Group</option>
-                      <option value="A+">A+</option>
-                      <option value="A-">A-</option>
-                      <option value="B+">B+</option>
-                      <option value="B-">B-</option>
-                      <option value="AB+">AB+</option>
-                      <option value="AB-">AB-</option>
-                      <option value="O+">O+</option>
-                      <option value="O-">O-</option>
-                    </select>
-                  </div>
-                  {errors.bloodType && (
-                    <span className="text-red-500 text-sm">
-                      {errors.bloodType.message}
-                    </span>
-                  )}
-                </>
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
+                  Blood Type
+                </div>
+                <select
+                  className="flex-1 p-2"
+                  {...register("bloodType", {
+                    required: "Blood Type is required",
+                  })}
+                >
+                  <option value="">Select Group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="Unknown">Unknown</option>
+                </select>
+              </div>
+              {errors.bloodType && (
+                <span className="text-red-500 text-sm">
+                  {errors.bloodType.message}
+                </span>
               )}
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">

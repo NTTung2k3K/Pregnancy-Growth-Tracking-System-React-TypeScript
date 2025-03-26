@@ -292,7 +292,7 @@ const BlogCreateContainer = () => {
             <div className="font-medium flex items-center mr-10">Content</div>
             <div>
               <Editor
-                apiKey="l9ld25hhisp2urw4o17zzc2y3nre42t6xpxlcfqgme6tnv9z"
+                apiKey="fopyhr808wdoc86vvbb3f6wx6ntkawc2mhcpm38t08kk2bxy"
                 init={{
                   plugins: [
                     "anchor",

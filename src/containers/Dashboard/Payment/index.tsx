@@ -51,14 +51,22 @@ export interface Package {
 
 const PaymentContainer = () => {
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchPayment = async () => {
-    const response = await axios.get(`${BASE_URL}/payments/get-all`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedResult = response.data.resultObj.map((item: any) => ({
-      ...item,
-    }));
-    setPayments(formattedResult || []);
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/payments/get-all`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const formattedResult = response.data.resultObj.map((item: any) => ({
+        ...item,
+      }));
+      setPayments(formattedResult || []);
+    } catch (error) {
+      console.error("Error fetching payments:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -67,7 +75,11 @@ const PaymentContainer = () => {
 
   return (
     <div className="p-6">
-      <DataTable columns={columns} data={payments} />
+      {loading ? (
+        <div className="text-center text-gray-500">Loading payments...</div>
+      ) : (
+        <DataTable columns={columns} data={payments} />
+      )}
     </div>
   );
 };
