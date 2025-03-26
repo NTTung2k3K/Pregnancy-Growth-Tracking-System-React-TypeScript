@@ -59,7 +59,7 @@ const ChatbotComponentChild: React.FC = () => {
     {
       id: "1",
       message:
-        "Chào mừng đến với Baby AI Child! Tôi có thể hỗ trợ gì cho bạn về thai nhi?",
+        "Chào mừng đến với Baby AI Child! Tôi có thể hỗ trợ gì cho bạn về thai nhi? (Đề xuất: bạn có thể đặt các câu hỏi liên quan đến thai kỳ, định hướng của thai nhi này)",
       trigger: "2",
     },
     {
