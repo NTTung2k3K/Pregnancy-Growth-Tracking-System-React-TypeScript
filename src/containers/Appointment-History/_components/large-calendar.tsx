@@ -40,7 +40,7 @@ export function LargeCalendar() {
   const [currentMonth, setCurrentMonth] = React.useState(new Date());
   const [appointments, setAppointments] = React.useState<Appointment[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [selectedAppointmentId, setSelectedAppointmentId] = React.useState<
     number | null
@@ -127,6 +127,9 @@ export function LargeCalendar() {
       isSameDay(parseISO(appointment.appointmentDate), date)
     );
   };
+
+  if(isLoading) {
+    return <div className="flex items-center justify-center">Loading...</div>;}
 
   return (
     <div className="max-w-3xl mx-auto p-2">

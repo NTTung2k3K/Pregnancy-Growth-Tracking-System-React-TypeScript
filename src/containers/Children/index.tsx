@@ -15,9 +15,11 @@ const ChildrenGridContainer = () => {
   const [children, setChildren] = useState<Child[]>([]);
   const [visibleCount, setVisibleCount] = useState(4);
   const [showAll, setShowAll] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchChildren = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.CHILD_BY_USER_ID}`,
         {
@@ -27,12 +29,18 @@ const ChildrenGridContainer = () => {
       setChildren(response.data.resultObj);
     } catch (error) {
       console.error("Failed to fetch employee:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchChildren();
   }, []);
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center">Loading...</div>;
+  }
 
   if (children?.length === 0) {
     return (

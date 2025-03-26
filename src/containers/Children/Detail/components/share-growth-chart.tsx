@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,6 +42,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function ShareGrowthChart({ child }: { child: Child }) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,15 +53,22 @@ export default function ShareGrowthChart({ child }: { child: Child }) {
   });
 
   async function onSubmit(data: FormData) {
-    const result = await axios.post(`${BASE_URL}/growthchart/create`, data);
-
-    if (result.data.isSuccessed) {
-      toast.success("Growth chart created successfully");
-      setOpen(false);
-      form.reset();
-      window.location.href = `/growth-chart/${result.data.resultObj.id}`;
-    } else {
-      toast.success(result.data.message);
+    setLoading(true);
+    try {
+      const result = await axios.post(`${BASE_URL}/growthchart/create`, data);
+      
+      if (result.data.isSuccessed) {
+        toast.success("Growth chart created successfully");
+        setOpen(false);
+        form.reset();
+        window.location.href = `/growth-chart/${result.data.resultObj.id}`;
+      } else {
+        toast.error(result.data.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred while submitting");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -107,8 +113,8 @@ export default function ShareGrowthChart({ child }: { child: Child }) {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Submit
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Submitting..." : "Submit"}
             </Button>
           </form>
         </Form>

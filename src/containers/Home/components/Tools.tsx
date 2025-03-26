@@ -10,7 +10,7 @@ const Tools = () => {
     },
     {
       imageUrl: "/assets/images/Home/Tools/baby-names-finder.jpg",
-      title: "Baby Names Finder",
+      title: "Nickname Finder",
       link: ROUTES.NAME_GENERATOR,
     },
     {

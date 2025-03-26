@@ -129,7 +129,9 @@ const ChildCreateContainer = () => {
         <div className="p-6">
           <div className="flex items-center justify-center">
             <div className="flex flex-col gap-y-2">
-              <h1 className="text-3xl font-medium text-sky-900">Create Baby</h1>
+              <h1 className="text-3xl font-medium text-sky-900">
+                Register Child
+              </h1>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
@@ -137,12 +139,14 @@ const ChildCreateContainer = () => {
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={UserPen} />
                 <h2 className="text-xl text-sky-900 font-semibold">
-                  Baby Profile
+                  Child Profile
                 </h2>
               </div>
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Name</div>
+                <div className="font-medium flex items-center mr-10">
+                  Nickname
+                </div>
                 <input
                   className="flex-1 p-2"
                   {...register("name", {

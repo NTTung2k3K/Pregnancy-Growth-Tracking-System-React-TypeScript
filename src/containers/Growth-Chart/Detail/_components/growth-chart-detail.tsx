@@ -173,7 +173,7 @@ export default function GrowthChartDetailUI(props: {
               <p className="font-medium">{data.status}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Child Name</p>
+              <p className="text-sm text-muted-foreground">Nickname</p>
               <p className="font-medium">{child.name}</p>
             </div>
             <div>

@@ -31,6 +31,7 @@ const AppointmentDetailContainer = () => {
   const isAdmin = role === "Admin";
   const [history, setHistory] = useState([]);
   const [status, setStatus] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const apiLink = isAdmin
     ? API_ROUTES.DASHBOARD_APPOINTMENT_ADMIN_DETAIL
@@ -38,6 +39,7 @@ const AppointmentDetailContainer = () => {
 
   const fetchAppointment = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${BASE_URL + apiLink}`, {
         params: { id: id },
       });
@@ -57,6 +59,8 @@ const AppointmentDetailContainer = () => {
       setDoctor(sortedAppointments[0].doctor);
     } catch (error) {
       console.error("Failed to fetch Appointment:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +82,10 @@ const AppointmentDetailContainer = () => {
   //     givenDate.getDate() === today.getDate()
   //   );
   // };
+
+  if (isLoading) {
+    return <div className=" flex justify-center items-center">Loading...</div>;
+  }
 
   return (
     <div>
@@ -302,7 +310,7 @@ const AppointmentDetailContainer = () => {
             <div className="grid grid-cols-2 gap-x-6">
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10 w-1/6">
-                  Child name
+                  Nickname
                 </div>
                 <p className="flex-1 p-2">{child.name}</p>
               </div>
