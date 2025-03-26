@@ -3,15 +3,14 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 import ChatbotComponentChild from "./ChatbotComponentChild";
 
-
 const ChatbotChild: React.FC = () => {
   return (
     <Dialog>
       <DialogTrigger className="text-sm bg-sky-900 text-emerald-400">
-        Open chat
+        Baby AI Child
       </DialogTrigger>
       <DialogContent className=" p-0 overflow-hidden">
-        <ChatbotComponentChild/>
+        <ChatbotComponentChild />
       </DialogContent>
     </Dialog>
   );
