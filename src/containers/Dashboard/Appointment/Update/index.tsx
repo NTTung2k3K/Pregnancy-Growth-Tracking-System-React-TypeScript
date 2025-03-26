@@ -22,6 +22,7 @@ import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/char
 import { getSlotString } from "@/lib/utils";
 import { API_ROUTES } from "@/routes/api";
 import { Standard } from "../../Standard/components/IStandard";
+import { set } from "date-fns";
 
 export interface AppointmentUpdateForm {
   id: number;
@@ -80,6 +81,7 @@ const AppointmentUpdateContainer = () => {
   const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
   const [maxStandard, setMaxStandard] = useState<Standard | null>(null);
   const [minStandard, setMinStandard] = useState<Standard | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const loadStandard = async (
     selectedWeek: string,
@@ -156,6 +158,7 @@ const AppointmentUpdateContainer = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fetchAppointment = async (statusData: Status[]) => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${BASE_URL}/appointments/get-by-id`, {
         params: { id: id },
       });
@@ -181,6 +184,8 @@ const AppointmentUpdateContainer = () => {
       setReason(fetchedAppointment.appoinmentUsers[0].reason);
     } catch (error) {
       console.error("Failed to fetch Appointment:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   const fetchDoctor = async () => {
@@ -207,8 +212,6 @@ const AppointmentUpdateContainer = () => {
     };
     fetchData();
   }, []);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formatNumber = (value: string) => {
     if (!value) return "";
@@ -305,7 +308,9 @@ const AppointmentUpdateContainer = () => {
     }
   };
 
-  console.log(doctors);
+  if (isLoading) {
+    return <div className="flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div>
@@ -445,7 +450,7 @@ const AppointmentUpdateContainer = () => {
                 </div>
                 <select
                   disabled={isAdmin}
-                  className={`flex-1 bg-white h-40 ${
+                  className={`flex-1 bg-white p-2 ${
                     isAdmin ? "!bg-gray-100" : ""
                   }`}
                   {...register("status", {
@@ -673,7 +678,7 @@ const AppointmentUpdateContainer = () => {
                   <div className="grid grid-cols-2 gap-x-6">
                     <div className=" flex mt-4 border bg-slate-100 rounded-md p-4">
                       <div className="font-medium flex items-center mr-10 w-1/6 ">
-                        Child name
+                        Nickname
                       </div>
                       <input
                         className="flex-1 p-2 bg-gray-100"

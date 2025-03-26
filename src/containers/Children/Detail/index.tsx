@@ -185,7 +185,7 @@ const ChildDetailContainer = () => {
 
         <div className="flex items-center justify-center mt-8">
           <div className="flex gap-y-2">
-            <h1 className="text-2xl font-bold text-sky-800">Baby Detail</h1>
+            <h1 className="text-2xl font-bold text-sky-800">Child Detail</h1>
           </div>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -194,12 +194,12 @@ const ChildDetailContainer = () => {
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={UserPen} />
                 <h2 className="text-xl text-sky-900 font-semibold">
-                  Baby Profile
+                  Child Profile
                 </h2>
               </div>
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">Name</div>
+                <div className="font-medium flex items-center mr-10">Nickname</div>
                 <input
                   className="flex-1 p-2"
                   {...register("name", {
@@ -219,7 +219,7 @@ const ChildDetailContainer = () => {
                 <input
                   disabled
                   type="date"
-                  className="flex-1 p-2 bg-slate-300"
+                  className="flex-1 p-2 bg-gray-100"
                   {...register("dueDate", {
                     required: "Due Date is required",
                   })}
@@ -305,7 +305,7 @@ const ChildDetailContainer = () => {
                         onClick={handleEditClick}
                         className="bg-sky-900 hover:bg-sky-700 text-emerald-400 "
                       >
-                        Edit
+                        Edit Image
                       </Button>
                     </div>
                   )}

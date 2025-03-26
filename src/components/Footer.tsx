@@ -37,7 +37,7 @@ const Footer = () => {
         </div>
         <div className="flex items-center">
           <MdEmail className="mr-4" />
-          <p>...</p>
+          <p>tungk@123</p>
         </div>
       </div>
       <div className="flex flex-col leading-8">
@@ -54,7 +54,7 @@ const Footer = () => {
           className="text-sky-950 flex items-center"
         >
           <Search className="mr-4" />
-          Baby Name Finder
+          Nickname Finder
         </Link>
         <Link
           to={ROUTES.COST_CALCULATOR}

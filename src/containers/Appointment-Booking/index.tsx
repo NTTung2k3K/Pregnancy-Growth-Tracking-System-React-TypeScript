@@ -49,6 +49,7 @@ export default function AppointmentBookingContainer() {
   const [notes, setNotes] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
   const [appointmentTemplates, setAppointmentTemplates] = useState<
     AppointmentTemplate[]
@@ -61,7 +62,7 @@ export default function AppointmentBookingContainer() {
 
   const fetchChilds = async () => {
     try {
-      setIsLoading(true);
+      setIsLoadingData(true);
       const userId = CookiesService.get();
 
       if (!userId) {
@@ -84,13 +85,13 @@ export default function AppointmentBookingContainer() {
     } catch (error) {
       toast.error("Failed to fetch children");
     } finally {
-      setIsLoading(false);
+      setIsLoadingData(false);
     }
   };
 
   const fetchAppointmentTemplates = async () => {
     try {
-      setIsLoading(true);
+      setIsLoadingData(true);
       const response = await axios.get(
         `${BASE_URL}/appointmenttemplates/get-all`
       );
@@ -103,7 +104,7 @@ export default function AppointmentBookingContainer() {
     } catch (error) {
       toast.error("Failed to fetch appointment templates");
     } finally {
-      setIsLoading(false);
+      setIsLoadingData(false);
     }
   };
 
@@ -244,6 +245,10 @@ export default function AppointmentBookingContainer() {
 
     return false;
   };
+
+  if (isLoadingData) {
+    return <div className="flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="p-10">
