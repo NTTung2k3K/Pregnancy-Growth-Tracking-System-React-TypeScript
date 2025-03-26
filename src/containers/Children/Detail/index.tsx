@@ -1,11 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 import { IconBadge } from "@/components/IconBadge";
-import {
-  CircleArrowLeft,
-  Image,
-  Trash,
-  UserPen,
-} from "lucide-react";
+import { CircleArrowLeft, Image, Trash, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/services/config";
@@ -24,6 +19,7 @@ import { GrowthCharts } from "@/containers/Dashboard/Appointment/components/char
 import AddRecordForm from "./components/AddRecordForm";
 import ShareGrowthChart from "@/containers/Children/Detail/components/share-growth-chart";
 import { CookiesService } from "@/services/cookies.service";
+import ChatbotChild from "@/components/ChatbotChild/ChatbotChild";
 
 interface ChildFormValue {
   name: string;
@@ -53,6 +49,14 @@ const ChildDetailContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditingImg, setIsEditingImg] = useState<boolean>(false);
   const [isMember, setIsMember] = useState<boolean>(false);
+  const [selectedWeek, setSelectedWeek] = useState<string>(
+    localStorage.getItem("week") || ""
+  );
+  const [isOpen, setIsOpen] = useState<boolean>(Number(selectedWeek) > 9);
+
+  useEffect(() => {
+    localStorage.setItem("week", selectedWeek); // Update storage on change
+  }, [selectedWeek]);
 
   const fetchIsMember = async () => {
     try {
@@ -97,14 +101,11 @@ const ChildDetailContainer = () => {
         {
           userId: child?.userId,
           name: data.name,
-          fetalGender: Number(data.fetalGender),
-          pregnancyStage: data.pregnancyStage,
+          fetalGender: Number(data.fetalGender) || 0,
           dueDate: data.dueDate,
-          deliveryPlan: data.deliveryPlan,
-          complications: data.complications,
           isGenerateSampleAppointments: false,
           photoUrl: imageFile,
-          bloodType: data.bloodType,
+          bloodType: data.bloodType || "A+",
         },
         {
           headers: {
@@ -199,6 +200,27 @@ const ChildDetailContainer = () => {
               </div>
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
+                  Week of Pregnancy
+                </div>
+                <select
+                  id="numberSelect"
+                  className="flex-1 p-2"
+                  value={selectedWeek} // Persist selection after refresh
+                  onChange={(e) => {
+                    setSelectedWeek(e.target.value);
+                    setIsOpen(Number(e.target.value) > 9);
+                  }}
+                >
+                  <option value="">Select Week</option>
+                  {Array.from({ length: 41 }, (_, i) => i + 1).map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
                   Full Name
                 </div>
                 <input
@@ -232,101 +254,60 @@ const ChildDetailContainer = () => {
                 </span>
               )}
 
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Pregnancy Stage
-                </div>
-                <input
-                  className="flex-1 p-2"
-                  {...register("pregnancyStage", {
-                    required: "Pregnancy Stage is required",
-                  })}
-                />
-              </div>
-              {errors.pregnancyStage && (
-                <span className="text-red-500 text-sm">
-                  {errors.pregnancyStage.message}
-                </span>
-              )}
-
-              <div>
-                <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                  <div className="font-medium flex items-center mr-10">
-                    Fetal Gender
+              {isOpen && (
+                <>
+                  <div>
+                    <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                      <div className="font-medium flex items-center mr-10">
+                        Fetal Gender
+                      </div>
+                      <select
+                        className="flex-1 p-2"
+                        {...register("fetalGender", {
+                          required: "Gender is required",
+                        })}
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="1">Male</option>
+                        <option value="0">Female</option>
+                      </select>
+                    </div>
                   </div>
-                  <select
-                    className="flex-1 p-2"
-                    {...register("fetalGender", {
-                      required: "Gender is required",
-                    })}
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="1">Male</option>
-                    <option value="0">Female</option>
-                  </select>
-                </div>
-              </div>
-              {errors.fetalGender && (
-                <p className="text-red-500">{errors.fetalGender.message}</p>
+                  {errors.fetalGender && (
+                    <p className="text-red-500">{errors.fetalGender.message}</p>
+                  )}
+                </>
               )}
 
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Delivery Plan
-                </div>
-                <input
-                  className="flex-1 p-2"
-                  {...register("deliveryPlan", {
-                    required: "Delivery Plan is required",
-                  })}
-                />
-              </div>
-              {errors.deliveryPlan && (
-                <span className="text-red-500 text-sm">
-                  {errors.deliveryPlan.message}
-                </span>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Complications
-                </div>
-                <input
-                  className="flex-1 p-2"
-                  {...register("complications", {
-                    required: "Complications is required",
-                  })}
-                />
-              </div>
-              {errors.complications && (
-                <span className="text-red-500 text-sm">
-                  {errors.complications.message}
-                </span>
-              )}
-              <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
-                <div className="font-medium flex items-center mr-10">
-                  Blood Type
-                </div>
-                <select
-                  className="flex-1 p-2"
-                  {...register("bloodType", {
-                    required: "Blood Type is required",
-                  })}
-                >
-                  <option value="">Select Group</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                </select>
-              </div>
-              {errors.bloodType && (
-                <span className="text-red-500 text-sm">
-                  {errors.bloodType.message}
-                </span>
+              {isOpen && (
+                <>
+                  <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+                    <div className="font-medium flex items-center mr-10">
+                      Blood Type
+                    </div>
+                    <select
+                      className="flex-1 p-2"
+                      {...register("bloodType", {
+                        required: "Blood Type is required",
+                      })}
+                    >
+                      <option value="">Select Group</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
+                  {errors.bloodType && (
+                    <span className="text-red-500 text-sm">
+                      {errors.bloodType.message}
+                    </span>
+                  )}
+                </>
               )}
             </div>
 
@@ -411,6 +392,8 @@ const ChildDetailContainer = () => {
               <AddRecordForm child={child} />
               <div className="mx-3"></div>
               <ShareGrowthChart key={child.id} child={child} />
+              <div className="mx-3"></div>
+              <ChatbotChild />
             </div>
           </>
         )}

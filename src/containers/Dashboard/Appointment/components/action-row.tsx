@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pen, UserPen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/routes";
-import { FaUserDoctor } from "react-icons/fa6";
 export default function ActionRow({
   id,
   status,
@@ -39,15 +38,10 @@ export default function ActionRow({
                 id.toString()
               )}`}
             >
-              {isAdmin ? (
+              {isAdmin && (
                 <DropdownMenuItem className="cursor-pointer">
                   <Pen className="h-4 w-4 mr-2" />
                   Change Doctor
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem className="cursor-pointer">
-                  <FaUserDoctor className="h-4 w-4 mr-2" />
-                  Examination
                 </DropdownMenuItem>
               )}
             </Link>

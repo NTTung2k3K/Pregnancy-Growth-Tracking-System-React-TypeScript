@@ -20,11 +20,6 @@ const VerifyOTPContainer = () => {
   const [time, setTime] = useState<number>(300);
   const [isCounting, setIsCounting] = useState<boolean>(false);
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
-  };
 
   useEffect(() => {
     if (isCounting && time > 0) {
@@ -94,19 +89,6 @@ const VerifyOTPContainer = () => {
             }}
             onChange={(otp) => setValue("otp", otp)}
           />
-
-          <div className="mt-4 w-full flex justify-end mr-16">
-            {!isCounting && (
-              <button
-                type="button"
-                className=" text-sky-900 font-semibold border-none"
-                // onClick={handleResend}
-              >
-                Resend
-              </button>
-            )}
-            {isCounting && <span>{formatTime(time)}</span>}
-          </div>
 
           <Button
             disabled={isLoading}

@@ -21,16 +21,22 @@ const fields: Array<keyof Standard> = [
   "abdominalCircumference",
   "fetalHeartRate",
 ];
-const formatFieldName = (field: string): string => {
-  return field
-    .replace(/\bminWeight\b/gi, "Min Height") // Convert "minWeight" to "Min Height"
-    .replace(/\bmaxWeight\b/gi, "Max Weight") // Convert "maxWeight" correctly
-    .replace(/\bmin\b/gi, "Min") // Convert "min" to "Min"
-    .replace(/\bmax\b/gi, "Max") // Convert "max" to "Max"
-    .replace(/\baverage\b/gi, "Average") // Convert "average" to "Average"
-    .replace(/([A-Z])/g, " $1") // Insert space before capital letters (camelCase to words)
-    .trim()
-    .replace(/^./, (char) => char.toUpperCase()); // Capitalize first letter
+
+const formatFieldName = (field: keyof Standard): string => {
+  const fieldMap :any = {
+    week: "Week",
+    averageWeight: "Average Weight",
+    averageHeight: "Average Height",
+    maxWeight: "Max Weight",
+    minWeight: "Min Weight",
+    minHeight: "Min Height",
+    maxHeight: "Max Height",
+    headCircumference: "Head Circumference",
+    abdominalCircumference: "Abdominal Circumference",
+    fetalHeartRate: "Fetal Heart Rate",
+    gender: "Gender", // Including gender for consistency
+  };
+  return fieldMap[field] || field;
 };
 
 const GrowthStandardDetailContainer = () => {
@@ -61,6 +67,7 @@ const GrowthStandardDetailContainer = () => {
   useEffect(() => {
     fetchStandardData();
   }, []);
+
 
   return (
     <div>
@@ -104,9 +111,9 @@ const GrowthStandardDetailContainer = () => {
                 step="any"
                 min="0"
                 {...register(key, {
-                  required: `${key} is required`,
-                  valueAsNumber: true, // Ensures numbers are stored correctly
-                  min: { value: 0, message: `${key} must be positive` }, // Ensure value is >= 0
+                  required: `${formatFieldName(key)} is required`,
+                  valueAsNumber: true,
+                  min: { value: 0, message: `${formatFieldName(key)} must be positive` },
                 })}
               />
               {errors[key] && (

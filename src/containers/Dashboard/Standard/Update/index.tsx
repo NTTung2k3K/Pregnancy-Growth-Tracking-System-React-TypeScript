@@ -24,16 +24,21 @@ const fields: Array<keyof Standard> = [
   "fetalHeartRate",
 ];
 
-const formatFieldName = (field: string): string => {
-  return field
-    .replace(/\bminWeight\b/gi, "Min Height") // Convert "minWeight" to "Min Height"
-    .replace(/\bmaxWeight\b/gi, "Max Weight") // Convert "maxWeight" correctly
-    .replace(/\bmin\b/gi, "Min") // Convert "min" to "Min"
-    .replace(/\bmax\b/gi, "Max") // Convert "max" to "Max"
-    .replace(/\baverage\b/gi, "Average") // Convert "average" to "Average"
-    .replace(/([A-Z])/g, " $1") // Insert space before capital letters (camelCase to words)
-    .trim()
-    .replace(/^./, (char) => char.toUpperCase()); // Capitalize first letter
+const formatFieldName = (field: keyof Standard): string => {
+  const fieldMap: any = {
+    week: "Week",
+    averageWeight: "Average Weight",
+    averageHeight: "Average Height",
+    maxWeight: "Max Weight",
+    minWeight: "Min Weight",
+    minHeight: "Min Height",
+    maxHeight: "Max Height",
+    headCircumference: "Head Circumference",
+    abdominalCircumference: "Abdominal Circumference",
+    fetalHeartRate: "Fetal Heart Rate",
+    gender: "Gender",
+  };
+  return fieldMap[field] || field;
 };
 
 const GrowthStandardUpdateContainer = () => {
@@ -125,34 +130,30 @@ const GrowthStandardUpdateContainer = () => {
             )}
           </div>
           {fields.map((key) => (
-            <>
-              <div className="">
-                <div
-                  key={key}
-                  className="flex border bg-slate-100 rounded-md p-4"
-                >
-                  <div className="font-medium flex items-center mr-10">
-                    {formatFieldName(key)}
-                  </div>
-                  <input
-                    type="number"
-                    className="flex-1 p-2 border rounded-md"
-                    step="any"
-                    min="0"
-                    {...register(key, {
-                      required: `${key} is required`,
-                      valueAsNumber: true, // Ensures numbers are stored correctly
-                      min: { value: 0, message: `${key} must be positive` }, // Ensure value is >= 0
-                    })}
-                  />
+            <div key={key} className="">
+              <div className="flex border bg-slate-100 rounded-md p-4">
+                <div className="font-medium flex items-center mr-10">
+                  {formatFieldName(key)}
                 </div>
-                {errors[key] && (
-                  <p className="text-red-500 mt-2 mx-4">
-                    {errors[key]?.message}
-                  </p>
-                )}
+                <input
+                  type="number"
+                  className="flex-1 p-2 border rounded-md"
+                  step="any"
+                  min="0"
+                  {...register(key, {
+                    required: `${formatFieldName(key)} is required`,
+                    valueAsNumber: true,
+                    min: {
+                      value: 0,
+                      message: `${formatFieldName(key)} must be positive`,
+                    },
+                  })}
+                />
               </div>
-            </>
+              {errors[key] && (
+                <p className="text-red-500 mt-2 mx-4">{errors[key]?.message}</p>
+              )}
+            </div>
           ))}
         </div>
         <div className="flex items-center justify-end mt-10">

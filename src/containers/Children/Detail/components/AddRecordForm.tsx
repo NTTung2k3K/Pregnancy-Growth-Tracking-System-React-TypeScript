@@ -266,7 +266,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
           {/* Weight */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="weight" className="text-right">
-              Weight (kg)
+              Weight (g)
             </Label>
             <Input
               disabled={!isWeekSelected}
@@ -336,7 +336,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
                 required: "Head circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
                 validate: (value) => {
-                  const minCircumference = 0; // Minimum is fixed at 0
+                  const minCircumference = 0.15; // Minimum is fixed at 0
                   const maxCircumference =
                     maxStandard?.headCircumference ?? 4.1; // Default to 4.1 if undefined
 
@@ -396,7 +396,7 @@ const AddRecordForm = ({ child }: { child: Child }) => {
                 required: "Abdominal circumference is required",
                 setValueAs: (value) => (value ? parseFloat(value) : undefined),
                 validate: (value) => {
-                  const minCircumference = 0; // Minimum is fixed at 0
+                  const minCircumference = 0.2; // Minimum is fixed at 0
                   const maxCircumference =
                     maxStandard?.abdominalCircumference ?? 3.5; // Default to 3.5 if undefined
 

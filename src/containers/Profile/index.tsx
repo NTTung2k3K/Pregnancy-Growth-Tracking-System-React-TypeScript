@@ -414,7 +414,10 @@ const UserProfileContainer = () => {
                           </div>
                           <div className="flex">
                             <DollarSign className="mr-2" />
-                            {item.package.price} VNĐ
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.package.price ?? 0)}
                           </div>
                         </div>
                       </div>

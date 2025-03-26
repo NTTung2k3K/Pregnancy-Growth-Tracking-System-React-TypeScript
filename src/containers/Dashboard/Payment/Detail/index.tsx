@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "@/routes";
 import { Payment } from "@/containers/Dashboard/Payment";
+import { formatDate } from "@/lib/text";
 
 const PaymentDetailContainer = () => {
   const { id } = useParams();
@@ -64,7 +65,30 @@ const PaymentDetailContainer = () => {
               <div className="font-medium flex items-center mr-10 w-1/6">
                 Payment Time
               </div>
-              <p className="flex-1 p-2">{payment?.paymentDate}</p>
+              <p className="p-2">
+                {payment?.paymentDate
+                  ? new Date(payment.paymentDate).toLocaleString("vi-VN", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })
+                  : "Chưa có ngày thanh toán"}
+              </p>
+            </div>
+            <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
+              <div className="font-medium flex items-center mr-10 w-1/6">
+                Start - End Date
+              </div>
+              <p className=" p-2">
+                {formatDate(payment?.userMembership.startDate)}
+              </p>
+              <p className=" p-2">to</p>
+              <p className=" p-2">
+                {formatDate(payment?.userMembership.endDate)}
+              </p>
             </div>
             {/* Description */}
             <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
