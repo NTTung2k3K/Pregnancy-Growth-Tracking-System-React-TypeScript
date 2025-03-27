@@ -24,6 +24,28 @@ const ChatDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingChat, setIsLoadingChat] = useState(false);
 
+  const fetchChatHistory = async (senderId: any, receiverId: any) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/chat/get-message`, {
+        params: {
+          senderId,
+          receiverId,
+        },
+      });
+      const fetchData = response.data.map((item:any) => ({
+        message: item.message,
+        senderId: item.senderId.id,
+        messageContent: item.message, // Optional, you can modify if needed
+      }));
+      setMessages(fetchData);
+    } catch (error) {
+      console.error("Failed to fetch chat history:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getEmployeeFromCookie = () => {
     const employeeCookie = Cookies.get("EMPLOYEE");
     if (employeeCookie) {
@@ -126,6 +148,7 @@ const ChatDashboard = () => {
 
     setErrorMessage("");
     setSelectedUser(user);
+    fetchChatHistory(user.id, userID);
     setMessages([]);
   };
 
@@ -137,6 +160,15 @@ const ChatDashboard = () => {
 
     try {
       setIsLoadingChat(true);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          message: newMessage,
+          senderId: userID,
+          messageContent: newMessage,
+        },
+      ]);
+      setNewMessage("");
       const response = await axios.post(`${BASE_URL}/chat/send-message`, {
         message: newMessage,
         userID,
@@ -157,15 +189,7 @@ const ChatDashboard = () => {
             sender: userId,
           });
 
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              message: messageContent,
-              senderId: userId,
-              messageContent: messageContent,
-            },
-          ]);
-          setNewMessage("");
+          // fetchChatHistory(userID, selectedUser.id);
         } else {
           console.error("Invalid channel name:", channelName);
         }
@@ -186,6 +210,8 @@ const ChatDashboard = () => {
       </div>
     );
   }
+
+  console.log(userID);
 
   return (
     <div className=" flex bg-sky-100 m-4 rounded-lg">
@@ -238,7 +264,7 @@ const ChatDashboard = () => {
             }}
           >
             {messages.map((msg, index) => {
-              console.log("Message content:", msg.messageContent); // In ra giá trị của messageContent
+              console.log(msg.senderId === userID);
               return (
                 <div
                   key={index}
@@ -251,15 +277,11 @@ const ChatDashboard = () => {
                   <div
                     className={`inline-block mr-4 p-2 rounded-lg max-w-[70%] break-words whitespace-pre-wrap box-border ${
                       msg.senderId === userID
-                        ? "bg-sky-200 text-sky-800"
+                        ? "bg-sky-200 text-sky-700"
                         : "bg-white"
                     }`}
                   >
-                    <p>
-                      {msg.senderId === userID
-                        ? msg.message
-                        : msg.messageContent}
-                    </p>
+                    <p>{msg.message}</p>
                   </div>
                 </div>
               );
