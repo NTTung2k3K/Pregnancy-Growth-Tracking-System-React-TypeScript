@@ -34,7 +34,7 @@ const ChatDashboard = () => {
           receiverId,
         },
       });
-      const fetchData = response.data.map((item:any) => ({
+      const fetchData = response.data.map((item: any) => ({
         message: item.message,
         senderId: item.senderId.id,
         messageContent: item.message, // Optional, you can modify if needed
@@ -213,7 +213,6 @@ const ChatDashboard = () => {
     );
   }
 
-
   return (
     <div className=" flex bg-sky-100 m-4 rounded-lg">
       <div className="w-[300px] bg-sky-200 p-4 rounded-lg">
@@ -241,7 +240,10 @@ const ChatDashboard = () => {
                 >
                   <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-md">
                     <img
-                      src={user.image || "https://haycafe.vn/wp-content/uploads/2022/03/Avatar-anime.jpg?quality=lossless"}
+                      src={
+                        user.image ||
+                        "https://haycafe.vn/wp-content/uploads/2022/03/Avatar-anime.jpg?quality=lossless"
+                      }
                       alt="User Avatar"
                       className="w-12 h-12 rounded-full object-cover border border-gray-300"
                     />
@@ -268,6 +270,7 @@ const ChatDashboard = () => {
           <h2 className="px-10 py-2 text-sky-800 font-semibold">
             {selectedUser.userName}
           </h2>
+
           <div
             style={{
               height: "calc(100% - 80px)",
