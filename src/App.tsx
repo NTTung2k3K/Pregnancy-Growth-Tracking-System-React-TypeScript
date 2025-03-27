@@ -5,6 +5,7 @@ import Loading from "./layouts/Loading";
 import { Toaster } from "react-hot-toast";
 // import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/ScrollToTop";
+import ChatDashboard from "./containers/Dashboard/ChatDashboard";
 
 // LAYOUTS
 const MainLayout = lazy(() => import("./layouts/Main"));
@@ -328,6 +329,7 @@ const router = createBrowserRouter([
     element: <DashboardLayout children={<DashboardMainContainer />} />,
   },
 
+
   //-----------------------EMPLOYEES
   {
     path: ROUTES.DASHBOARD_DOCTOR,
@@ -530,6 +532,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD_GROWTH_STANDARDS_DETAIL,
     element: <DashboardLayout children={<GrowthStandardDetailContainer />} />,
+  },
+  {
+    path: ROUTES.DASHBOARD_CHAT,
+    element: <DashboardLayout children={<ChatDashboard />} />,
   },
 ]);
 

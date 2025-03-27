@@ -9,6 +9,8 @@ import {
   BookMarked,
   UserPen,
   CalendarDays,
+  MessageCircleCode,
+  MailCheck,
   Baby,
 } from "lucide-react";
 
@@ -75,6 +77,11 @@ const doctorNav = [
     title: "Profile",
     icon: UserPen,
     url: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
+  {
+    title: "Chat",
+    icon: MessageCircleCode,
+    url: ROUTES.DASHBOARD_CHAT,
   },
 ];
 
@@ -155,6 +162,11 @@ const adminNav = [
     title: "Appointments",
     icon: CalendarDays,
     url: ROUTES.DASHBOARD_APPOINTMENT,
+  },
+  {
+    title: "Chat",
+    icon: MailCheck,
+    url: ROUTES.DASHBOARD_CHAT,
   },
 ];
 

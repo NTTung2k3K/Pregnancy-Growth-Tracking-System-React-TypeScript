@@ -101,4 +101,8 @@ export const ROUTES = {
   DASHBOARD_GROWTH_STANDARDS_UPDATE: "/dashboard/growth-standards/update/:id",
   DASHBOARD_GROWTH_STANDARDS_DETAIL: "/dashboard/growth-standards/detail/:id",
   DASHBOARD_GROWTH_STANDARDS_CREATE: "/dashboard/growth-standards/create",
+
+
+  //----------------CHAT
+  DASHBOARD_CHAT: "/dashboard/chat",
 };
