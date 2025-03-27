@@ -20,6 +20,7 @@ const ChatDashboard = () => {
   const [newMessage, setNewMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingChat, setIsLoadingChat] = useState(false);
 
