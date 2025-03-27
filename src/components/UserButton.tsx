@@ -61,6 +61,7 @@ const UserButton = () => {
 
       case "Silver":
         return "bg-[#c0c0c0] hover:bg-[#c0c0c0]";
+
       case "Gold": // Corrected from "Bronze" to "Gold"
         return "bg-[#ffd700] hover:bg-[#ffd700]";
       default:
