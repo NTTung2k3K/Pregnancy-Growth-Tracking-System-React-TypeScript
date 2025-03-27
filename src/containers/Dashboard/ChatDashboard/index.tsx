@@ -9,6 +9,7 @@ interface User {
   userName: string;
   email: string;
   role: string;
+  image: string;
 }
 
 const ChatDashboard = () => {
@@ -121,6 +122,7 @@ const ChatDashboard = () => {
             userName: item.fullName,
             email: item.email,
             role: item.role.name,
+            image: item.image ?? "",
           }));
 
         setUsers(filteredUsers);
@@ -237,10 +239,21 @@ const ChatDashboard = () => {
                   className="p-4 mb-2 bg-sky-800 rounded-md text-emerald-400 cursor-pointer"
                   onClick={() => handleSelectUser(user)}
                 >
-                  <div>
-                    <strong>{user.userName}</strong>
-                    <p>{user.email}</p>
-                    <small>{user.role}</small>
+                  <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-md">
+                    <img
+                      src={user.image || "https://haycafe.vn/wp-content/uploads/2022/03/Avatar-anime.jpg?quality=lossless"}
+                      alt="User Avatar"
+                      className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                    />
+                    <div>
+                      <strong className="text-lg text-gray-900">
+                        {user.userName}
+                      </strong>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <small className="text-xs text-gray-500">
+                        {user.role}
+                      </small>
+                    </div>
                   </div>
                 </li>
               ))
