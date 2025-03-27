@@ -9,6 +9,7 @@ import { BASE_URL, configHeaders } from "@/services/config";
 import { API_ROUTES } from "@/routes/api";
 import { ROUTES } from "@/routes";
 import toast from "react-hot-toast";
+import { AiOutlineLoading } from "react-icons/ai";
 interface User {
   id: string;
   email: string;
@@ -33,6 +34,8 @@ interface CommentItemProps {
   currentUserId: string | null; // Add currentUserId prop
   onReplySubmit: () => void;
   status: string;
+  isReply: boolean;
+  isParentBanned: boolean;
 }
 
 export function CommentItem({
@@ -41,11 +44,15 @@ export function CommentItem({
   currentUserId,
   onReplySubmit,
   status,
+  isReply,
+  isParentBanned,
 }: CommentItemProps) {
   const [isReplying, setIsReplying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const role = localStorage.getItem("role");
 
   const handleBan = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_FEEDBACKS_BAN}`,
@@ -67,10 +74,13 @@ export function CommentItem({
       }
     } catch (error) {
       console.error("Failed to ban feedback:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleUnban = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.put(
         `${BASE_URL + API_ROUTES.DASHBOARD_FEEDBACKS_UNBAN}`,
@@ -92,10 +102,13 @@ export function CommentItem({
       }
     } catch (error) {
       console.error("Failed to unban feedback:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.delete(
         `${BASE_URL + API_ROUTES.DASHBOARD_FEEDBACKS_DELETE}`,
@@ -117,6 +130,8 @@ export function CommentItem({
       }
     } catch (error) {
       console.error("Failed to ban feedback:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -159,12 +174,17 @@ export function CommentItem({
                 !["Answered", "Blocked"].includes(status) &&
                 feedback.status !== "BANNED" && (
                   <Button
+                    disabled={isLoading}
                     variant="ghost"
                     size="sm"
                     className="bg-slate-200 mr-2 flex items-center gap-2"
                     onClick={() => setIsReplying(!isReplying)}
                   >
-                    <MessageSquare className="w-4 h-4" />
+                    {isLoading ? (
+                      <AiOutlineLoading className="animate-spin" />
+                    ) : (
+                      <MessageSquare className="w-4 h-4" />
+                    )}
                     Reply
                   </Button>
                 )}
@@ -175,22 +195,49 @@ export function CommentItem({
                 currentUserId &&
                 status != "Answered" ? (
                   <Button
+                    disabled={isLoading}
                     variant="ghost"
                     size="sm"
                     className="mr-2 bg-orange-400 text-white flex items-center gap-2"
                     onClick={() => handleBan()}
                   >
-                    <Ban className="w-4 h-4" />
+                    {isLoading ? (
+                      <AiOutlineLoading className="animate-spin" />
+                    ) : (
+                      <Ban className="w-4 h-4" />
+                    )}
                     Ban
                   </Button>
+                ) : isReply ? (
+                  !isParentBanned && (
+                    <Button
+                      disabled={isLoading}
+                      variant="ghost"
+                      size="sm"
+                      className="mr-2 bg-orange-400 text-white flex items-center gap-2"
+                      onClick={() => handleUnban()}
+                    >
+                      {isLoading ? (
+                        <AiOutlineLoading className="animate-spin" />
+                      ) : (
+                        <LockOpen className="w-4 h-4" />
+                      )}
+                      Unban
+                    </Button>
+                  )
                 ) : (
                   <Button
+                    disabled={isLoading}
                     variant="ghost"
                     size="sm"
                     className="mr-2 bg-orange-400 text-white flex items-center gap-2"
                     onClick={() => handleUnban()}
                   >
-                    <LockOpen className="w-4 h-4" />
+                    {isLoading ? (
+                      <AiOutlineLoading className="animate-spin" />
+                    ) : (
+                      <LockOpen className="w-4 h-4" />
+                    )}
                     Unban
                   </Button>
                 )
@@ -203,12 +250,17 @@ export function CommentItem({
                 currentUserId &&
                 status != "Answered" && (
                   <Button
+                    disabled={isLoading}
                     variant="ghost"
                     size="sm"
                     className="bg-red-400 text-white flex items-center gap-2"
                     onClick={() => handleDelete()}
                   >
-                    <Trash className="w-4 h-4" />
+                    {isLoading ? (
+                      <AiOutlineLoading className="animate-spin" />
+                    ) : (
+                      <Trash className="w-4 h-4" />
+                    )}
                     Delete
                   </Button>
                 )}
@@ -243,6 +295,8 @@ export function CommentItem({
               growthChartId={growthChartId}
               currentUserId={currentUserId}
               onReplySubmit={onReplySubmit}
+              isReply={true}
+              isParentBanned={feedback.status === "BANNED"}
             />
           ))}
         </div>
