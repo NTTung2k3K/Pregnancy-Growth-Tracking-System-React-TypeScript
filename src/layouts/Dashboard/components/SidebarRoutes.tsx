@@ -9,6 +9,7 @@ import {
   Baby,
   BookHeart,
   Newspaper,
+  MessageCircleCodeIcon,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 import { ROUTES } from "@/routes";
@@ -76,6 +77,11 @@ const doctorRoutes = [
     icon: UserPen,
     label: "Profile",
     href: ROUTES.DASHBOARD_EMPLOYEE_PROFILE,
+  },
+  {
+    icon: MessageCircleCodeIcon,
+    label: "Profile",
+    href: ROUTES.DASHBOARD_CHAT,
   },
 ];
 
