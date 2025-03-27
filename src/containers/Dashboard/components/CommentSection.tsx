@@ -107,6 +107,8 @@ export function CommentsSection({
               growthChartId={growthChartId}
               currentUserId={currentUserId}
               onReplySubmit={refreshComments}
+              isReply={false}
+              isParentBanned={false}
             />
           ))}
         </div>

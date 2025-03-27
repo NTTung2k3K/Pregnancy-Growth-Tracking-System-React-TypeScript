@@ -27,12 +27,14 @@ interface GrowthChartsFormValues {
 }
 
 const GrowthChartDetailContainer = () => {
-  const { register, handleSubmit, setValue } =
-    useForm<GrowthChartsFormValues>();
+  const { register, handleSubmit, setValue } = useForm<
+    GrowthChartsFormValues
+  >();
   const { id } = useParams();
   const [chart, setChart] = useState<GrowthChart>();
   const [status, setStatus] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingData, setIsLoadingData] = useState<boolean>(false);
   const currentUserId = CookiesEmployeeService.get();
   const isAdmin = localStorage.getItem("role") === "Admin";
   const backLink = isAdmin
@@ -40,6 +42,7 @@ const GrowthChartDetailContainer = () => {
     : ROUTES.DASHBOARD_DOCTOR_GROWTH_CHARTS;
 
   const fetchStatus = async () => {
+    setIsLoadingData(true);
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_CHARTS_STATUS_ALL}`,
@@ -52,6 +55,8 @@ const GrowthChartDetailContainer = () => {
       setStatus(response.data.resultObj);
     } catch (error) {
       console.error("Failed to fetch status:", error);
+    } finally {
+      setIsLoadingData(false);
     }
   };
 
@@ -60,6 +65,8 @@ const GrowthChartDetailContainer = () => {
   }, []);
 
   const fetchChart = async () => {
+    setIsLoadingData(true);
+
     try {
       const response = await axios.get(
         `${BASE_URL + API_ROUTES.DASHBOARD_GROWTH_CHARTS_DETAIL}`,
@@ -81,6 +88,8 @@ const GrowthChartDetailContainer = () => {
       setChart(fetchedChart);
     } catch (error) {
       console.error("Failed to fetch chart:", error);
+    } finally {
+      setIsLoadingData(false);
     }
   };
 
@@ -114,6 +123,10 @@ const GrowthChartDetailContainer = () => {
       setIsLoading(false);
     }
   };
+
+  if (isLoadingData) {
+    return <div className="flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div>
@@ -154,7 +167,7 @@ const GrowthChartDetailContainer = () => {
 
               <div className="flex mt-4 border bg-slate-100 rounded-md p-4">
                 <div className="font-medium flex items-center mr-10">
-                  View Count
+                  View Count 
                 </div>
                 <p className="flex-1 p-2">{chart?.viewCount}</p>
               </div>
