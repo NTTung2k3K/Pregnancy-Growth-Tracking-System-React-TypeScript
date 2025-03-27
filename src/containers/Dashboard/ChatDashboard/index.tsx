@@ -160,6 +160,15 @@ const ChatDashboard = () => {
 
     try {
       setIsLoadingChat(true);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          message: newMessage,
+          senderId: userID,
+          messageContent: newMessage,
+        },
+      ]);
+      setNewMessage("");
       const response = await axios.post(`${BASE_URL}/chat/send-message`, {
         message: newMessage,
         userID,
@@ -180,15 +189,6 @@ const ChatDashboard = () => {
             sender: userId,
           });
 
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              message: messageContent,
-              senderId: userId,
-              messageContent: messageContent,
-            },
-          ]);
-          setNewMessage("");
           // fetchChatHistory(userID, selectedUser.id);
         } else {
           console.error("Invalid channel name:", channelName);
