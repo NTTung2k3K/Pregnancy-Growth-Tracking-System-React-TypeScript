@@ -81,14 +81,14 @@ export const columns: ColumnDef<Blog>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Author ID
+          Author 
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
       // Lấy role.name từ authorResponseModel nếu có, ngược lại hiển thị giá trị mặc định
-      const roleName = row.original.authorResponseModel?.role?.name || "N/A";
+      const roleName = row.original.authorResponseModel?.fullName || "N/A";
       return <span>{roleName}</span>;
     },
   },

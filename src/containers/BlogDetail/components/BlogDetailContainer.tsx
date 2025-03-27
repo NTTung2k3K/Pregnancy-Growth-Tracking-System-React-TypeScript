@@ -22,10 +22,7 @@ export interface Blog {
   };
   authorResponseModel: {
     id: string;
-    role: {
-      id: string;
-      name: string;
-    };
+    fullName: string;
   };
 }
 
@@ -51,6 +48,7 @@ const BlogDetailContent = () => {
 
   useEffect(() => {
     const fetchBlog = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`${BASE_URL}/blog/${id}`);
         setBlog(response.data.resultObj);
@@ -130,7 +128,7 @@ const BlogDetailContent = () => {
               <div className="mb-5 mr-10 flex items-center">
                 <div className="w-full">
                   <span className="mb-1 text-base font-medium text-body-color">
-                    By <span>{blog.authorResponseModel.role.name}</span>
+                    By <span>{blog.authorResponseModel.fullName}</span>
                   </span>
                 </div>
               </div>
