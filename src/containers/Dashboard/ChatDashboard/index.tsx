@@ -249,7 +249,7 @@ const ChatDashboard = () => {
                   }}
                 >
                   <div
-                    className={`inline-block p-2 rounded-lg max-w-[70%] break-words whitespace-pre-wrap box-border ${
+                    className={`inline-block mr-4 p-2 rounded-lg max-w-[70%] break-words whitespace-pre-wrap box-border ${
                       msg.senderId === userID
                         ? "bg-sky-200 text-sky-800"
                         : "bg-white"
