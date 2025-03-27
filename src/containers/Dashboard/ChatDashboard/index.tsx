@@ -213,7 +213,6 @@ const ChatDashboard = () => {
     );
   }
 
-  console.log(userID);
 
   return (
     <div className=" flex bg-sky-100 m-4 rounded-lg">
@@ -265,7 +264,7 @@ const ChatDashboard = () => {
       </div>
 
       {selectedUser ? (
-        <div className="h-[850px] flex-1 bg-sky-100 p-10 rounded-lg">
+        <div className="h-[650px] flex-1 bg-sky-100 p-10 rounded-lg">
           <h2 className="px-10 py-2 text-sky-800 font-semibold">
             {selectedUser.userName}
           </h2>
@@ -277,7 +276,6 @@ const ChatDashboard = () => {
             }}
           >
             {messages.map((msg, index) => {
-              console.log(msg.senderId === userID);
               return (
                 <div
                   key={index}
@@ -318,7 +316,7 @@ const ChatDashboard = () => {
           </div>
         </div>
       ) : (
-        <div className="h-[850px] flex-1 flex items-center justify-center">
+        <div className="h-[650px] flex-1 flex items-center justify-center">
           Please select a user to chat
         </div>
       )}
