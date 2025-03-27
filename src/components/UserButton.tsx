@@ -58,6 +58,7 @@ const UserButton = () => {
     switch (tier) {
       case "Bronze":
         return "bg-[#cd7f32] hover:bg-[#cd7f32]";
+
       case "Silver":
         return "bg-[#c0c0c0] hover:bg-[#c0c0c0]";
       case "Gold": // Corrected from "Bronze" to "Gold"
