@@ -12,12 +12,39 @@ interface User {
   image: string;
 }
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const formatTimeForSender = (sendAt: string) => {
+  const vnTime = dayjs(sendAt).tz("Asia/Ho_Chi_Minh");
+  const now = dayjs().tz("Asia/Ho_Chi_Minh");
+
+  if (vnTime.isSame(now, "day")) {
+    return vnTime.format("HH:mm"); // Hiển thị giờ:phút nếu cùng ngày
+  } else {
+    return vnTime.format("DD/MM/YYYY - HH:mm:ss"); // Hiển thị ngày tháng năm: giờ:phút:giây
+  }
+};
+
+const formatTimeForReceiver = (sendAt: string) => {
+  const vnTime = dayjs(sendAt).tz("Asia/Ho_Chi_Minh");
+  return vnTime.fromNow(); // Hiển thị "X phút trước", "X giờ trước", "2 ngày trước",...
+};
+
+
+
 const ChatDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [messages, setMessages] = useState<
-    { message: string; senderId: string; messageContent?: string }[]
-  >([]);
+  { message: string; senderId: string; sendAt: string }[]
+>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,6 +53,8 @@ const ChatDashboard = () => {
   const [isLoadingChat, setIsLoadingChat] = useState(false);
 
   const fetchChatHistory = async (senderId: any, receiverId: any) => {
+    console.log(senderId)
+    console.log(receiverId)
     setIsLoading(true);
     try {
       const response = await axios.get(`${BASE_URL}/chat/get-message`, {
@@ -34,18 +63,24 @@ const ChatDashboard = () => {
           receiverId,
         },
       });
+      console.log(response.data);
+  
       const fetchData = response.data.map((item: any) => ({
         message: item.message,
         senderId: item.senderId.id,
-        messageContent: item.message, // Optional, you can modify if needed
+        sendAt: item.sendAt
       }));
+  
       setMessages(fetchData);
+      console.log(fetchData);
     } catch (error) {
       console.error("Failed to fetch chat history:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
 
   const getEmployeeFromCookie = () => {
     const employeeCookie = Cookies.get("EMPLOYEE");
@@ -81,22 +116,19 @@ const ChatDashboard = () => {
       const channel = pusher.subscribe(channelName);
 
       // Lắng nghe sự kiện "new-message" từ người gửi
-      channel.bind(
-        "new-message",
-        (data: { messageContent: string; senderId: string }) => {
-          if (data.senderId !== userID) {
-            setMessages((prevMessages) => [
-              ...prevMessages,
-              {
-                message: data.messageContent,
-                senderId: data.senderId,
-                messageContent: data.messageContent,
-              },
-            ]);
-          }
+      channel.bind("new-message", (data: { messageContent: string; senderId: string; sendAt: string }) => {
+        if (data.senderId !== userID) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              message: data.messageContent,
+              senderId: data.senderId,
+              sendAt: data.sendAt || new Date().toISOString(), // Gán giá trị mặc định nếu không có sendAt
+            },
+          ]);
         }
-      );
-
+      });
+      
       return () => {
         pusher.unsubscribe(channelName);
       };
@@ -161,7 +193,7 @@ const ChatDashboard = () => {
       console.error("UserID or SelectedUser is undefined");
       return;
     }
-
+  
     try {
       setIsLoadingChat(true);
       setMessages((prevMessages) => [
@@ -169,33 +201,30 @@ const ChatDashboard = () => {
         {
           message: newMessage,
           senderId: userID,
-          messageContent: newMessage,
+          sendAt: new Date().toISOString(), // Thời gian gửi tin nhắn
         },
       ]);
       setNewMessage("");
+  
       const response = await axios.post(`${BASE_URL}/chat/send-message`, {
         message: newMessage,
         userID,
         recipientUserId: selectedUser.id,
       });
-
+  
       console.log("API Response:", response.data);
-
+  
       if (response.data && response.data.channelName) {
         const { channelName, messageContent, userId } = response.data;
-
+  
         if (channelName && typeof channelName === "string") {
           const channel = pusher.subscribe(channelName);
-
+  
           // Gửi sự kiện đến người nhận qua Pusher
           channel.trigger("client-new-message", {
             message: messageContent,
             sender: userId,
           });
-
-          // fetchChatHistory(userID, selectedUser.id);
-        } else {
-          console.error("Invalid channel name:", channelName);
         }
       } else {
         console.error("No channel name received from API.");
@@ -206,6 +235,7 @@ const ChatDashboard = () => {
       setIsLoadingChat(false);
     }
   };
+  
 
   if (isLoading) {
     return (
@@ -282,24 +312,19 @@ const ChatDashboard = () => {
           >
             {messages.map((msg, index) => {
               return (
-                <div
-                  key={index}
-                  style={{
-                    display: "block", // ✅ mỗi tin nhắn chiếm nguyên dòng
-                    marginBottom: "10px",
-                    textAlign: msg.senderId === userID ? "right" : "left",
-                  }}
-                >
-                  <div
-                    className={`inline-block mr-4 p-2 rounded-lg max-w-[70%] break-words whitespace-pre-wrap box-border ${
-                      msg.senderId === userID
-                        ? "bg-sky-200 text-sky-700"
-                        : "bg-white"
-                    }`}
-                  >
-                    <p>{msg.message}</p>
-                  </div>
+              <div key={index} style={{ textAlign: msg.senderId === userID ? "right" : "left" }}>
+                <div className={`inline-block mr-4 p-2 rounded-lg max-w-[70%] break-words whitespace-pre-wrap box-border ${
+                  msg.senderId === userID ? "bg-sky-200 text-sky-700" : "bg-white"
+                }`}>
+                  <p>{msg.message}</p>
+                  <small className="text-xs text-gray-500 block mt-1">
+                    {msg.senderId === userID
+                      ? formatTimeForSender(msg.sendAt) // Định dạng cho người gửi
+                      : formatTimeForReceiver(msg.sendAt) // Định dạng cho người nhận
+                    }
+                  </small>
                 </div>
+              </div>
               );
             })}
           </div>
