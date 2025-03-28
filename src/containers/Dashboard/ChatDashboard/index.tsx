@@ -145,6 +145,7 @@ const ChatDashboard = () => {
     if (user.id === userID) {
       setErrorMessage("You cannot chat with yourself.");
       setSelectedUser(null);
+
       return;
     }
 
@@ -240,7 +241,10 @@ const ChatDashboard = () => {
                 >
                   <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-md">
                     <img
-                      src={user.image || "https://th.bing.com/th/id/R.869baf58b63f64a47cd521691eae7bf6?rik=%2bjP33WJBQzowcA&pid=ImgRaw&r=0"}
+                      src={
+                        user.image ||
+                        "https://th.bing.com/th/id/R.869baf58b63f64a47cd521691eae7bf6?rik=%2bjP33WJBQzowcA&pid=ImgRaw&r=0"
+                      }
                       alt="User Avatar"
                       className="w-12 h-12 rounded-full object-cover border border-gray-300"
                     />
