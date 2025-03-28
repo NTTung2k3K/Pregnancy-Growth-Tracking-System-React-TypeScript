@@ -152,6 +152,7 @@ const ChatDashboard = () => {
     setErrorMessage("");
     setSelectedUser(user);
     fetchChatHistory(user.id, userID);
+
     setMessages([]);
   };
 
