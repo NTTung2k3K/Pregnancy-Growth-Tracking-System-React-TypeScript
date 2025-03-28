@@ -184,7 +184,7 @@ const BlogsDetailContainer = () => {
           {blog?.content && (
             <Editor
               disabled
-              apiKey="fopyhr808wdoc86vvbb3f6wx6ntkawc2mhcpm38t08kk2bxy"
+              apiKey="w6deubhbdzb753ax8hv1z54l6e7g53u0mkj1d7dgc8ij7ajq"
               initialValue={blog.content}
               init={{
                 menubar: false,
