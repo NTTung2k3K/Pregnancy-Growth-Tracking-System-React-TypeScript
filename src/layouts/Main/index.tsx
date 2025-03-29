@@ -15,6 +15,7 @@ declare global {
 const MainLayout = ({ children }: MainLayoutProps) => {
   useEffect(() => {
     // Kiểm tra nếu script đã tồn tại để tránh load nhiều lần
+
     if (!document.getElementById("voiceflow-chatbot")) {
       const script = document.createElement("script");
       script.id = "voiceflow-chatbot";
