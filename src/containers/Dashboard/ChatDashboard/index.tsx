@@ -326,7 +326,7 @@ const ChatDashboard = () => {
               </div>
             ) : (
               messages.map((msg, index) => (
-                <div key={index} style={{ textAlign: msg.senderId === userID ? "right" : "left" }}>
+                <div className="p-1" key={index} style={{ textAlign: msg.senderId === userID ? "right" : "left" }}>
                   <div className={`inline-block p-2 rounded-lg ${msg.senderId === userID ? "bg-sky-200" : "bg-white"}`}>
                     <p>{msg.message}</p>
                     <small>{msg.senderId === userID ? formatTimeForSender(msg.sendAt) : formatTimeForReceiver(msg.sendAt)}</small>
